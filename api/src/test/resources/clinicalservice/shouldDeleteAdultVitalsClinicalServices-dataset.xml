@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<dataset>
+	<!-- Encounter For VITAL ADULT -->
+  	<encounter encounter_id="1001" encounter_type="2" patient_id="7" location_id="1" form_id="1" encounter_datetime="2008-08-15 00:00:00.0" creator="1" date_created="2008-08-18 14:22:17.0" voided="false" uuid="eec646cb-c847-4ss-enc-vital-adult"/>
+  	<obs obs_id="105" person_id="7" concept_id="73" encounter_id="1001" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_numeric="61.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000005"/>
+ 	<obs obs_id="106" person_id="7" concept_id="74" encounter_id="1001" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_numeric="61.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000006"/>
+	<obs obs_id="107" person_id="7" concept_id="75" encounter_id="1001" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_numeric="61.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000007"/>
+	<obs obs_id="108" person_id="7" concept_id="76" encounter_id="1001" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_numeric="61.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000008"/>
+	<obs obs_id="109" person_id="7" concept_id="77" encounter_id="1001" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_numeric="61.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000009"/>
+	<obs obs_id="110" person_id="7" concept_id="78" encounter_id="1001" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_numeric="61.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000010"/>
+	<obs obs_id="111" person_id="7" concept_id="79" encounter_id="1001" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_numeric="61.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000011"/>
+</dataset> 
