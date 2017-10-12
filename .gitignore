@@ -1,5 +1,17 @@
-# Object file
-*.o
-
-# Ada Library Information
-*.ali
+.idea
+.settings
+*.iml
+.DS_Store
+*.log
+target/
+.project
+api/.classpath
+api/.project
+omod/.classpath
+omod/.project
+omod/.externalToolBuilders
+omod/maven-eclipse.xml
+.java-version
+*.orig
+api/*.orig
+omod/*.orig
