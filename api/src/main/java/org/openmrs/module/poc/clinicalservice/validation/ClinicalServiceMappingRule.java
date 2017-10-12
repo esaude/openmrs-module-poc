@@ -19,7 +19,7 @@ public class ClinicalServiceMappingRule {
 	public void validate(final String servicekey) throws POCBusinessException {
 		
 		try {
-			final ClinicalServiceKeys clinicalServiceKey = ClinicalServiceKeys.valueOf(servicekey);
+			final ClinicalServiceKeys clinicalServiceKey = ClinicalServiceKeys.getClinicalServiceByCode(servicekey);
 			
 			final List<String> clinicalServicesUuid = MappedClinicalServices.getClinicalServices(clinicalServiceKey);
 			
@@ -38,7 +38,7 @@ public class ClinicalServiceMappingRule {
 			
 		}
 		catch (final IllegalArgumentException e) {
-			throw new POCBusinessException("Clinical Service with value '" + servicekey + "' not found");
+			throw new POCBusinessException(e.getMessage());
 		}
 	}
 }

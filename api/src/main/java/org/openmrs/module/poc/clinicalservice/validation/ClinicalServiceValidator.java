@@ -7,19 +7,16 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ClinicalServiceValidator {
-
+	
 	@Autowired
 	private EncounterClinicalServiceRule encounterClinicalServiceRule;
-
+	
 	@Autowired
 	private ClinicalServiceMappingRule clinicalServiceMappingRule;
-
-	public void validateDeletion(final Encounter encounterService, final String serviceKey)
-			throws POCBusinessException {
-
+	
+	public void validateDeletion(final Encounter encounterService, final String serviceKey) throws POCBusinessException {
+		
 		this.encounterClinicalServiceRule.validate(encounterService);
 		this.clinicalServiceMappingRule.validate(serviceKey);
-		// TODO should validate Patient Age????
-
 	}
 }

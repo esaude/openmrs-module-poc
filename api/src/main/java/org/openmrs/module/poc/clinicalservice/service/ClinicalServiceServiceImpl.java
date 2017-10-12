@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
 import org.openmrs.Concept;
 import org.openmrs.Encounter;
 import org.openmrs.Obs;
@@ -39,7 +38,8 @@ public class ClinicalServiceServiceImpl extends BaseOpenmrsService implements Cl
 		this.clinicalServiceValidator.validateDeletion(es, clinicalServiceKey);
 		
 		final Encounter encounter = this.encounterService.getEncounterByUuid(encounterUuid);
-		final List<Concept> clinicalServices = this.getClinicalServices(ClinicalServiceKeys.valueOf(clinicalServiceKey));
+		final List<Concept> clinicalServices = this.getClinicalServices(clinicalServiceKey);
+		
 		final Set<Obs> allObs = encounter.getAllObs();
 		
 		for (final Obs obs : allObs) {
@@ -54,15 +54,15 @@ public class ClinicalServiceServiceImpl extends BaseOpenmrsService implements Cl
 			}
 		}
 		
-		if (!clinicalServices.isEmpty()) {
-			throw new POCBusinessException("Some Clinical services was not deleted: "
-			        + StringUtils.join(clinicalServices, "|"));
+		if (encounter.getAllObs().isEmpty()) {
+			this.encounterService.voidEncounter(encounter, "deleted All clinical Services");
 		}
 	}
 	
-	private List<Concept> getClinicalServices(final ClinicalServiceKeys clinicalServiceKey) {
+	private List<Concept> getClinicalServices(final String clinicalServiceKey) {
 		
-		final List<String> clinicalServiceUuids = MappedClinicalServices.getClinicalServices(clinicalServiceKey);
+		final List<String> clinicalServiceUuids = MappedClinicalServices.getClinicalServices(ClinicalServiceKeys
+		        .getClinicalServiceByCode(clinicalServiceKey));
 		
 		final List<Concept> clinicalServices = new ArrayList<Concept>();
 		

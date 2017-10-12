@@ -33,11 +33,14 @@ public class MappedClinicalServices {
 		MappedClinicalServices.clinicalServices.put(ClinicalServiceKeys.VITALS_ADULT, Arrays.asList(
 		    ConceptUUIDConstants.TEMPERATURE, ConceptUUIDConstants.WEIGHT, ConceptUUIDConstants.HEIGHT,
 		    ConceptUUIDConstants.SISTOLICA_ARTERIAL_BLOOD_PRESSURE, ConceptUUIDConstants.DIALOSTIC_BLOOD_PRESSURE,
-		    ConceptUUIDConstants.HEART_RATE, ConceptUUIDConstants.RESPIRATORY_FREQUENCY));
+		    ConceptUUIDConstants.HEART_RATE, ConceptUUIDConstants.RESPIRATORY_FREQUENCY,
+		    ConceptUUIDConstants.POC_MAPPING_VITALS_DATE));
 		// VITALS_CHILD
+		
 		MappedClinicalServices.clinicalServices.put(ClinicalServiceKeys.VITALS_CHILD, Arrays.asList(
 		    ConceptUUIDConstants.TEMPERATURE, ConceptUUIDConstants.WEIGHT, ConceptUUIDConstants.HEIGHT,
-		    ConceptUUIDConstants.HEART_RATE, ConceptUUIDConstants.RESPIRATORY_FREQUENCY));
+		    ConceptUUIDConstants.HEART_RATE, ConceptUUIDConstants.RESPIRATORY_FREQUENCY,
+		    ConceptUUIDConstants.POC_MAPPING_VITALS_DATE));
 	}
 	
 	private MappedClinicalServices() {

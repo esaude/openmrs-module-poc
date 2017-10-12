@@ -68,6 +68,8 @@ public class ConceptUUIDConstants {
 	
 	public static final String OCCUPATION = "e1dc07c2-1d5f-11e0-b929-000c29ad1d07";
 	
+	public static final String POC_MAPPING_VITALS_DATE = "283e551d-a470-4280-84fd-8f409f3caf7a";
+	
 	private ConceptUUIDConstants() {
 		
 	}

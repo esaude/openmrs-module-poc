@@ -26,6 +26,7 @@ import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.poc.api.BasePOCModuleContextSensitiveTest;
+import org.openmrs.module.poc.api.common.exception.POCBusinessException;
 import org.openmrs.module.poc.clinicalservice.service.ClinicalServiceService;
 import org.openmrs.module.poc.clinicalservice.util.ClinicalServiceKeys;
 
@@ -46,7 +47,7 @@ public class ClinicalServiceServiceTest extends BasePOCModuleContextSensitiveTes
 		    CoreMatchers.hasItems(Matchers.<Obs> hasProperty("voided", CoreMatchers.is(false))));
 		
 		Context.getService(ClinicalServiceService.class).deleteClinicalService(encounterUuid,
-		    ClinicalServiceKeys.VITALS_CHILD.toString());
+		    ClinicalServiceKeys.VITALS_CHILD.getCode());
 		final Encounter encounuter = Context.getEncounterService().getEncounterByUuid(encounterUuid);
 		
 		final Set<Obs> deletedObs = encounuter.getAllObs(true);
@@ -54,6 +55,7 @@ public class ClinicalServiceServiceTest extends BasePOCModuleContextSensitiveTes
 		MatcherAssert.assertThat(deletedObs, IsCollectionWithSize.hasSize(5));
 		MatcherAssert.assertThat(deletedObs,
 		    CoreMatchers.hasItems(Matchers.<Obs> hasProperty("voided", CoreMatchers.is(true))));
+		MatcherAssert.assertThat(encounuter, Matchers.hasProperty("voided", CoreMatchers.is(true)));
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -71,7 +73,7 @@ public class ClinicalServiceServiceTest extends BasePOCModuleContextSensitiveTes
 		    CoreMatchers.hasItems(Matchers.<Obs> hasProperty("voided", CoreMatchers.is(false))));
 		
 		Context.getService(ClinicalServiceService.class).deleteClinicalService(encounterUuid,
-		    ClinicalServiceKeys.VITALS_CHILD.toString());
+		    ClinicalServiceKeys.VITALS_ADULT.getCode());
 		final Encounter encounuter = Context.getEncounterService().getEncounterByUuid(encounterUuid);
 		
 		final Set<Obs> deletedObs = encounuter.getAllObs(true);
@@ -79,6 +81,7 @@ public class ClinicalServiceServiceTest extends BasePOCModuleContextSensitiveTes
 		MatcherAssert.assertThat(deletedObs, IsCollectionWithSize.hasSize(7));
 		MatcherAssert.assertThat(deletedObs,
 		    CoreMatchers.hasItems(Matchers.<Obs> hasProperty("voided", CoreMatchers.is(true))));
+		MatcherAssert.assertThat(encounuter, Matchers.hasProperty("voided", CoreMatchers.is(true)));
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -96,7 +99,7 @@ public class ClinicalServiceServiceTest extends BasePOCModuleContextSensitiveTes
 		    CoreMatchers.hasItems(Matchers.<Obs> hasProperty("voided", CoreMatchers.is(false))));
 		
 		Context.getService(ClinicalServiceService.class).deleteClinicalService(vitalsEncounterUuid,
-		    ClinicalServiceKeys.SOCIAL_INFO_ADULT.toString());
+		    ClinicalServiceKeys.SOCIAL_INFO_ADULT.getCode());
 		final Encounter encounuter = Context.getEncounterService().getEncounterByUuid(vitalsEncounterUuid);
 		
 		final Set<Obs> deletedObs = encounuter.getAllObs(true);
@@ -105,5 +108,14 @@ public class ClinicalServiceServiceTest extends BasePOCModuleContextSensitiveTes
 		MatcherAssert.assertThat(deletedObs, IsCollectionWithSize.hasSize(12));
 		MatcherAssert.assertThat(deletedObs,
 		    CoreMatchers.hasItems(Matchers.<Obs> hasProperty("voided", CoreMatchers.is(true))));
+	}
+	
+	@Test(expected = POCBusinessException.class)
+	public void shouldNotFindClinicalServiceForGivenWrongCode() throws Exception {
+		
+		final String vitalsEncounterUuid = "eec646cb-c8-enc-social-inf-adult";
+		final String invalidCode = "invalid";
+		
+		Context.getService(ClinicalServiceService.class).deleteClinicalService(vitalsEncounterUuid, invalidCode);
 	}
 }
