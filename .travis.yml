@@ -2,6 +2,6 @@ language: java
 jdk: oraclejdk8
 script: mvn clean install --batch-mode
 after_success: 
-- mvn jacoco:report
+- mvn jacoco:report coveralls:report
 notifications:
   slack: esaude:fJniHlqocbXRRIkoDY1Ky4dw
