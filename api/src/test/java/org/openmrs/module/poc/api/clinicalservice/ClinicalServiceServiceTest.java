@@ -1,3 +1,12 @@
+/**
+ * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+ * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+ *
+ * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+ * graphic logo is a trademark of OpenMRS Inc.
+ */
 package org.openmrs.module.poc.api.clinicalservice;
 
 /*
@@ -34,8 +43,8 @@ public class ClinicalServiceServiceTest extends BasePOCModuleContextSensitiveTes
 	
 	@SuppressWarnings("unchecked")
 	@Test
-	public void shouldDeleteChildVitalsClinicalServices() throws Exception {
-		this.executeDataSet("clinicalservice/shouldDeleteChildVitalsClinicalServices-dataset.xml");
+	public void shouldDeletePediatricVitalsClinicalServices() throws Exception {
+		this.executeDataSet("clinicalservice/shouldDeletePediatricVitalsClinicalServices-dataset.xml");
 		
 		final String encounterUuid = "eec646cb-c847-4ss-enc-vital-child";
 		
@@ -47,7 +56,7 @@ public class ClinicalServiceServiceTest extends BasePOCModuleContextSensitiveTes
 		    CoreMatchers.hasItems(Matchers.<Obs> hasProperty("voided", CoreMatchers.is(false))));
 		
 		Context.getService(ClinicalServiceService.class).deleteClinicalService(encounterUuid,
-		    ClinicalServiceKeys.VITALS_CHILD.getCode());
+		    ClinicalServiceKeys.VITALS_PEDIATRICS.getCode());
 		final Encounter encounuter = Context.getEncounterService().getEncounterByUuid(encounterUuid);
 		
 		final Set<Obs> deletedObs = encounuter.getAllObs(true);
@@ -117,5 +126,214 @@ public class ClinicalServiceServiceTest extends BasePOCModuleContextSensitiveTes
 		final String invalidCode = "invalid";
 		
 		Context.getService(ClinicalServiceService.class).deleteClinicalService(vitalsEncounterUuid, invalidCode);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void shouldDeleteWHOStageAdult() throws Exception {
+		this.executeDataSet("clinicalservice/shouldDeleteWHOStageAdult-dataset.xml");
+		
+		final String whoAdultEncounter = "eec646cb-c847-4ss-enc-who-adult";
+		
+		final List<Obs> notDeletedObs = Context.getObsService().getObservations("1005");
+		
+		MatcherAssert.assertThat(notDeletedObs, CoreMatchers.notNullValue());
+		MatcherAssert.assertThat(notDeletedObs, IsCollectionWithSize.hasSize(5));
+		MatcherAssert.assertThat(notDeletedObs,
+		    CoreMatchers.hasItems(Matchers.<Obs> hasProperty("voided", CoreMatchers.is(false))));
+		
+		Context.getService(ClinicalServiceService.class).deleteClinicalService(whoAdultEncounter,
+		    ClinicalServiceKeys.WHO_STAGE_ADULT.getCode());
+		final Encounter encounuter = Context.getEncounterService().getEncounterByUuid(whoAdultEncounter);
+		
+		final Set<Obs> deletedObs = encounuter.getAllObs(true);
+		
+		MatcherAssert.assertThat(deletedObs, CoreMatchers.notNullValue());
+		MatcherAssert.assertThat(deletedObs, IsCollectionWithSize.hasSize(5));
+		MatcherAssert.assertThat(deletedObs,
+		    CoreMatchers.hasItems(Matchers.<Obs> hasProperty("voided", CoreMatchers.is(true))));
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void shouldDeleteWHOStagePediatrics() throws Exception {
+		this.executeDataSet("clinicalservice/shouldDeleteWHOStagePediatrics-dataset.xml");
+		
+		final String whoAdultEncounter = "eec646cb-c847-4ss-enc-who-pediatrics";
+		
+		final List<Obs> notDeletedObs = Context.getObsService().getObservations("1005");
+		
+		MatcherAssert.assertThat(notDeletedObs, CoreMatchers.notNullValue());
+		MatcherAssert.assertThat(notDeletedObs, IsCollectionWithSize.hasSize(5));
+		MatcherAssert.assertThat(notDeletedObs,
+		    CoreMatchers.hasItems(Matchers.<Obs> hasProperty("voided", CoreMatchers.is(false))));
+		
+		Context.getService(ClinicalServiceService.class).deleteClinicalService(whoAdultEncounter,
+		    ClinicalServiceKeys.WHO_STAGE_PEDIATRICS.getCode());
+		final Encounter encounuter = Context.getEncounterService().getEncounterByUuid(whoAdultEncounter);
+		
+		final Set<Obs> deletedObs = encounuter.getAllObs(true);
+		
+		MatcherAssert.assertThat(deletedObs, CoreMatchers.notNullValue());
+		MatcherAssert.assertThat(deletedObs, IsCollectionWithSize.hasSize(5));
+		MatcherAssert.assertThat(deletedObs,
+		    CoreMatchers.hasItems(Matchers.<Obs> hasProperty("voided", CoreMatchers.is(true))));
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void shouldDeleteRelevantAspects() throws Exception {
+		this.executeDataSet("clinicalservice/shouldDeleteRelevantAspects-dataset.xml");
+		
+		final String whoAdultEncounter = "eec646cb-c847-4ss-enc-relevant-aspects";
+		
+		final List<Obs> notDeletedObs = Context.getObsService().getObservations("1005");
+		
+		MatcherAssert.assertThat(notDeletedObs, CoreMatchers.notNullValue());
+		MatcherAssert.assertThat(notDeletedObs, IsCollectionWithSize.hasSize(2));
+		MatcherAssert.assertThat(notDeletedObs,
+		    CoreMatchers.hasItems(Matchers.<Obs> hasProperty("voided", CoreMatchers.is(false))));
+		
+		Context.getService(ClinicalServiceService.class).deleteClinicalService(whoAdultEncounter,
+		    ClinicalServiceKeys.RELEVANT_ASPECTS.getCode());
+		final Encounter encounuter = Context.getEncounterService().getEncounterByUuid(whoAdultEncounter);
+		
+		final Set<Obs> deletedObs = encounuter.getAllObs(true);
+		
+		MatcherAssert.assertThat(deletedObs, CoreMatchers.notNullValue());
+		MatcherAssert.assertThat(deletedObs, IsCollectionWithSize.hasSize(2));
+		MatcherAssert.assertThat(deletedObs,
+		    CoreMatchers.hasItems(Matchers.<Obs> hasProperty("voided", CoreMatchers.is(true))));
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void shouldDeleteAdultAnamneseExams() throws Exception {
+		this.executeDataSet("clinicalservice/shouldDeleteAdultAnamneseExams-dataset.xml");
+		
+		final String whoAdultEncounter = "eec-c847-4ss-enc-adult-amnese-exams";
+		
+		final List<Obs> notDeletedObs = Context.getObsService().getObservations("1005");
+		
+		MatcherAssert.assertThat(notDeletedObs, CoreMatchers.notNullValue());
+		MatcherAssert.assertThat(notDeletedObs, IsCollectionWithSize.hasSize(9));
+		MatcherAssert.assertThat(notDeletedObs,
+		    CoreMatchers.hasItems(Matchers.<Obs> hasProperty("voided", CoreMatchers.is(false))));
+		
+		Context.getService(ClinicalServiceService.class).deleteClinicalService(whoAdultEncounter,
+		    ClinicalServiceKeys.ADULT_ANAMNESE_EXAMS.getCode());
+		final Encounter encounuter = Context.getEncounterService().getEncounterByUuid(whoAdultEncounter);
+		
+		final Set<Obs> deletedObs = encounuter.getAllObs(true);
+		
+		MatcherAssert.assertThat(deletedObs, CoreMatchers.notNullValue());
+		MatcherAssert.assertThat(deletedObs, IsCollectionWithSize.hasSize(9));
+		MatcherAssert.assertThat(deletedObs,
+		    CoreMatchers.hasItems(Matchers.<Obs> hasProperty("voided", CoreMatchers.is(true))));
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void shouldDeletePediatricsAnamneseExams() throws Exception {
+		this.executeDataSet("clinicalservice/shouldDeletePediatricsAnamneseExams-dataset.xml");
+		
+		final String whoAdultEncounter = "c847-4ss-enc-pediatrics-amnese-exams";
+		
+		final List<Obs> notDeletedObs = Context.getObsService().getObservations("1005");
+		
+		MatcherAssert.assertThat(notDeletedObs, CoreMatchers.notNullValue());
+		MatcherAssert.assertThat(notDeletedObs, IsCollectionWithSize.hasSize(8));
+		MatcherAssert.assertThat(notDeletedObs,
+		    CoreMatchers.hasItems(Matchers.<Obs> hasProperty("voided", CoreMatchers.is(false))));
+		
+		Context.getService(ClinicalServiceService.class).deleteClinicalService(whoAdultEncounter,
+		    ClinicalServiceKeys.PEDIATRICS_ANAMNESE_EXAMS.getCode());
+		final Encounter encounuter = Context.getEncounterService().getEncounterByUuid(whoAdultEncounter);
+		
+		final Set<Obs> deletedObs = encounuter.getAllObs(true);
+		
+		MatcherAssert.assertThat(deletedObs, CoreMatchers.notNullValue());
+		MatcherAssert.assertThat(deletedObs, IsCollectionWithSize.hasSize(8));
+		MatcherAssert.assertThat(deletedObs,
+		    CoreMatchers.hasItems(Matchers.<Obs> hasProperty("voided", CoreMatchers.is(true))));
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void shouldDeleteAdultDiagnosis() throws Exception {
+		this.executeDataSet("clinicalservice/shouldDeleteAdultDiagnosis-dataset.xml");
+		
+		final String whoAdultEncounter = "c847-4ss-enc-xpto-adult-diagnosis";
+		
+		final List<Obs> notDeletedObs = Context.getObsService().getObservations("1005");
+		
+		MatcherAssert.assertThat(notDeletedObs, CoreMatchers.notNullValue());
+		MatcherAssert.assertThat(notDeletedObs, IsCollectionWithSize.hasSize(6));
+		MatcherAssert.assertThat(notDeletedObs,
+		    CoreMatchers.hasItems(Matchers.<Obs> hasProperty("voided", CoreMatchers.is(false))));
+		
+		Context.getService(ClinicalServiceService.class).deleteClinicalService(whoAdultEncounter,
+		    ClinicalServiceKeys.ADULT_DIAGNOSIS.getCode());
+		final Encounter encounuter = Context.getEncounterService().getEncounterByUuid(whoAdultEncounter);
+		
+		final Set<Obs> deletedObs = encounuter.getAllObs(true);
+		
+		MatcherAssert.assertThat(deletedObs, CoreMatchers.notNullValue());
+		MatcherAssert.assertThat(deletedObs, IsCollectionWithSize.hasSize(6));
+		MatcherAssert.assertThat(deletedObs,
+		    CoreMatchers.hasItems(Matchers.<Obs> hasProperty("voided", CoreMatchers.is(true))));
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void shouldDeletePediatricDiagnosis() throws Exception {
+		this.executeDataSet("clinicalservice/shouldDeletePediatricDiagnosis-dataset.xml");
+		
+		final String whoAdultEncounter = "c847-4ss-enc-xpto-pediatric-diagnosis";
+		
+		final List<Obs> notDeletedObs = Context.getObsService().getObservations("1005");
+		
+		MatcherAssert.assertThat(notDeletedObs, CoreMatchers.notNullValue());
+		MatcherAssert.assertThat(notDeletedObs, IsCollectionWithSize.hasSize(6));
+		MatcherAssert.assertThat(notDeletedObs,
+		    CoreMatchers.hasItems(Matchers.<Obs> hasProperty("voided", CoreMatchers.is(false))));
+		
+		Context.getService(ClinicalServiceService.class).deleteClinicalService(whoAdultEncounter,
+		    ClinicalServiceKeys.PEDIATRICS_DIAGNOSIS.getCode());
+		final Encounter encounuter = Context.getEncounterService().getEncounterByUuid(whoAdultEncounter);
+		
+		final Set<Obs> deletedObs = encounuter.getAllObs(true);
+		
+		MatcherAssert.assertThat(deletedObs, CoreMatchers.notNullValue());
+		MatcherAssert.assertThat(deletedObs, IsCollectionWithSize.hasSize(6));
+		MatcherAssert.assertThat(deletedObs,
+		    CoreMatchers.hasItems(Matchers.<Obs> hasProperty("voided", CoreMatchers.is(true))));
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void shouldDeleteAllObsIncludingObsGroupAndEnconterOfPediatricDiagnosis() throws Exception {
+		this.executeDataSet("clinicalservice/shouldDeleteAllObsIncludingObsGroupAndEnconterOfPediatricDiagnosis-dataset.xml");
+		
+		final String whoAdultEncounter = "c847-4ss-enc-xpto-pediatric-diagnosis";
+		
+		final List<Obs> notDeletedObs = Context.getObsService().getObservations("1005");
+		
+		MatcherAssert.assertThat(notDeletedObs, CoreMatchers.notNullValue());
+		MatcherAssert.assertThat(notDeletedObs, IsCollectionWithSize.hasSize(9));
+		MatcherAssert.assertThat(notDeletedObs,
+		    CoreMatchers.hasItems(Matchers.<Obs> hasProperty("voided", CoreMatchers.is(false))));
+		
+		Context.getService(ClinicalServiceService.class).deleteClinicalService(whoAdultEncounter,
+		    ClinicalServiceKeys.PEDIATRICS_DIAGNOSIS.getCode());
+		final Encounter encounuter = Context.getEncounterService().getEncounterByUuid(whoAdultEncounter);
+		
+		final Set<Obs> deletedObs = encounuter.getAllObs(true);
+		
+		MatcherAssert.assertThat(deletedObs, CoreMatchers.notNullValue());
+		MatcherAssert.assertThat(deletedObs, IsCollectionWithSize.hasSize(9));
+		MatcherAssert.assertThat(deletedObs,
+		    CoreMatchers.hasItems(Matchers.<Obs> hasProperty("voided", CoreMatchers.is(true))));
+		MatcherAssert.assertThat(encounuter, Matchers.hasProperty("voided", CoreMatchers.is(true)));
 	}
 }

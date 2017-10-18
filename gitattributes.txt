@@ -1,0 +1,85 @@
+====
+    This Source Code Form is subject to the terms of the Mozilla Public License,
+    v. 2.0. If a copy of the MPL was not distributed with this file, You can
+    obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+    the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+
+    Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+    graphic logo is a trademark of OpenMRS Inc.
+====
+
+* text=auto
+
+# Known text file extensions
+*.as text
+*.bat text
+*.cnf text
+*.conf text
+*.css text
+*.csv text
+*.dtd text
+*.erb text
+*.ftl text
+*.gitattributes text
+*.gitignore text
+*.gitkeep text
+*.gitmodules text
+*.groovy text
+*.gsp text
+*.htaccess text
+*.htm text
+*.html text
+*.java text
+*.js text
+*.js.withjstl text
+*.json text
+*.jsp text
+*.list text
+*.lock text
+*.log text
+*.markdown text
+*.md text
+*.nsh text
+*.nsi text
+*.opts text
+*.php text
+*.pl text
+*.policy text
+*.pp text
+*.project text
+*.properties text
+*.rb text
+*.rdf text
+*.scss text
+*.sh text
+*.sql text
+*.story text
+*.svg text
+*.tag text
+*.tld text
+*.txt text
+*.vm text
+*.xml text
+*.xsl text
+*.xslt text
+*.yaml text
+*.yml text
+
+# Known binary file extensions
+*.bmp binary
+*.chls binary
+*.class binary
+*.db binary
+*.eot binary
+*.exe binary
+*.gif binary
+*.gzip binary
+*.ico binary
+*.jar binary
+*.jpeg binary
+*.jpg binary
+*.omod binary
+*.png binary
+*.ttf binary
+*.woff binary
+*.zip binary

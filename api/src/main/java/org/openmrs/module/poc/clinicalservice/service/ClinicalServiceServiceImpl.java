@@ -1,3 +1,12 @@
+/**
+ * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+ * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+ *
+ * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+ * graphic logo is a trademark of OpenMRS Inc.
+ */
 package org.openmrs.module.poc.clinicalservice.service;
 
 import java.util.ArrayList;
@@ -54,17 +63,31 @@ public class ClinicalServiceServiceImpl extends BaseOpenmrsService implements Cl
 			}
 		}
 		
-		if (encounter.getAllObs().isEmpty()) {
+		final Set<Obs> remainActiveObss = encounter.getAllObs();
+		if (remainActiveObss.isEmpty()) {
 			this.encounterService.voidEncounter(encounter, "deleted All clinical Services");
+		} else {
+			
+			for (final Obs obs : remainActiveObss) {
+				
+				if (obs.getRelatedObservations().isEmpty()) {
+					this.obsService.voidObs(obs, "delete clinical service +" + obs.getConcept().getDisplayString());
+				}
+			}
+			
+			if (encounter.getAllObs().isEmpty()) {
+				
+				this.encounterService.voidEncounter(encounter, "deleted All clinical Services");
+			}
 		}
 	}
 	
 	private List<Concept> getClinicalServices(final String clinicalServiceKey) {
 		
-		final List<String> clinicalServiceUuids = MappedClinicalServices.getClinicalServices(ClinicalServiceKeys
-		        .getClinicalServiceByCode(clinicalServiceKey));
+		final List<String> clinicalServiceUuids = MappedClinicalServices
+		        .getClinicalServices(ClinicalServiceKeys.getClinicalServiceByCode(clinicalServiceKey));
 		
-		final List<Concept> clinicalServices = new ArrayList<Concept>();
+		final List<Concept> clinicalServices = new ArrayList<>();
 		
 		for (final String clinicalServiceUuid : clinicalServiceUuids) {
 			
