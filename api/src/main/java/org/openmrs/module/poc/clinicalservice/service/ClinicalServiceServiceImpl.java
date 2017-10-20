@@ -68,9 +68,10 @@ public class ClinicalServiceServiceImpl extends BaseOpenmrsService implements Cl
 			this.encounterService.voidEncounter(encounter, "deleted All clinical Services");
 		} else {
 			
+			final List<Concept> allClinicalServices = this.getAllClinicalServices();
 			for (final Obs obs : remainActiveObss) {
 				
-				if (obs.getRelatedObservations().isEmpty()) {
+				if (!allClinicalServices.contains(obs.getConcept())) {
 					this.obsService.voidObs(obs, "delete clinical service +" + obs.getConcept().getDisplayString());
 				}
 			}
@@ -94,6 +95,17 @@ public class ClinicalServiceServiceImpl extends BaseOpenmrsService implements Cl
 			clinicalServices.add(this.conceptService.getConceptByUuid(clinicalServiceUuid));
 		}
 		return clinicalServices;
+	}
+	
+	private List<Concept> getAllClinicalServices() {
+		
+		final List<Concept> allClinicalServices = new ArrayList<>();
+		
+		for (final ClinicalServiceKeys clinicalServiceKey : ClinicalServiceKeys.values()) {
+			
+			allClinicalServices.addAll(this.getClinicalServices(clinicalServiceKey.getCode()));
+		}
+		return allClinicalServices;
 	}
 	
 	@Override
