@@ -260,7 +260,7 @@ public class ClinicalServiceServiceTest extends BasePOCModuleContextSensitiveTes
 		final List<Obs> notDeletedObs = Context.getObsService().getObservations("1005");
 		
 		MatcherAssert.assertThat(notDeletedObs, CoreMatchers.notNullValue());
-		MatcherAssert.assertThat(notDeletedObs, IsCollectionWithSize.hasSize(3));
+		MatcherAssert.assertThat(notDeletedObs, IsCollectionWithSize.hasSize(2));
 		MatcherAssert.assertThat(notDeletedObs,
 		    CoreMatchers.hasItems(Matchers.<Obs> hasProperty("voided", CoreMatchers.is(false))));
 		
@@ -271,7 +271,7 @@ public class ClinicalServiceServiceTest extends BasePOCModuleContextSensitiveTes
 		final Set<Obs> deletedObs = encounuter.getAllObs(true);
 		
 		MatcherAssert.assertThat(deletedObs, CoreMatchers.notNullValue());
-		MatcherAssert.assertThat(deletedObs, IsCollectionWithSize.hasSize(3));
+		MatcherAssert.assertThat(deletedObs, IsCollectionWithSize.hasSize(2));
 		MatcherAssert.assertThat(deletedObs,
 		    CoreMatchers.hasItems(Matchers.<Obs> hasProperty("voided", CoreMatchers.is(true))));
 	}

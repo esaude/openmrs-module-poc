@@ -86,8 +86,7 @@ public class MappedClinicalServices {
 		
 		// RELEVANT_ASPECTS
 		MappedClinicalServices.clinicalServices.put(ClinicalServiceKeys.RELEVANT_ASPECTS,
-		    Arrays.asList(ClinicalServicesConceptUUIDConstants.POC_MAPPING_ANAMNESE_DATE,
-		        ClinicalServicesConceptUUIDConstants.OBSERVATION_STORY,
+		    Arrays.asList(ClinicalServicesConceptUUIDConstants.OBSERVATION_STORY,
 		        ClinicalServicesConceptUUIDConstants.TYPE_OF_MESSAGE));
 		
 		// ADULT_ANAMNESE_EXAMS
