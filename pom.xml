@@ -280,6 +280,10 @@
 						<includes>
 							<include>org/openmrs/**</include>
 						</includes>
+						<excludes>
+							<exclude>
+								**/*OpenMRSPOCModuleActivator.class</exclude>
+						</excludes>
 					</configuration>
 					<executions>
 						<execution>
