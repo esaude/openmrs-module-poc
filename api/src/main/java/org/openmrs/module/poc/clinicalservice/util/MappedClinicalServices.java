@@ -58,7 +58,7 @@ public class MappedClinicalServices {
 		        ClinicalServicesConceptUUIDConstants.RESPIRATORY_FREQUENCY,
 		        ClinicalServicesConceptUUIDConstants.POC_MAPPING_VITALS_DATE));
 		
-		// VITALS_CHILD
+		// VITALS_PEDIATRICS
 		MappedClinicalServices.clinicalServices.put(ClinicalServiceKeys.VITALS_PEDIATRICS,
 		    Arrays.asList(ClinicalServicesConceptUUIDConstants.TEMPERATURE,
 		        ClinicalServicesConceptUUIDConstants.WEIGHT, ClinicalServicesConceptUUIDConstants.HEIGHT,
@@ -72,7 +72,8 @@ public class MappedClinicalServices {
 		        ClinicalServicesConceptUUIDConstants.WHO_STAGE_1_ADULT,
 		        ClinicalServicesConceptUUIDConstants.WHO_STAGE_2_ADULT,
 		        ClinicalServicesConceptUUIDConstants.WHO_STAGE_3_ADULT,
-		        ClinicalServicesConceptUUIDConstants.WHO_STAGE_4_ADULT));
+		        ClinicalServicesConceptUUIDConstants.WHO_STAGE_4_ADULT,
+		        ClinicalServicesConceptUUIDConstants.CURRENT_WHO_HIV_STAGE));
 		
 		// WHO_STAGE_PEDIATRICS
 		MappedClinicalServices.clinicalServices.put(ClinicalServiceKeys.WHO_STAGE_PEDIATRICS,
@@ -80,7 +81,8 @@ public class MappedClinicalServices {
 		        ClinicalServicesConceptUUIDConstants.WHO_STAGE_1_ADULT,
 		        ClinicalServicesConceptUUIDConstants.WHO_STAGE_2_ADULT,
 		        ClinicalServicesConceptUUIDConstants.WHO_STAGE_3_ADULT,
-		        ClinicalServicesConceptUUIDConstants.WHO_STAGE_4_ADULT));
+		        ClinicalServicesConceptUUIDConstants.WHO_STAGE_4_ADULT,
+		        ClinicalServicesConceptUUIDConstants.CURRENT_WHO_HIV_STAGE));
 		
 		// RELEVANT_ASPECTS
 		MappedClinicalServices.clinicalServices.put(ClinicalServiceKeys.RELEVANT_ASPECTS,
@@ -127,10 +129,6 @@ public class MappedClinicalServices {
 		        ClinicalServicesConceptUUIDConstants.DIAGNOSIS_ADDED,
 		        ClinicalServicesConceptUUIDConstants.NON_CODED_DIAGNOSIS,
 		        ClinicalServicesConceptUUIDConstants.RETURN_VISIT_DATE));
-		
-	}
-	
-	private MappedClinicalServices() {
 	}
 	
 	public static List<String> getClinicalServices(final ClinicalServiceKeys serviceKey) {

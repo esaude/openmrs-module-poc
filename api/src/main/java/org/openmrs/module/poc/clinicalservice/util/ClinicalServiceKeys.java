@@ -54,6 +54,7 @@ public enum ClinicalServiceKeys {
 				return clinicalService;
 			}
 		}
+		
 		throw new IllegalArgumentException("Clinical Service not found for given code " + code);
 	}
 }

@@ -28,17 +28,17 @@ public class EncounterClinicalServiceRule implements IValidationRule<Encounter> 
 			throw new POCBusinessException("encounter not provided");
 		}
 		
-		final Encounter encounterService = Context.getEncounterService().getEncounterByUuid(encounter.getUuid());
+		final Encounter encounterFound = Context.getEncounterService().getEncounterByUuid(encounter.getUuid());
 		
-		if (encounterService == null) {
+		if (encounterFound == null) {
 			throw new POCBusinessException("encounter not found for given uuid " + encounter.getUuid());
 		}
 		
-		if (encounter.isVoided()) {
+		if (encounterFound.isVoided()) {
 			throw new POCBusinessException("Cannot delete services for a voided encounter " + encounter.getUuid());
 		}
 		
-		final Set<Obs> allNonVoidedEncounterObs = encounterService.getAllObs();
+		final Set<Obs> allNonVoidedEncounterObs = encounterFound.getAllObs();
 		
 		if (allNonVoidedEncounterObs.isEmpty()) {
 			throw new POCBusinessException("Cannot delete services for encounter without non voided Obs "

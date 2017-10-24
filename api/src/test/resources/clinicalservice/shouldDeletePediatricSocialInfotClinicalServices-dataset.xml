@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+
+    This Source Code Form is subject to the terms of the Mozilla Public License,
+    v. 2.0. If a copy of the MPL was not distributed with this file, You can
+    obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+    the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+
+    Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+    graphic logo is a trademark of OpenMRS Inc.
+
+-->
+
+<dataset>
+	
+		<!-- Encounter For SOCIAL_INFO_ADULT -->
+  	<encounter encounter_id="1002" encounter_type="2" patient_id="7" location_id="1" form_id="1" encounter_datetime="2008-08-15 00:00:00.0" creator="1" date_created="2008-08-18 14:22:17.0" voided="false" uuid="eec646cb-c8-enc-social-inf-pediatric"/>
+  	<obs obs_id="102" person_id="7" concept_id="115" encounter_id="1002" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_numeric="61.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000012"/>
+ 	<obs obs_id="113" person_id="7" concept_id="116" encounter_id="1002" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_numeric="61.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000013"/>
+	<obs obs_id="114" person_id="7" concept_id="117" encounter_id="1002" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_numeric="61.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000014"/>
+	<obs obs_id="115" person_id="7" concept_id="118" encounter_id="1002" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_numeric="61.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000015"/>
+	<obs obs_id="116" person_id="7" concept_id="119" encounter_id="1002" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_numeric="61.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000016"/>
+	<obs obs_id="117" person_id="7" concept_id="120" encounter_id="1002" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_numeric="61.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000017"/>
+	<obs obs_id="118" person_id="7" concept_id="121" encounter_id="1002" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_numeric="61.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000018"/>
+	<obs obs_id="119" person_id="7" concept_id="122" encounter_id="1002" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_numeric="61.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000019"/>
+	<obs obs_id="120" person_id="7" concept_id="123" encounter_id="1002" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_numeric="61.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000020"/>
+	<obs obs_id="121" person_id="7" concept_id="124" encounter_id="1002" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_numeric="61.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000021"/>
+	<obs obs_id="122" person_id="7" concept_id="125" encounter_id="1002" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_numeric="61.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000022"/>
+	<obs obs_id="123" person_id="7" concept_id="126" encounter_id="1002" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_numeric="61.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000023"/>
+	<obs obs_id="124" person_id="7" concept_id="127" encounter_id="1002" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_numeric="61.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000024"/>
+	<obs obs_id="125" person_id="7" concept_id="128" encounter_id="1002" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_numeric="61.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000025"/>
+	<obs obs_id="126" person_id="7" concept_id="80" encounter_id="1002" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_numeric="61.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000026"/>
+	<obs obs_id="127" person_id="7" concept_id="81" encounter_id="1002" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_numeric="61.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000027"/>
+	<obs obs_id="128" person_id="7" concept_id="82" encounter_id="1002" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_numeric="61.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000028"/>
+</dataset> 
