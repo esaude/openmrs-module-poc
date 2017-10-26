@@ -16,13 +16,12 @@ import java.util.Set;
 import org.openmrs.Concept;
 import org.openmrs.Encounter;
 import org.openmrs.Obs;
-import org.openmrs.api.ConceptService;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.ObsService;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.poc.api.common.exception.POCBusinessException;
 import org.openmrs.module.poc.clinicalservice.util.ClinicalServiceKeys;
-import org.openmrs.module.poc.clinicalservice.util.MappedClinicalServices;
+import org.openmrs.module.poc.clinicalservice.util.ClinicalServiceUtil;
 import org.openmrs.module.poc.clinicalservice.validation.ClinicalServiceValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -30,12 +29,13 @@ public class ClinicalServiceServiceImpl extends BaseOpenmrsService implements Cl
 	
 	private ObsService obsService;
 	
-	private ConceptService conceptService;
-	
 	private EncounterService encounterService;
 	
 	@Autowired
 	private ClinicalServiceValidator clinicalServiceValidator;
+	
+	@Autowired
+	private ClinicalServiceUtil clinicalServiceUtil;
 	
 	@Override
 	public void deleteClinicalService(final String encounterUuid, final String clinicalServiceKey)
@@ -47,7 +47,7 @@ public class ClinicalServiceServiceImpl extends BaseOpenmrsService implements Cl
 		this.clinicalServiceValidator.validateDeletion(es, clinicalServiceKey);
 		
 		final Encounter encounter = this.encounterService.getEncounterByUuid(encounterUuid);
-		final List<Concept> clinicalServices = this.getClinicalServices(clinicalServiceKey);
+		final List<Concept> clinicalServices = this.clinicalServiceUtil.getNotVoidedConcepts(clinicalServiceKey);
 		
 		final Set<Obs> allObs = encounter.getAllObs();
 		
@@ -55,11 +55,8 @@ public class ClinicalServiceServiceImpl extends BaseOpenmrsService implements Cl
 			
 			final Concept obsClinicalService = obs.getConcept();
 			
-			if (clinicalServices.contains(obsClinicalService)) {
-				if (!obs.isVoided()) {
-					this.obsService.voidObs(obs, "delete clinical service +" + obsClinicalService.getDisplayString());
-				}
-				clinicalServices.remove(obsClinicalService);
+			if (clinicalServices.contains(obsClinicalService) && !obs.isVoided()) {
+				this.obsService.voidObs(obs, "delete clinical service +" + obsClinicalService.getDisplayString());
 			}
 		}
 		
@@ -68,13 +65,13 @@ public class ClinicalServiceServiceImpl extends BaseOpenmrsService implements Cl
 			this.encounterService.voidEncounter(encounter, "deleted All clinical Services");
 		} else {
 			
+			final List<Concept> allClinicalServices = this.getAllClinicalServices();
 			for (final Obs obs : remainActiveObss) {
 				
-				if (obs.getRelatedObservations().isEmpty()) {
+				if (!allClinicalServices.contains(obs.getConcept()) && obs.getRelatedObservations().isEmpty()) {
 					this.obsService.voidObs(obs, "delete clinical service +" + obs.getConcept().getDisplayString());
 				}
 			}
-			
 			if (encounter.getAllObs().isEmpty()) {
 				
 				this.encounterService.voidEncounter(encounter, "deleted All clinical Services");
@@ -82,28 +79,20 @@ public class ClinicalServiceServiceImpl extends BaseOpenmrsService implements Cl
 		}
 	}
 	
-	private List<Concept> getClinicalServices(final String clinicalServiceKey) {
+	private List<Concept> getAllClinicalServices() {
 		
-		final List<String> clinicalServiceUuids = MappedClinicalServices
-		        .getClinicalServices(ClinicalServiceKeys.getClinicalServiceByCode(clinicalServiceKey));
+		final List<Concept> allClinicalServices = new ArrayList<>();
 		
-		final List<Concept> clinicalServices = new ArrayList<>();
-		
-		for (final String clinicalServiceUuid : clinicalServiceUuids) {
+		for (final ClinicalServiceKeys clinicalServiceKey : ClinicalServiceKeys.values()) {
 			
-			clinicalServices.add(this.conceptService.getConceptByUuid(clinicalServiceUuid));
+			allClinicalServices.addAll(this.clinicalServiceUtil.getNotVoidedConcepts(clinicalServiceKey.getCode()));
 		}
-		return clinicalServices;
+		return allClinicalServices;
 	}
 	
 	@Override
 	public void setObsService(final ObsService obsService) {
 		this.obsService = obsService;
-	}
-	
-	@Override
-	public void setConceptService(final ConceptService conceptService) {
-		this.conceptService = conceptService;
 	}
 	
 	@Override

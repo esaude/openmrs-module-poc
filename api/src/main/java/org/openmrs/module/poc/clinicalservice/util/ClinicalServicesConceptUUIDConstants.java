@@ -123,7 +123,6 @@ public class ClinicalServicesConceptUUIDConstants {
 	
 	public static final String RETURN_VISIT_DATE = "e1dae630-1d5f-11e0-b929-000c29ad1d07";
 	
-	private ClinicalServicesConceptUUIDConstants() {
-		
-	}
+	public static final String CURRENT_WHO_HIV_STAGE = "e1e53c02-1d5f-11e0-b929-000c29ad1d07";
+	
 }

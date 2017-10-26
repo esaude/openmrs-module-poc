@@ -212,22 +212,14 @@
 
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>buildnumber-maven-plugin</artifactId>
-					<version>1.1</version>
+					<artifactId>cobertura-maven-plugin</artifactId>
+					<version>2.6</version>
 					<configuration>
-						<buildNumberPropertyName>revisionNumber</buildNumberPropertyName>
-						<getRevisionOnlyOnce>true</getRevisionOnlyOnce>
-						<revisionOnScmFailure>0</revisionOnScmFailure>
-						<shortRevisionLength>6</shortRevisionLength>
+						<format>xml</format>
+						<maxmem>256m</maxmem>
+						<!-- aggregated reports for multi-module projects -->
+						<aggregate>true</aggregate>
 					</configuration>
-					<executions>
-						<execution>
-							<phase>validate</phase>
-							<goals>
-								<goal>create</goal>
-							</goals>
-						</execution>
-					</executions>
 				</plugin>
 
 				<!--This plugin's configuration is used to store Eclipse m2e settings 
@@ -291,6 +283,10 @@
 						<includes>
 							<include>org/openmrs/**</include>
 						</includes>
+						<excludes>
+							<exclude>
+								**/*OpenMRSPOCModuleActivator.class</exclude>
+						</excludes>
 					</configuration>
 					<executions>
 						<execution>
@@ -304,7 +300,10 @@
 				<plugin>
 					<groupId>org.eluder.coveralls</groupId>
 					<artifactId>coveralls-maven-plugin</artifactId>
-					<version>4.2.0</version>
+					<version>4.3.0</version>
+					<configuration>
+						<repoToken>kWCA8AAQxrv31HNRdf1y6xrOhWTL0dFWQ</repoToken>
+					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>com.mycila</groupId>

@@ -9,7 +9,6 @@
  */
 package org.openmrs.module.poc.clinicalservice.service;
 
-import org.openmrs.api.ConceptService;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.ObsService;
 import org.openmrs.api.OpenmrsService;
@@ -20,8 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 public interface ClinicalServiceService extends OpenmrsService {
 	
 	void setObsService(ObsService obsService);
-	
-	void setConceptService(ConceptService conceptService);
 	
 	void setEncounterService(EncounterService encounterService);
 	
