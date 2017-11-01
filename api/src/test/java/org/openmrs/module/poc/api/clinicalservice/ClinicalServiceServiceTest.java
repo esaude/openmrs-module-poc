@@ -407,4 +407,9 @@ public class ClinicalServiceServiceTest extends BasePOCModuleContextSensitiveTes
 		    CoreMatchers.hasItems(Matchers.<Obs> hasProperty("voided", CoreMatchers.is(true))));
 		MatcherAssert.assertThat(encounuter, Matchers.hasProperty("voided", CoreMatchers.is(true)));
 	}
+	
+	@Test
+	public void testeMessageBundle() {
+		
+	}
 }

@@ -58,4 +58,17 @@
 		</property>
 	</bean>
 	
+	<bean id="mutableResourceBundleMessageSource" class="org.openmrs.module.poc.api.messagesource.POCMutableResourceBundleMessageSource">
+		<property name="basenames">
+			<!--  ABKTODO: Ugh. Presumes to be in a web application... -->
+			<list>
+				<value>classpath:custom_messages</value>
+				<value>classpath:messages</value>
+			</list>
+		</property>
+		<property name="useCodeAsDefaultMessage"><value>true</value></property>
+		<property name="cacheSeconds" value="5" />
+		<property name="defaultEncoding"><value>UTF-8</value></property>
+	</bean>
+	
 </beans>
