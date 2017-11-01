@@ -35,7 +35,7 @@
 
 	<scm>
 		<connection>scm:git:https://github.com/esaude/openmrs-module-poc.git</connection>
-		<developerConnection>scm:git:https://github.com/esaude/openmrs-module-pco.git</developerConnection>
+		<developerConnection>scm:git:https://github.com/esaude/openmrs-module-poc.git</developerConnection>
 		<url>https://github.com/esaude/openmrs-module-</url>
 		<tag>HEAD</tag>
 	</scm> 
