@@ -28,8 +28,6 @@
   		    http://www.springframework.org/schema/util
   		    http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 
-	<context:component-scan base-package="org.openmrs.module.poc"/>
-	
 	<!-- Services accessible via Context.getService() -->
 	<bean parent="serviceContext">
 		<property name="moduleService">
@@ -57,9 +55,13 @@
 		</property>
 	</bean>
 	
-	<bean id="mutableResourceBundleMessageSource" class="org.openmrs.module.poc.api.messagesource.POCMutableResourceBundleMessageSource">
+	<bean id="messageSourceServiceTarget" class="org.openmrs.messagesource.impl.MessageSourceServiceImpl">
+		<property name="activeMessageSource"><ref bean="mutableResourceBundleMessageSource"/>
+		</property>
+	</bean>
+	
+	<bean id="mutableResourceBundleMessageSource" class="org.openmrs.messagesource.impl.MutableResourceBundleMessageSource">
 		<property name="basenames">
-			<!--  ABKTODO: Ugh. Presumes to be in a web application... -->
 			<list>
 				<value>classpath:custom_messages</value>
 				<value>classpath:messages</value>
@@ -69,8 +71,5 @@
 		<property name="cacheSeconds" value="5" />
 		<property name="defaultEncoding"><value>UTF-8</value></property>
 	</bean>
-	
-		<!--  **************************  VALIDATOR CONFIGURATION  *************************  -->
-	<bean id="pocPatientProgramValidator" class="org.openmrs.module.poc.api.validator.POCPatientProgramValidator" />
 	
 </beans>

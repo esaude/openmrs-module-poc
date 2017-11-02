@@ -57,7 +57,8 @@ public class ClinicalServiceServiceImpl extends BaseOpenmrsService implements Cl
 			
 			final Concept obsClinicalService = obs.getConcept();
 			
-			final String infoMessage = Context.getMessageSourceService().getMessage("info.clinical.service.inactivated",
+			final String infoMessage = Context.getMessageSourceService().getMessage(
+			    "poc.info.clinical.service.inactivated",
 			    Arrays.asList(obsClinicalService.getDisplayString()).toArray(), Context.getLocale());
 			
 			if (clinicalServices.contains(obsClinicalService) && !obs.isVoided()) {
@@ -69,14 +70,14 @@ public class ClinicalServiceServiceImpl extends BaseOpenmrsService implements Cl
 		if (remainActiveObss.isEmpty()) {
 			
 			this.encounterService.voidEncounter(encounter, Context.getMessageSourceService()
-			        .getMessage("info.encounter.inactivated.due.deleted.all.clinical.services"));
+			        .getMessage("poc.info.encounter.inactivated.due.deleted.all.clinical.services"));
 		} else {
 			
 			final List<Concept> allClinicalServices = this.getAllClinicalServices();
 			for (final Obs obs : remainActiveObss) {
 				
 				final String infoMessage = Context.getMessageSourceService().getMessage(
-				    "info.clinical.service.inactivated",
+				    "poc.info.clinical.service.inactivated",
 				    Arrays.asList(obs.getConcept().getDisplayString()).toArray(), Context.getLocale());
 				
 				if (!allClinicalServices.contains(obs.getConcept()) && obs.getRelatedObservations().isEmpty()) {
@@ -86,7 +87,7 @@ public class ClinicalServiceServiceImpl extends BaseOpenmrsService implements Cl
 			if (encounter.getAllObs().isEmpty()) {
 				
 				this.encounterService.voidEncounter(encounter, Context.getMessageSourceService()
-				        .getMessage("info.encounter.inactivated.due.deleted.all.clinical.services"));
+				        .getMessage("poc.info.encounter.inactivated.due.deleted.all.clinical.services"));
 			}
 		}
 	}

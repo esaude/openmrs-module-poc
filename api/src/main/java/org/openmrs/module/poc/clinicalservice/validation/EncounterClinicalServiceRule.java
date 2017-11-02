@@ -25,24 +25,24 @@ public class EncounterClinicalServiceRule implements IValidationRule<Encounter> 
 	public void validate(final Encounter encounter) throws POCBusinessException {
 		
 		if ((encounter == null) || (encounter.getUuid() == null)) {
-			throw new POCBusinessException("error.encounter.not.provided");
+			throw new POCBusinessException("poc.error.encounter.not.provided");
 		}
 		
 		final Encounter encounterFound = Context.getEncounterService().getEncounterByUuid(encounter.getUuid());
 		
 		if (encounterFound == null) {
-			throw new POCBusinessException("error.enconter.not.found.for.given.uuid", encounter.getUuid());
+			throw new POCBusinessException("poc.error.enconter.not.found.for.given.uuid", encounter.getUuid());
 		}
 		
 		if (encounterFound.isVoided()) {
-			throw new POCBusinessException("error.cannot.delete.clinical.services.for.voided.encounter",
+			throw new POCBusinessException("poc.error.cannot.delete.clinical.services.for.voided.encounter",
 			        encounter.getUuid());
 		}
 		
 		final Set<Obs> allNonVoidedEncounterObs = encounterFound.getAllObs();
 		
 		if (allNonVoidedEncounterObs.isEmpty()) {
-			throw new POCBusinessException("error.cannot.delete.clinical.services.for.encounter.without.active.obs",
+			throw new POCBusinessException("poc.error.cannot.delete.clinical.services.for.encounter.without.active.obs",
 			        encounter.getUuid());
 		}
 	}
