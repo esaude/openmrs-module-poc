@@ -28,8 +28,7 @@
   		    http://www.springframework.org/schema/util
   		    http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 
-	<!-- Add here beans related to the API context -->
-
+	<context:component-scan base-package="org.openmrs.module.poc"/>
 	
 	<!-- Services accessible via Context.getService() -->
 	<bean parent="serviceContext">
@@ -70,5 +69,8 @@
 		<property name="cacheSeconds" value="5" />
 		<property name="defaultEncoding"><value>UTF-8</value></property>
 	</bean>
+	
+		<!--  **************************  VALIDATOR CONFIGURATION  *************************  -->
+	<bean id="pocPatientProgramValidator" class="org.openmrs.module.poc.api.validator.POCPatientProgramValidator" />
 	
 </beans>
