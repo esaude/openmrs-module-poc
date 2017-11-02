@@ -54,7 +54,6 @@ public enum ClinicalServiceKeys {
 				return clinicalService;
 			}
 		}
-		
-		throw new IllegalArgumentException("Clinical Service not found for given code " + code);
+		throw new IllegalArgumentException("poc.error.clinical.service.not.found.for.given.code");
 	}
 }

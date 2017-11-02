@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-
-    This Source Code Form is subject to the terms of the Mozilla Public License,
-    v. 2.0. If a copy of the MPL was not distributed with this file, You can
-    obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
-    the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
-
-    Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
-    graphic logo is a trademark of OpenMRS Inc.
-
--->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public 
+	License, v. 2.0. If a copy of the MPL was not distributed with this file, 
+	You can obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed 
+	under the terms of the Healthcare Disclaimer located at http://openmrs.org/license. 
+	Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS 
+	graphic logo is a trademark of OpenMRS Inc. -->
 
 <module configVersion="1.2">
 
@@ -47,6 +42,7 @@
 
 	<!-- Internationalization -->
 	<!-- All message codes should start with ${project.parent.artifactId}. -->
+
 	<messages>
 		<lang>en</lang>
 		<file>messages.properties</file>
@@ -58,6 +54,10 @@
 	<messages>
 		<lang>es</lang>
 		<file>messages_es.properties</file>
+	</messages>
+	<messages>
+		<lang>pt</lang>
+		<file>messages_pt.properties</file>
 	</messages>
 	<!-- /Internationalization -->
 

@@ -10,6 +10,7 @@
 package org.openmrs.module.poc.clinicalservice.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -18,6 +19,7 @@ import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.ObsService;
+import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.poc.api.common.exception.POCBusinessException;
 import org.openmrs.module.poc.clinicalservice.util.ClinicalServiceKeys;
@@ -55,26 +57,37 @@ public class ClinicalServiceServiceImpl extends BaseOpenmrsService implements Cl
 			
 			final Concept obsClinicalService = obs.getConcept();
 			
+			final String infoMessage = Context.getMessageSourceService().getMessage(
+			    "poc.info.clinical.service.inactivated",
+			    Arrays.asList(obsClinicalService.getDisplayString()).toArray(), Context.getLocale());
+			
 			if (clinicalServices.contains(obsClinicalService) && !obs.isVoided()) {
-				this.obsService.voidObs(obs, "delete clinical service +" + obsClinicalService.getDisplayString());
+				this.obsService.voidObs(obs, infoMessage);
 			}
 		}
 		
 		final Set<Obs> remainActiveObss = encounter.getAllObs();
 		if (remainActiveObss.isEmpty()) {
-			this.encounterService.voidEncounter(encounter, "deleted All clinical Services");
+			
+			this.encounterService.voidEncounter(encounter, Context.getMessageSourceService()
+			        .getMessage("poc.info.encounter.inactivated.due.deleted.all.clinical.services"));
 		} else {
 			
 			final List<Concept> allClinicalServices = this.getAllClinicalServices();
 			for (final Obs obs : remainActiveObss) {
 				
+				final String infoMessage = Context.getMessageSourceService().getMessage(
+				    "poc.info.clinical.service.inactivated",
+				    Arrays.asList(obs.getConcept().getDisplayString()).toArray(), Context.getLocale());
+				
 				if (!allClinicalServices.contains(obs.getConcept()) && obs.getRelatedObservations().isEmpty()) {
-					this.obsService.voidObs(obs, "delete clinical service +" + obs.getConcept().getDisplayString());
+					this.obsService.voidObs(obs, infoMessage);
 				}
 			}
 			if (encounter.getAllObs().isEmpty()) {
 				
-				this.encounterService.voidEncounter(encounter, "deleted All clinical Services");
+				this.encounterService.voidEncounter(encounter, Context.getMessageSourceService()
+				        .getMessage("poc.info.encounter.inactivated.due.deleted.all.clinical.services"));
 			}
 		}
 	}

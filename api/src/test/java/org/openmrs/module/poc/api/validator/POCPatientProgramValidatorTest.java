@@ -9,17 +9,16 @@
  */
 package org.openmrs.module.poc.api.validator;
 
+import java.util.Calendar;
+
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.MatcherAssert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openmrs.Patient;
 import org.openmrs.PatientProgram;
 import org.openmrs.Program;
 import org.springframework.validation.BindException;
-
-import java.util.Calendar;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 public class POCPatientProgramValidatorTest {
 	
@@ -31,15 +30,15 @@ public class POCPatientProgramValidatorTest {
 	
 	@Before
 	public void setUp() {
-		Program program = new Program();
-		Patient patient = new Patient();
-		patientProgram = new PatientProgram();
-		patientProgram.setProgram(program);
-		patientProgram.setPatient(patient);
+		final Program program = new Program();
+		final Patient patient = new Patient();
+		this.patientProgram = new PatientProgram();
+		this.patientProgram.setProgram(program);
+		this.patientProgram.setPatient(patient);
 		
-		pocPatientProgramValidator = new POCPatientProgramValidator();
+		this.pocPatientProgramValidator = new POCPatientProgramValidator();
 		
-		errors = new BindException(patientProgram, "patientProgram");
+		this.errors = new BindException(this.patientProgram, "patientProgram");
 	}
 	
 	/**
@@ -47,13 +46,14 @@ public class POCPatientProgramValidatorTest {
 	 */
 	@Test
 	public void shouldFailGivenTargetWithPTVProgramAndMalePatientIsAged6YearsOrOlder() throws Exception {
-		patientProgram.getProgram().setUuid(POCPatientProgramValidator.PTV_ETV_PROGRAM_UUID);
-		patientProgram.getPatient().setBirthdateFromAge(6, null);
-		patientProgram.getPatient().setGender("M");
+		this.patientProgram.getProgram().setUuid(POCPatientProgramValidator.PTV_ETV_PROGRAM_UUID);
+		this.patientProgram.getPatient().setBirthdateFromAge(6, null);
+		this.patientProgram.getPatient().setGender("M");
 		
-		pocPatientProgramValidator.validate(patientProgram, errors);
+		this.pocPatientProgramValidator.validate(this.patientProgram, this.errors);
 		
-		assertThat(errors.getGlobalError().getCode(), is("error.patientProgram.patientMustBeAged5OrYounger"));
+		MatcherAssert.assertThat(this.errors.getGlobalError().getCode(),
+		    CoreMatchers.is("poc.error.patientProgram.patientMustBeAged5OrYounger"));
 	}
 	
 	/**
@@ -61,13 +61,13 @@ public class POCPatientProgramValidatorTest {
 	 */
 	@Test
 	public void shouldPassGiveTargetWithPTVProgramAndMalePatientAged5YearsOrYounger() throws Exception {
-		patientProgram.getProgram().setUuid(POCPatientProgramValidator.PTV_ETV_PROGRAM_UUID);
-		patientProgram.getPatient().setBirthdateFromAge(5, null);
-		patientProgram.getPatient().setGender("M");
+		this.patientProgram.getProgram().setUuid(POCPatientProgramValidator.PTV_ETV_PROGRAM_UUID);
+		this.patientProgram.getPatient().setBirthdateFromAge(5, null);
+		this.patientProgram.getPatient().setGender("M");
 		
-		pocPatientProgramValidator.validate(patientProgram, errors);
+		this.pocPatientProgramValidator.validate(this.patientProgram, this.errors);
 		
-		assertThat(errors.hasGlobalErrors(), is(false));
+		MatcherAssert.assertThat(this.errors.hasGlobalErrors(), CoreMatchers.is(false));
 	}
 	
 	/**
@@ -75,13 +75,13 @@ public class POCPatientProgramValidatorTest {
 	 */
 	@Test
 	public void shouldPassGivenTargetWithPTVProgramAndFemalePatient() throws Exception {
-		patientProgram.getProgram().setUuid(POCPatientProgramValidator.PTV_ETV_PROGRAM_UUID);
-		patientProgram.getPatient().setBirthdateFromAge(6, null);
-		patientProgram.getPatient().setGender("F");
+		this.patientProgram.getProgram().setUuid(POCPatientProgramValidator.PTV_ETV_PROGRAM_UUID);
+		this.patientProgram.getPatient().setBirthdateFromAge(6, null);
+		this.patientProgram.getPatient().setGender("F");
 		
-		pocPatientProgramValidator.validate(patientProgram, errors);
+		this.pocPatientProgramValidator.validate(this.patientProgram, this.errors);
 		
-		assertThat(errors.hasGlobalErrors(), is(false));
+		MatcherAssert.assertThat(this.errors.hasGlobalErrors(), CoreMatchers.is(false));
 	}
 	
 	/**
@@ -89,15 +89,15 @@ public class POCPatientProgramValidatorTest {
 	 */
 	@Test
 	public void shouldFailGivenTargetWithCCRProgramAndPatientAged18MonthsOrOlder() throws Exception {
-		patientProgram.getProgram().setUuid(POCPatientProgramValidator.CCR_PROGRAM_UUID);
-		Calendar monthsAgo = Calendar.getInstance();
+		this.patientProgram.getProgram().setUuid(POCPatientProgramValidator.CCR_PROGRAM_UUID);
+		final Calendar monthsAgo = Calendar.getInstance();
 		monthsAgo.add(Calendar.MONTH, -18);
-		patientProgram.getPatient().setBirthdate(monthsAgo.getTime());
+		this.patientProgram.getPatient().setBirthdate(monthsAgo.getTime());
 		
-		pocPatientProgramValidator.validate(patientProgram, errors);
+		this.pocPatientProgramValidator.validate(this.patientProgram, this.errors);
 		
-		assertThat(errors.getGlobalError().getCode(),
-		    is("error.patientProgram.patientMustBeYoungerThan18Months"));
+		MatcherAssert.assertThat(this.errors.getGlobalError().getCode(),
+		    CoreMatchers.is("poc.error.patientProgram.patientMustBeYoungerThan18Months"));
 	}
 	
 	/**
@@ -105,13 +105,13 @@ public class POCPatientProgramValidatorTest {
 	 */
 	@Test
 	public void shouldPassGivenTargetWithCCRProgramAndPatientAged17MonthsOrYounger() throws Exception {
-		patientProgram.getProgram().setUuid(POCPatientProgramValidator.CCR_PROGRAM_UUID);
-		Calendar monthsAgo = Calendar.getInstance();
+		this.patientProgram.getProgram().setUuid(POCPatientProgramValidator.CCR_PROGRAM_UUID);
+		final Calendar monthsAgo = Calendar.getInstance();
 		monthsAgo.add(Calendar.MONTH, -17);
-		patientProgram.getPatient().setBirthdate(monthsAgo.getTime());
+		this.patientProgram.getPatient().setBirthdate(monthsAgo.getTime());
 		
-		pocPatientProgramValidator.validate(patientProgram, errors);
+		this.pocPatientProgramValidator.validate(this.patientProgram, this.errors);
 		
-		assertThat(errors.hasGlobalErrors(), is(false));
+		MatcherAssert.assertThat(this.errors.hasGlobalErrors(), CoreMatchers.is(false));
 	}
 }

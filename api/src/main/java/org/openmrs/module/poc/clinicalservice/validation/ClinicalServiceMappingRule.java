@@ -30,7 +30,7 @@ public class ClinicalServiceMappingRule {
 			
 		}
 		catch (final IllegalArgumentException e) {
-			throw new POCBusinessException(e.getMessage());
+			throw new POCBusinessException(e.getMessage(), servicekey);
 		}
 	}
 }

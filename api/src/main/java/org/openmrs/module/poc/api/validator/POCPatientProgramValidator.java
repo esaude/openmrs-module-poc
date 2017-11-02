@@ -9,6 +9,8 @@
  */
 package org.openmrs.module.poc.api.validator;
 
+import java.util.Date;
+
 import org.joda.time.DateTime;
 import org.joda.time.Months;
 import org.openmrs.Patient;
@@ -16,8 +18,6 @@ import org.openmrs.PatientProgram;
 import org.openmrs.annotation.Handler;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-
-import java.util.Date;
 
 @Handler(supports = { PatientProgram.class }, order = 51)
 public class POCPatientProgramValidator implements Validator {
@@ -31,7 +31,7 @@ public class POCPatientProgramValidator implements Validator {
 	public static final int PTV_MAX_AGE = 5; // years
 	
 	@Override
-	public boolean supports(Class<?> clazz) {
+	public boolean supports(final Class<?> clazz) {
 		return PatientProgram.class.isAssignableFrom(clazz);
 	}
 	
@@ -40,15 +40,15 @@ public class POCPatientProgramValidator implements Validator {
 	 * @param errors Errors.
 	 */
 	@Override
-	public void validate(Object target, Errors errors) {
-		PatientProgram patientProgram = (PatientProgram) target;
+	public void validate(final Object target, final Errors errors) {
+		final PatientProgram patientProgram = (PatientProgram) target;
 		
-		if (CCR_PROGRAM_UUID.equals(patientProgram.getProgram().getUuid())) {
-			validateCCR(target, errors);
+		if (POCPatientProgramValidator.CCR_PROGRAM_UUID.equals(patientProgram.getProgram().getUuid())) {
+			this.validateCCR(target, errors);
 		}
 		
-		if (PTV_ETV_PROGRAM_UUID.equals(patientProgram.getProgram().getUuid())) {
-			validatePTV(target, errors);
+		if (POCPatientProgramValidator.PTV_ETV_PROGRAM_UUID.equals(patientProgram.getProgram().getUuid())) {
+			this.validatePTV(target, errors);
 		}
 	}
 	
@@ -58,12 +58,12 @@ public class POCPatientProgramValidator implements Validator {
 	 * @param target The CCR patient program to validate.
 	 * @param errors Errors.
 	 */
-	private void validateCCR(Object target, Errors errors) {
-		PatientProgram patientProgram = (PatientProgram) target;
-		Integer ageInMonths = patientAgeInMonths(patientProgram.getPatient());
+	private void validateCCR(final Object target, final Errors errors) {
+		final PatientProgram patientProgram = (PatientProgram) target;
+		final Integer ageInMonths = this.patientAgeInMonths(patientProgram.getPatient());
 		
-		if (ageInMonths >= CCR_MAX_AGE) {
-			errors.reject("error.patientProgram.patientMustBeYoungerThan18Months");
+		if (ageInMonths >= POCPatientProgramValidator.CCR_MAX_AGE) {
+			errors.reject("poc.error.patientProgram.patientMustBeYoungerThan18Months");
 		}
 		
 	}
@@ -74,23 +74,24 @@ public class POCPatientProgramValidator implements Validator {
 	 * @param target The PTV patient program to validate.
 	 * @param errors Errors.
 	 */
-	private void validatePTV(Object target, Errors errors) {
-		Patient patient = ((PatientProgram) target).getPatient();
+	private void validatePTV(final Object target, final Errors errors) {
+		final Patient patient = ((PatientProgram) target).getPatient();
 		
-		if (patient.getAge() > PTV_MAX_AGE && "M".equals(patient.getGender())) {
-			errors.reject("error.patientProgram.patientMustBeAged5OrYounger");
+		if ((patient.getAge() > POCPatientProgramValidator.PTV_MAX_AGE) && "M".equals(patient.getGender())) {
+			errors.reject("poc.error.patientProgram.patientMustBeAged5OrYounger");
 		}
 		
 	}
 	
-	private Integer patientAgeInMonths(Patient patient) {
+	private Integer patientAgeInMonths(final Patient patient) {
 		
-		if (patient == null || patient.getBirthdate() == null) {
-			return null; // if there is error in patient's data return age as null
+		if ((patient == null) || (patient.getBirthdate() == null)) {
+			return null; // if there is error in patient's data return age as
+			// null
 		}
-		Date birthdate = patient.getBirthdate();
-		DateTime today = new DateTime();
-		DateTime dob = new DateTime(birthdate.getTime());
+		final Date birthdate = patient.getBirthdate();
+		final DateTime today = new DateTime();
+		final DateTime dob = new DateTime(birthdate.getTime());
 		return Months.monthsBetween(dob.toDateMidnight(), today.toDateMidnight()).getMonths();
 	}
 }
