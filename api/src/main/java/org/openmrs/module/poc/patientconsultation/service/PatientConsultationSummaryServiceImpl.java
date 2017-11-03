@@ -59,7 +59,7 @@ public class PatientConsultationSummaryServiceImpl extends BaseOpenmrsService
 		final List<Obs> resultObs = this.patientConsultationSummaryDAO.findObsByLocationAndDateInterval(
 		    Arrays.asList(adultFollowUp, pediatricFollowUp, ccrFollowUp), concept, location, startDate, endDate);
 		
-		return this.summarizeObjectsToPatientConsultation(this.groupObsByDateNextVisitDate(resultObs));
+		return this.summarizeObjectsToPatientConsultation(location, this.groupObsByDateNextVisitDate(resultObs));
 	}
 	
 	private Map<Date, List<Obs>> groupObsByDateNextVisitDate(final List<Obs> resultObs) {
@@ -76,7 +76,7 @@ public class PatientConsultationSummaryServiceImpl extends BaseOpenmrsService
 		return mapObsByNextVisitDate;
 	}
 	
-	private List<PatientConsultationSummary> summarizeObjectsToPatientConsultation(
+	private List<PatientConsultationSummary> summarizeObjectsToPatientConsultation(final Location location,
 	        final Map<Date, List<Obs>> mapObsByDateNextVisit) {
 		
 		final List<PatientConsultationSummary> listSummary = new ArrayList<>();
@@ -90,7 +90,8 @@ public class PatientConsultationSummaryServiceImpl extends BaseOpenmrsService
 			for (final Obs obs : listObs) {
 				
 				final boolean ckeckedInInExpectedNextVisitDate = this.patientConsultationSummaryDAO
-				        .hasCheckinInExpectedNextVisitDate(new Patient(obs.getPerson().getId()), valueDateTime);
+				        .hasCheckinInExpectedNextVisitDate(new Patient(obs.getPerson().getId()), location,
+				            valueDateTime);
 				
 				final PatientConsultation patientConsultation = new PatientConsultation(obs.getEncounter(),
 				        ckeckedInInExpectedNextVisitDate);

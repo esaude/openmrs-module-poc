@@ -459,6 +459,10 @@
 
   <encounter_type encounter_type_id="2" uuid="eec646cb-c847-4ss-enc-type-002" name="service encounter" creator="1" date_created="2008-08-18 14:22:17.0" retired="false" description ="service encounter"/>
   
+  <encounter_type encounter_type_id="3" uuid="e278f956-1d5f-11e0-b929-000c29ad1d07" name="starv-adult-follow-upp" creator="1" date_created="2008-08-18 14:22:17.0" retired="false" description ="service encounter"/>
+  <encounter_type encounter_type_id="4" uuid="e278fce4-1d5f-11e0-b929-000c29ad1d07" name="starv-child-follow-upp" creator="1" date_created="2008-08-18 14:22:17.0" retired="false" description ="service encounter"/>
+  <encounter_type encounter_type_id="5" uuid="e278fe10-1d5f-11e0-b929-000c29ad1d07" name="ccr-follow-up" creator="1" date_created="2008-08-18 14:22:17.0" retired="false" description ="service encounter"/>
+      
   	<concept concept_id="73" retired="false" datatype_id="4" class_id="2" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="e1e2e70e-1d5f-11e0-b929-000c29ad1d07"/>
 	<concept_name concept_id="73" name="Temperature" locale="en_GB" creator="1" date_created="2015-01-16 13:52:53.0" concept_name_id="3011" concept_name_type="FULLY_SPECIFIED" locale_preferred="0" voided="false" uuid="35d3346a-6769-4d52-823f-b42000000019"/>
 	

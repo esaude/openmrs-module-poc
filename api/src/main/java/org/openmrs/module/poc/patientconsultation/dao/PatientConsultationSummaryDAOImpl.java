@@ -43,6 +43,8 @@ public class PatientConsultationSummaryDAOImpl implements PatientConsultationSum
 		searchCriteria.add(Restrictions.in("enc.encounterType", encounterTypes));
 		searchCriteria.add(Restrictions.eq("obs.concept", concept));
 		searchCriteria.add(Restrictions.eq("obs.voided", false));
+		searchCriteria.createAlias("obs.person", "person");
+		searchCriteria.add(Restrictions.eq("person.voided", false));
 		searchCriteria.add(Restrictions.eq("obs.location", location));
 		searchCriteria.add(Restrictions.between("obs.valueDatetime", DateUtils.lowDateTime(startDate),
 		    DateUtils.highDateTime(endDate)));
@@ -52,10 +54,12 @@ public class PatientConsultationSummaryDAOImpl implements PatientConsultationSum
 	}
 	
 	@Override
-	public boolean hasCheckinInExpectedNextVisitDate(final Patient patient, final Date dateForNextVisit) {
+	public boolean hasCheckinInExpectedNextVisitDate(final Patient patient, final Location location,
+	        final Date dateForNextVisit) {
 		
 		final Criteria searchCriteria = this.sessionFactory.getCurrentSession().createCriteria(Visit.class, "visit");
 		searchCriteria.add(Restrictions.eq("visit.patient", patient));
+		searchCriteria.add(Restrictions.eq("visit.location", location));
 		searchCriteria.add(Restrictions.eq("visit.voided", false));
 		searchCriteria.add(Restrictions.ge("startDatetime", DateUtils.lowDateTime(dateForNextVisit)));
 		searchCriteria.add(Restrictions.le("startDatetime", DateUtils.highDateTime(dateForNextVisit)));

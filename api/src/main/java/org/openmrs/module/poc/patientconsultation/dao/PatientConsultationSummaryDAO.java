@@ -26,5 +26,5 @@ public interface PatientConsultationSummaryDAO {
 	public List<Obs> findObsByLocationAndDateInterval(List<EncounterType> encounterTypes, Concept concept,
 	        Location location, Date initialDate, Date endDate);
 	
-	public boolean hasCheckinInExpectedNextVisitDate(Patient patient, Date dateForNextVisit);
+	public boolean hasCheckinInExpectedNextVisitDate(Patient patient, Location location, Date dateForNextVisit);
 }
