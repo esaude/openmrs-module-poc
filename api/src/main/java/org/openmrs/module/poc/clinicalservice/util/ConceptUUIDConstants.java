@@ -9,7 +9,7 @@
  */
 package org.openmrs.module.poc.clinicalservice.util;
 
-public class ConceptUUIDConstants {
+public interface ConceptUUIDConstants {
 	
 	public static final String RESPIRATORY_FREQUENCY = "e1e4628c-1d5f-11e0-b929-000c29ad1d07";
 	
