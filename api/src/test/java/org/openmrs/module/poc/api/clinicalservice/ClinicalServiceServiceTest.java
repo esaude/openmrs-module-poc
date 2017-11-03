@@ -25,7 +25,7 @@ import org.openmrs.module.poc.api.BasePOCModuleContextSensitiveTest;
 import org.openmrs.module.poc.api.common.exception.POCBusinessException;
 import org.openmrs.module.poc.clinicalservice.service.ClinicalServiceService;
 import org.openmrs.module.poc.clinicalservice.util.ClinicalServiceKeys;
-import org.openmrs.module.poc.clinicalservice.util.ClinicalServicesConceptUUIDConstants;
+import org.openmrs.module.poc.clinicalservice.util.ConceptUUIDConstants;
 
 public class ClinicalServiceServiceTest extends BasePOCModuleContextSensitiveTest {
 	
@@ -186,7 +186,7 @@ public class ClinicalServiceServiceTest extends BasePOCModuleContextSensitiveTes
 		// This must be mocked to not lost focus testing one and unique
 		// behaviour
 		final Concept temperature = Context.getConceptService()
-		        .getConceptByUuid(ClinicalServicesConceptUUIDConstants.TEMPERATURE);
+		        .getConceptByUuid(ConceptUUIDConstants.TEMPERATURE);
 		Context.getConceptService().retireConcept(temperature, "reason");
 		
 		this.executeDataSet("clinicalservice/shouldDeletePediatricVitalsClinicalServices-dataset.xml");
