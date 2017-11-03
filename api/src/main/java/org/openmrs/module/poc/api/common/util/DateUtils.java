@@ -14,9 +14,6 @@ import java.util.Date;
 
 public class DateUtils {
 	
-	private DateUtils() {
-	}
-	
 	/**
 	 * Retorna o valor do horário minimo para a data de referencia passada. <BR>
 	 * <BR>
@@ -43,12 +40,6 @@ public class DateUtils {
 	 * @return {@link Date} que representa o horário maximo para dia informado.
 	 */
 	public static Date highDateTime(final Date date) {
-		// final Calendar aux = Calendar.getInstance();
-		// aux.setTime(date);
-		// DateUtils.toOnlyDate(aux); // zera os parametros de
-		// hour,min,sec,milisec
-		// aux.roll(Calendar.DATE, true); // vai para o dia seguinte
-		// aux.roll(Calendar.MINUTE, false); // reduz 1 milisegundo
 		
 		final Calendar aux = Calendar.getInstance();
 		aux.setTime(date);
@@ -69,10 +60,5 @@ public class DateUtils {
 		date.set(Calendar.MINUTE, 0);
 		date.set(Calendar.SECOND, 0);
 		date.set(Calendar.MILLISECOND, 0);
-	}
-	
-	public static void main(final String[] args) {
-		
-		System.out.println(DateUtils.highDateTime(Calendar.getInstance().getTime()));
 	}
 }
