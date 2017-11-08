@@ -14,7 +14,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.test.BaseContextSensitiveTest;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 
-public abstract class BasePOCModuleContextSensitiveTest extends BaseModuleContextSensitiveTest {
+public abstract class POCBaseModuleContextSensitiveTest extends BaseModuleContextSensitiveTest {
 	
 	private static final String EXAMPLE_XML_DATASET_PACKAGE_PATH = "standardTestDataset.xml";
 	
@@ -35,7 +35,7 @@ public abstract class BasePOCModuleContextSensitiveTest extends BaseModuleContex
 			this.executeDataSet(BaseContextSensitiveTest.INITIAL_XML_DATASET_PACKAGE_PATH);
 		}
 		
-		this.executeDataSet(BasePOCModuleContextSensitiveTest.EXAMPLE_XML_DATASET_PACKAGE_PATH);
+		this.executeDataSet(POCBaseModuleContextSensitiveTest.EXAMPLE_XML_DATASET_PACKAGE_PATH);
 		
 		// Commit so that it is not rolled back after a test.
 		this.getConnection().commit();

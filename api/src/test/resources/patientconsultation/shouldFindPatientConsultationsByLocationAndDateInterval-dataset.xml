@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+
+    This Source Code Form is subject to the terms of the Mozilla Public License,
+    v. 2.0. If a copy of the MPL was not distributed with this file, You can
+    obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+    the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+
+    Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+    graphic logo is a trademark of OpenMRS Inc.
+
+-->
+
+<dataset>
+	
+  	<encounter encounter_id="1005" encounter_type="3" patient_id="2" location_id="2" form_id="1" encounter_datetime="2008-08-15 00:00:00.0" creator="1" date_created="2008-08-18 14:22:17.0" voided="false" uuid="eec-c847-4ss-enc-adult-amnese-exam1"/>
+  	<encounter encounter_id="1005" encounter_type="3" patient_id="2" location_id="2" form_id="1" encounter_datetime="2008-08-15 00:00:00.0" creator="1" date_created="2008-08-18 14:22:17.0" voided="false" uuid="eec-c847-4ss-enc-adult-amnese-exam2"/>
+  	<encounter encounter_id="1005" encounter_type="3" patient_id="2" location_id="2" form_id="1" encounter_datetime="2008-08-15 00:00:00.0" creator="1" date_created="2008-08-18 14:22:17.0" voided="false" uuid="eec-c847-4ss-enc-adult-amnese-exam3"/>
+  	
+  	<encounter encounter_id="1006" encounter_type="4" patient_id="6" location_id="2" form_id="1" encounter_datetime="2008-08-15 00:00:00.0" creator="1" date_created="2008-08-18 14:22:17.0" voided="false" uuid="eec-c847-4ss-enc-adult-amnese-exam4"/>
+  	<encounter encounter_id="1006" encounter_type="4" patient_id="6" location_id="2" form_id="1" encounter_datetime="2008-08-15 00:00:00.0" creator="1" date_created="2008-08-18 14:22:17.0" voided="false" uuid="eec-c847-4ss-enc-adult-amnese-exam5"/>
+  	<encounter encounter_id="1006" encounter_type="4" patient_id="6" location_id="2" form_id="1" encounter_datetime="2008-08-15 00:00:00.0" creator="1" date_created="2008-08-18 14:22:17.0" voided="false" uuid="eec-c847-4ss-enc-adult-amnese-exam6"/>
+  	
+  	<encounter encounter_id="1007" encounter_type="5" patient_id="7" location_id="2" form_id="1" encounter_datetime="2008-08-15 00:00:00.0" creator="1" date_created="2008-08-18 14:22:17.0" voided="false" uuid="eec-c847-4ss-enc-adult-amnese-exam7"/>
+  	<encounter encounter_id="1007" encounter_type="5" patient_id="7" location_id="2" form_id="1" encounter_datetime="2008-08-15 00:00:00.0" creator="1" date_created="2008-08-18 14:22:17.0" voided="false" uuid="eec-c847-4ss-enc-adult-amnese-exam8"/>
+  	<encounter encounter_id="1007" encounter_type="5" patient_id="7" location_id="2" form_id="1" encounter_datetime="2008-08-15 00:00:00.0" creator="1" date_created="2008-08-18 14:22:17.0" voided="false" uuid="eec-c847-4ss-enc-adult-amnese-exam9"/>
+  	  	  	
+  	<obs obs_id ="150" person_id="2" concept_id="114" encounter_id="1005" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_datetime="2017-10-20 00:00:00.0" value_numeric="61.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000500"/>
+ 	<obs obs_id ="151" person_id="2" concept_id="101" encounter_id="1005" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_numeric="61.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000501"/>
+	<obs obs_id ="152" person_id="2" concept_id="102" encounter_id="1005" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_numeric="61.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000502"/>
+	
+	<obs obs_id ="153" person_id="6" concept_id="114" encounter_id="1006" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_datetime="2017-10-30 00:00:00.0" value_numeric="61.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000503"/>
+	<obs obs_id ="154" person_id="6" concept_id="104" encounter_id="1006" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_numeric="61.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000504"/>
+	<obs obs_id ="155" person_id="6" concept_id="105" encounter_id="1006" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_numeric="61.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000505"/>
+	
+	<obs obs_id ="156" person_id="7" concept_id="114" encounter_id="1007" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_datetime="2017-11-03 00:00:00.0" value_numeric="61.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000506"/>
+	<obs obs_id ="157" person_id="7" concept_id="107" encounter_id="1007" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_numeric="61.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000507"/>
+	<obs obs_id ="158" person_id="7" concept_id="108" encounter_id="1007" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_numeric="61.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000508"/>
+
+	<visit visit_id="10" patient_id="2" visit_type_id="1" location_id="2" date_started="2017-10-20 10:30:00.0" creator="1" date_created="2018-01-01 00:00:00.0" voided="0" uuid="e1428fea-6b78-11e0-93c3-18a905e044d1" />
+	<visit visit_id="11" patient_id="6" visit_type_id="1" location_id="2" date_started="2017-12-01 00:00:00.0" creator="1" date_created="2018-01-01 00:00:00.0" voided="0" uuid="e1428fea-6b78-11e0-93c3-18a905e044d2" />
+	<visit visit_id="12" patient_id="6" visit_type_id="1" location_id="2" date_started="2017-10-30 00:00:00.0" creator="1" date_created="2018-01-01 00:00:00.0" voided="1" voided_by="1" date_voided="2018-01-01 00:00:00.0" void_reason="no reason" uuid="e1428fea-6b78-11e0-93c3-18a905e044d3" />
+	<visit visit_id="13" patient_id="7" visit_type_id="1" location_id="2" date_started="2017-11-03 00:00:00.0" creator="1" date_created="2018-01-01 00:00:00.0" voided="0" uuid="e1428fea-6b78-11e0-93c3-18a905e044d4" />
+
+</dataset> 

@@ -21,114 +21,114 @@ public class MappedClinicalServices {
 		
 		// SOCIAL_INFO_ADULT
 		MappedClinicalServices.clinicalServices.put(ClinicalServiceKeys.SOCIAL_INFO_ADULT,
-		    Arrays.asList(ClinicalServicesConceptUUIDConstants.NAME, ClinicalServicesConceptUUIDConstants.SURNAME,
-		        ClinicalServicesConceptUUIDConstants.TELEPHONE, ClinicalServicesConceptUUIDConstants.OCCUPATION,
-		        ClinicalServicesConceptUUIDConstants.EDUCATION_LEVEL,
-		        ClinicalServicesConceptUUIDConstants.NUMBER_OF_COHABITANTS,
-		        ClinicalServicesConceptUUIDConstants.HIV_SEROLOGY_OF_THE_SPOUSE,
-		        ClinicalServicesConceptUUIDConstants.NUMBER_OF_CHILDREN,
-		        ClinicalServicesConceptUUIDConstants.NUMBER_OF_CHILDREN_TESTED,
-		        ClinicalServicesConceptUUIDConstants.NUMBER_OF_CHILDREN_HIV_POSETIVE,
-		        ClinicalServicesConceptUUIDConstants.GLACIER_AT_HOME,
-		        ClinicalServicesConceptUUIDConstants.ELECTRICITY_AT_HOME));
+		    Arrays.asList(ConceptUUIDConstants.NAME, ConceptUUIDConstants.SURNAME,
+		        ConceptUUIDConstants.TELEPHONE, ConceptUUIDConstants.OCCUPATION,
+		        ConceptUUIDConstants.EDUCATION_LEVEL,
+		        ConceptUUIDConstants.NUMBER_OF_COHABITANTS,
+		        ConceptUUIDConstants.HIV_SEROLOGY_OF_THE_SPOUSE,
+		        ConceptUUIDConstants.NUMBER_OF_CHILDREN,
+		        ConceptUUIDConstants.NUMBER_OF_CHILDREN_TESTED,
+		        ConceptUUIDConstants.NUMBER_OF_CHILDREN_HIV_POSETIVE,
+		        ConceptUUIDConstants.GLACIER_AT_HOME,
+		        ConceptUUIDConstants.ELECTRICITY_AT_HOME));
 		
 		// SOCIAL_INFO_CHILD
 		MappedClinicalServices.clinicalServices.put(ClinicalServiceKeys.SOCIAL_INFO_PEDIATRICS, Arrays.asList(
-		    ClinicalServicesConceptUUIDConstants.NAME, ClinicalServicesConceptUUIDConstants.SURNAME,
-		    ClinicalServicesConceptUUIDConstants.TELEPHONE, ClinicalServicesConceptUUIDConstants.MOTHERS_NAME,
-		    ClinicalServicesConceptUUIDConstants.MOTHERS_AGE, ClinicalServicesConceptUUIDConstants.MOTHER_IS_ALIVE,
-		    ClinicalServicesConceptUUIDConstants.MOTHER_IS_SICK,
-		    ClinicalServicesConceptUUIDConstants.MOTHERS_DESEASE,
-		    ClinicalServicesConceptUUIDConstants.MOTHER_HIV_RESULT,
-		    ClinicalServicesConceptUUIDConstants.MOTHER_TREATING_WITH_ANTIRETROVIRALS,
-		    ClinicalServicesConceptUUIDConstants.FATHERS_NAME, ClinicalServicesConceptUUIDConstants.FATHERS_AGE,
-		    ClinicalServicesConceptUUIDConstants.FATHER_IS_ALIVE,
-		    ClinicalServicesConceptUUIDConstants.FATHER_IS_SICK,
-		    ClinicalServicesConceptUUIDConstants.FATHERS_DESEASE,
-		    ClinicalServicesConceptUUIDConstants.FATHER_HIV_RESULT,
-		    ClinicalServicesConceptUUIDConstants.FATHER_TREATING_WITH_ANTIRETROVIRALS));
+		    ConceptUUIDConstants.NAME, ConceptUUIDConstants.SURNAME,
+		    ConceptUUIDConstants.TELEPHONE, ConceptUUIDConstants.MOTHERS_NAME,
+		    ConceptUUIDConstants.MOTHERS_AGE, ConceptUUIDConstants.MOTHER_IS_ALIVE,
+		    ConceptUUIDConstants.MOTHER_IS_SICK,
+		    ConceptUUIDConstants.MOTHERS_DESEASE,
+		    ConceptUUIDConstants.MOTHER_HIV_RESULT,
+		    ConceptUUIDConstants.MOTHER_TREATING_WITH_ANTIRETROVIRALS,
+		    ConceptUUIDConstants.FATHERS_NAME, ConceptUUIDConstants.FATHERS_AGE,
+		    ConceptUUIDConstants.FATHER_IS_ALIVE,
+		    ConceptUUIDConstants.FATHER_IS_SICK,
+		    ConceptUUIDConstants.FATHERS_DESEASE,
+		    ConceptUUIDConstants.FATHER_HIV_RESULT,
+		    ConceptUUIDConstants.FATHER_TREATING_WITH_ANTIRETROVIRALS));
 		
 		// VITALS_ADULT
 		MappedClinicalServices.clinicalServices.put(ClinicalServiceKeys.VITALS_ADULT,
-		    Arrays.asList(ClinicalServicesConceptUUIDConstants.TEMPERATURE,
-		        ClinicalServicesConceptUUIDConstants.WEIGHT, ClinicalServicesConceptUUIDConstants.HEIGHT,
-		        ClinicalServicesConceptUUIDConstants.SISTOLICA_ARTERIAL_BLOOD_PRESSURE,
-		        ClinicalServicesConceptUUIDConstants.DIALOSTIC_BLOOD_PRESSURE,
-		        ClinicalServicesConceptUUIDConstants.HEART_RATE,
-		        ClinicalServicesConceptUUIDConstants.RESPIRATORY_FREQUENCY,
-		        ClinicalServicesConceptUUIDConstants.POC_MAPPING_VITALS_DATE));
+		    Arrays.asList(ConceptUUIDConstants.TEMPERATURE,
+		        ConceptUUIDConstants.WEIGHT, ConceptUUIDConstants.HEIGHT,
+		        ConceptUUIDConstants.SISTOLICA_ARTERIAL_BLOOD_PRESSURE,
+		        ConceptUUIDConstants.DIALOSTIC_BLOOD_PRESSURE,
+		        ConceptUUIDConstants.HEART_RATE,
+		        ConceptUUIDConstants.RESPIRATORY_FREQUENCY,
+		        ConceptUUIDConstants.POC_MAPPING_VITALS_DATE));
 		
 		// VITALS_PEDIATRICS
 		MappedClinicalServices.clinicalServices.put(ClinicalServiceKeys.VITALS_PEDIATRICS,
-		    Arrays.asList(ClinicalServicesConceptUUIDConstants.TEMPERATURE,
-		        ClinicalServicesConceptUUIDConstants.WEIGHT, ClinicalServicesConceptUUIDConstants.HEIGHT,
-		        ClinicalServicesConceptUUIDConstants.HEART_RATE,
-		        ClinicalServicesConceptUUIDConstants.RESPIRATORY_FREQUENCY,
-		        ClinicalServicesConceptUUIDConstants.POC_MAPPING_VITALS_DATE));
+		    Arrays.asList(ConceptUUIDConstants.TEMPERATURE,
+		        ConceptUUIDConstants.WEIGHT, ConceptUUIDConstants.HEIGHT,
+		        ConceptUUIDConstants.HEART_RATE,
+		        ConceptUUIDConstants.RESPIRATORY_FREQUENCY,
+		        ConceptUUIDConstants.POC_MAPPING_VITALS_DATE));
 		
 		// WHO_STAGE_ADULT
 		MappedClinicalServices.clinicalServices.put(ClinicalServiceKeys.WHO_STAGE_ADULT,
-		    Arrays.asList(ClinicalServicesConceptUUIDConstants.POC_MAPPING_WHO_DATE,
-		        ClinicalServicesConceptUUIDConstants.WHO_STAGE_1_ADULT,
-		        ClinicalServicesConceptUUIDConstants.WHO_STAGE_2_ADULT,
-		        ClinicalServicesConceptUUIDConstants.WHO_STAGE_3_ADULT,
-		        ClinicalServicesConceptUUIDConstants.WHO_STAGE_4_ADULT,
-		        ClinicalServicesConceptUUIDConstants.CURRENT_WHO_HIV_STAGE));
+		    Arrays.asList(ConceptUUIDConstants.POC_MAPPING_WHO_DATE,
+		        ConceptUUIDConstants.WHO_STAGE_1_ADULT,
+		        ConceptUUIDConstants.WHO_STAGE_2_ADULT,
+		        ConceptUUIDConstants.WHO_STAGE_3_ADULT,
+		        ConceptUUIDConstants.WHO_STAGE_4_ADULT,
+		        ConceptUUIDConstants.CURRENT_WHO_HIV_STAGE));
 		
 		// WHO_STAGE_PEDIATRICS
 		MappedClinicalServices.clinicalServices.put(ClinicalServiceKeys.WHO_STAGE_PEDIATRICS,
-		    Arrays.asList(ClinicalServicesConceptUUIDConstants.POC_MAPPING_WHO_DATE,
-		        ClinicalServicesConceptUUIDConstants.WHO_STAGE_1_ADULT,
-		        ClinicalServicesConceptUUIDConstants.WHO_STAGE_2_ADULT,
-		        ClinicalServicesConceptUUIDConstants.WHO_STAGE_3_ADULT,
-		        ClinicalServicesConceptUUIDConstants.WHO_STAGE_4_ADULT,
-		        ClinicalServicesConceptUUIDConstants.CURRENT_WHO_HIV_STAGE));
+		    Arrays.asList(ConceptUUIDConstants.POC_MAPPING_WHO_DATE,
+		        ConceptUUIDConstants.WHO_STAGE_1_ADULT,
+		        ConceptUUIDConstants.WHO_STAGE_2_ADULT,
+		        ConceptUUIDConstants.WHO_STAGE_3_ADULT,
+		        ConceptUUIDConstants.WHO_STAGE_4_ADULT,
+		        ConceptUUIDConstants.CURRENT_WHO_HIV_STAGE));
 		
 		// RELEVANT_ASPECTS
 		MappedClinicalServices.clinicalServices.put(ClinicalServiceKeys.RELEVANT_ASPECTS,
-		    Arrays.asList(ClinicalServicesConceptUUIDConstants.OBSERVATION_STORY,
-		        ClinicalServicesConceptUUIDConstants.TYPE_OF_MESSAGE));
+		    Arrays.asList(ConceptUUIDConstants.OBSERVATION_STORY,
+		        ConceptUUIDConstants.TYPE_OF_MESSAGE));
 		
 		// ADULT_ANAMNESE_EXAMS
 		MappedClinicalServices.clinicalServices.put(ClinicalServiceKeys.ADULT_ANAMNESE_EXAMS,
-		    Arrays.asList(ClinicalServicesConceptUUIDConstants.POC_MAPPING_ANAMNESE_DATE,
-		        ClinicalServicesConceptUUIDConstants.PATIENT_HISTORY,
-		        ClinicalServicesConceptUUIDConstants.HEAD_AND_NECK_EXAMS,
-		        ClinicalServicesConceptUUIDConstants.CHEST_EXAMS,
-		        ClinicalServicesConceptUUIDConstants.ABDOMEN_EXAMS,
-		        ClinicalServicesConceptUUIDConstants.UPPER_AND_LOWER_LIMBS_EXAMS,
-		        ClinicalServicesConceptUUIDConstants.SCREENING_FOR_STI,
-		        ClinicalServicesConceptUUIDConstants.SCREENING_FOR_TB,
-		        ClinicalServicesConceptUUIDConstants.SCREENING_FOR_CRIPTO));
+		    Arrays.asList(ConceptUUIDConstants.POC_MAPPING_ANAMNESE_DATE,
+		        ConceptUUIDConstants.PATIENT_HISTORY,
+		        ConceptUUIDConstants.HEAD_AND_NECK_EXAMS,
+		        ConceptUUIDConstants.CHEST_EXAMS,
+		        ConceptUUIDConstants.ABDOMEN_EXAMS,
+		        ConceptUUIDConstants.UPPER_AND_LOWER_LIMBS_EXAMS,
+		        ConceptUUIDConstants.SCREENING_FOR_STI,
+		        ConceptUUIDConstants.SCREENING_FOR_TB,
+		        ConceptUUIDConstants.SCREENING_FOR_CRIPTO));
 		
 		// PEDIATRICS_ANAMNESE_EXAMS
 		MappedClinicalServices.clinicalServices.put(ClinicalServiceKeys.PEDIATRICS_ANAMNESE_EXAMS,
-		    Arrays.asList(ClinicalServicesConceptUUIDConstants.POC_MAPPING_ANAMNESE_DATE,
-		        ClinicalServicesConceptUUIDConstants.PATIENT_HISTORY,
-		        ClinicalServicesConceptUUIDConstants.HEAD_AND_NECK_EXAMS,
-		        ClinicalServicesConceptUUIDConstants.CHEST_EXAMS,
-		        ClinicalServicesConceptUUIDConstants.ABDOMEN_EXAMS,
-		        ClinicalServicesConceptUUIDConstants.UPPER_AND_LOWER_LIMBS_EXAMS,
-		        ClinicalServicesConceptUUIDConstants.SCREENING_FOR_TB,
-		        ClinicalServicesConceptUUIDConstants.SCREENING_FOR_CRIPTO));
+		    Arrays.asList(ConceptUUIDConstants.POC_MAPPING_ANAMNESE_DATE,
+		        ConceptUUIDConstants.PATIENT_HISTORY,
+		        ConceptUUIDConstants.HEAD_AND_NECK_EXAMS,
+		        ConceptUUIDConstants.CHEST_EXAMS,
+		        ConceptUUIDConstants.ABDOMEN_EXAMS,
+		        ConceptUUIDConstants.UPPER_AND_LOWER_LIMBS_EXAMS,
+		        ConceptUUIDConstants.SCREENING_FOR_TB,
+		        ConceptUUIDConstants.SCREENING_FOR_CRIPTO));
 		
 		// ADULT_DIAGNOSIS
 		MappedClinicalServices.clinicalServices.put(ClinicalServiceKeys.ADULT_DIAGNOSIS,
-		    Arrays.asList(ClinicalServicesConceptUUIDConstants.POC_MAPPING_DIAGNOSIS_DATE,
-		        ClinicalServicesConceptUUIDConstants.TB_DRUG_START_DATE,
-		        ClinicalServicesConceptUUIDConstants.TB_DRUG_END_DATE,
-		        ClinicalServicesConceptUUIDConstants.DIAGNOSIS_ADDED,
-		        ClinicalServicesConceptUUIDConstants.NON_CODED_DIAGNOSIS,
-		        ClinicalServicesConceptUUIDConstants.RETURN_VISIT_DATE));
+		    Arrays.asList(ConceptUUIDConstants.POC_MAPPING_DIAGNOSIS_DATE,
+		        ConceptUUIDConstants.TB_DRUG_START_DATE,
+		        ConceptUUIDConstants.TB_DRUG_END_DATE,
+		        ConceptUUIDConstants.DIAGNOSIS_ADDED,
+		        ConceptUUIDConstants.NON_CODED_DIAGNOSIS,
+		        ConceptUUIDConstants.RETURN_VISIT_DATE));
 		
 		// PEDIATRICS_DIAGNOSIS
 		MappedClinicalServices.clinicalServices.put(ClinicalServiceKeys.PEDIATRICS_DIAGNOSIS,
-		    Arrays.asList(ClinicalServicesConceptUUIDConstants.POC_MAPPING_DIAGNOSIS_DATE,
-		        ClinicalServicesConceptUUIDConstants.TB_DRUG_START_DATE,
-		        ClinicalServicesConceptUUIDConstants.TB_DRUG_END_DATE,
-		        ClinicalServicesConceptUUIDConstants.DIAGNOSIS_ADDED,
-		        ClinicalServicesConceptUUIDConstants.NON_CODED_DIAGNOSIS,
-		        ClinicalServicesConceptUUIDConstants.RETURN_VISIT_DATE));
+		    Arrays.asList(ConceptUUIDConstants.POC_MAPPING_DIAGNOSIS_DATE,
+		        ConceptUUIDConstants.TB_DRUG_START_DATE,
+		        ConceptUUIDConstants.TB_DRUG_END_DATE,
+		        ConceptUUIDConstants.DIAGNOSIS_ADDED,
+		        ConceptUUIDConstants.NON_CODED_DIAGNOSIS,
+		        ConceptUUIDConstants.RETURN_VISIT_DATE));
 	}
 	
 	public static List<String> getClinicalServices(final ClinicalServiceKeys serviceKey) {
