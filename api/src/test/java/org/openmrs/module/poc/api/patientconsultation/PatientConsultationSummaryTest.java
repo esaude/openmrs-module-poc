@@ -18,37 +18,37 @@ import org.openmrs.module.poc.patientconsultation.model.PatientConsultation;
 import org.openmrs.module.poc.patientconsultation.model.PatientConsultationSummary;
 
 public class PatientConsultationSummaryTest {
-
+	
 	@Test
 	public void shouldCreateAnInstanceOfPatientConsultationSummary() {
-
+		
 		final PatientConsultationSummary summary = new PatientConsultationSummary();
-
+		
 		summary.setConsultationDate(new Date());
 		summary.addPatientConsultation(new PatientConsultation());
-
+		
 		summary.setId(10);
 		Assert.assertNotNull(summary);
 		Assert.assertNotNull(summary.getConsultationDate());
 		Assert.assertEquals(1, summary.getPatientConsultations().size());
 		Assert.assertEquals(null, summary.getId());
 	}
-
+	
 	@Test
 	public void shouldCreateAnInstanceOfPatientConsultation() {
-
+		
 		final PatientConsultation patientConsultation = new PatientConsultation();
-
+		
 		patientConsultation.setParent(new PatientConsultationSummary());
 		patientConsultation.setEncounter(new Encounter());
 		patientConsultation.setCheckInOnConsultationDate(Boolean.TRUE);
 		patientConsultation.setId(10);
-
+		
 		Assert.assertNotNull(patientConsultation);
 		Assert.assertNotNull(patientConsultation.getParent());
 		Assert.assertNotNull(patientConsultation.getEncounter());
 		Assert.assertNotNull(patientConsultation.getCheckInOnConsultationDate());
 		Assert.assertNull(patientConsultation.getId());
 	}
-
+	
 }

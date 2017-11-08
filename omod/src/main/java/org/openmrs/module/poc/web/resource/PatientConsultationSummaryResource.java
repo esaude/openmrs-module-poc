@@ -9,16 +9,12 @@
  */
 package org.openmrs.module.poc.web.resource;
 
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
 import org.openmrs.Location;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.poc.patientconsultation.model.PatientConsultationSummary;
 import org.openmrs.module.poc.patientconsultation.service.PatientConsultationSummaryService;
+import org.openmrs.module.webservices.rest.web.ConversionUtil;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
@@ -31,6 +27,10 @@ import org.openmrs.module.webservices.rest.web.resource.impl.DataDelegatingCrudR
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.openmrs.module.webservices.rest.web.resource.impl.NeedsPaging;
 import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOperationException;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 @Resource(name = RestConstants.VERSION_1
         + "/patientconsultationsummary", order = 1, supportedClass = PatientConsultationSummary.class, supportedOpenmrsVersions = {
@@ -83,12 +83,11 @@ public class PatientConsultationSummaryResource extends DataDelegatingCrudResour
 		try {
 			final Location location = Context.getLocationService()
 			        .getLocationByUuid(context.getRequest().getParameter("location"));
-			final SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-			final Date stardDate = formatter.parse(context.getRequest().getParameter("startDate"));
-			final Date endDate = formatter.parse(context.getRequest().getParameter("endDate"));
+			final Date startDate = (Date) ConversionUtil.convert(context.getRequest().getParameter("startDate"), Date.class);
+			final Date endDate = (Date) ConversionUtil.convert(context.getRequest().getParameter("endDate"), Date.class);
 			
 			return new NeedsPaging<>(Context.getService(PatientConsultationSummaryService.class)
-			        .findPatientConsultationsByLocationAndDateInterval(location, stardDate, endDate), context);
+			        .findPatientConsultationsByLocationAndDateInterval(location, startDate, endDate), context);
 			
 		}
 		catch (final Exception e) {
