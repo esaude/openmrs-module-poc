@@ -7,7 +7,7 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.poc.api.testorderrequest.dao;
+package org.openmrs.module.poc.api.testrequest.dao;
 
 import java.util.List;
 import java.util.Locale;
@@ -15,7 +15,7 @@ import java.util.Locale;
 import org.hibernate.SessionFactory;
 import org.openmrs.Concept;
 
-public interface TestOrderRequestDAO {
+public interface TestRequestDAO {
 	
 	void setSessionFactory(final SessionFactory sessionFactory);
 	

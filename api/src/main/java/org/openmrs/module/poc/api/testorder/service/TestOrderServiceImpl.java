@@ -22,11 +22,9 @@ import org.openmrs.Encounter;
 import org.openmrs.EncounterRole;
 import org.openmrs.EncounterType;
 import org.openmrs.Location;
-import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.OrderType;
 import org.openmrs.Patient;
-import org.openmrs.Person;
 import org.openmrs.Provider;
 import org.openmrs.TestOrder;
 import org.openmrs.api.APIException;
@@ -41,17 +39,19 @@ import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.poc.api.common.service.POCDbSessionManager;
 import org.openmrs.module.poc.api.common.util.OPENMRSUUIDs;
-import org.openmrs.module.poc.api.testorder.dao.TestOrderDAO;
+import org.openmrs.module.poc.api.pocheuristic.service.PocHeuristicService;
 import org.openmrs.module.poc.api.testorder.model.TestOrderItem;
 import org.openmrs.module.poc.api.testorder.model.TestOrderPOC;
 import org.openmrs.module.poc.api.testorder.validation.TestOrderRequestValidator;
-import org.openmrs.module.poc.api.testorderrequest.model.TestOrderRequest;
-import org.openmrs.module.poc.api.testorderrequest.service.TestOrderRequestService;
+import org.openmrs.module.poc.api.testrequest.model.TestRequest;
+import org.openmrs.module.poc.api.testrequest.service.TestRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(noRollbackFor = APIException.class)
 public class TestOrderServiceImpl extends BaseOpenmrsService implements TestOrderService {
 	
-	private TestOrderDAO testOrderDAO;
+	private PocHeuristicService pocHeuristicService;
 	
 	private OrderService orderService;
 	
@@ -73,8 +73,8 @@ public class TestOrderServiceImpl extends BaseOpenmrsService implements TestOrde
 	private TestOrderRequestValidator testOrderRequestValidator;
 	
 	@Override
-	public void setTestOrderDAO(final TestOrderDAO testOrderDAO) {
-		this.testOrderDAO = testOrderDAO;
+	public void setPocHeuristicService(final PocHeuristicService pocHeuristicService) {
+		this.pocHeuristicService = pocHeuristicService;
 	}
 	
 	@Override
@@ -118,25 +118,26 @@ public class TestOrderServiceImpl extends BaseOpenmrsService implements TestOrde
 	}
 	
 	@Override
-	public TestOrderPOC createTestOder(final TestOrderPOC testOrderPOC, final Date creationDate) {
+	public TestOrderPOC createTestOder(final TestOrderPOC testOrderPOC) {
 		
 		try {
 			
 			// workaround to controll the hibernate sessions commits
 			this.pOCDbSessionManager.setManualFlushMode();
 			
-			this.testOrderRequestValidator.validate(testOrderPOC, creationDate);
+			this.testOrderRequestValidator.validate(testOrderPOC);
 			
 			final Patient patient = this.patientService.getPatientByUuid(testOrderPOC.getPatient().getUuid());
-			final Person providerPerson = this.personService.getPersonByUuid(testOrderPOC.getProvider().getUuid());
-			final Provider provider = this.providerService.getProvidersByPerson(providerPerson).iterator().next();
+			
+			final Provider provider = this.providerService.getProviderByUuid(testOrderPOC.getProvider().getUuid());
 			final CareSetting careSetting = this.orderService
 			        .getCareSettingByUuid(OPENMRSUUIDs.OUT_PUT_PATIENT_CARE_SETTINGS_CARESETTINGS_UUID);
 			final Location location = this.locationService.getLocationByUuid(testOrderPOC.getLocation().getUuid());
 			
-			final Encounter encounter = this.getEncounterByRules(patient, provider, location, creationDate);
+			final Encounter encounter = this.getEncounterByRules(patient, provider, location,
+			    testOrderPOC.getDateCreation());
 			
-			this.setObsCreationDate(testOrderPOC, encounter);
+			// this.setObsCreationDate(testOrderPOC, encounter);
 			
 			for (final TestOrderItem orderItem : testOrderPOC.getTestOrderItems()) {
 				
@@ -153,6 +154,7 @@ public class TestOrderServiceImpl extends BaseOpenmrsService implements TestOrde
 				
 				// this.createObs(encounter, order, orderItem);
 			}
+			
 			this.encounterService.saveEncounter(encounter);
 			testOrderPOC.setEncounter(encounter);
 		}
@@ -187,7 +189,7 @@ public class TestOrderServiceImpl extends BaseOpenmrsService implements TestOrde
 	public List<TestOrderPOC> findTestOrdersByPatient(final String patientUUID) {
 		
 		final Map<Concept, Concept> mapCategoriesByTestConcept = this.getMapCategoriesByTestConcept();
-		final List<Encounter> encounters = this.testOrderDAO.findEncountersWithTestOrdersByPatient(patientUUID);
+		final List<Encounter> encounters = this.pocHeuristicService.findEncountersWithTestOrdersByPatient(patientUUID);
 		final List<TestOrderPOC> result = new ArrayList<>();
 		
 		for (final Encounter encounter : encounters) {
@@ -205,8 +207,8 @@ public class TestOrderServiceImpl extends BaseOpenmrsService implements TestOrde
 	        final EncounterType encounterType, final Location location, final Date encounterDateTime)
 	        throws APIException {
 		
-		return this.testOrderDAO.findLastEncounterByPatientAndEncounterTypeAndLocationAndDateAndStatus(patient,
-		    encounterType, location, encounterDateTime, false);
+		return this.pocHeuristicService.findLastEncounterByPatientAndEncounterTypeAndLocationAndDateAndStatus(patient,
+		    encounterType, location, encounterDateTime);
 	}
 	
 	@Override
@@ -279,25 +281,17 @@ public class TestOrderServiceImpl extends BaseOpenmrsService implements TestOrde
 	
 	private Map<Concept, Concept> getMapCategoriesByTestConcept() {
 		
-		final List<TestOrderRequest> findAllTestOrderRequest = Context.getService(TestOrderRequestService.class)
+		final List<TestRequest> findAllTestOrderRequest = Context.getService(TestRequestService.class)
 		        .findAllTestOrderRequest(Context.getLocale());
 		
 		final Map<Concept, Concept> map = new HashMap<>();
 		
-		for (final TestOrderRequest testOrderRequest : findAllTestOrderRequest) {
+		for (final TestRequest testOrderRequest : findAllTestOrderRequest) {
 			
 			map.put(testOrderRequest.getTestOrder(), testOrderRequest.getCategory());
 		}
 		
 		return map;
-	}
-	
-	private void setObsCreationDate(final TestOrderPOC testOrderPOC, final Encounter encounter) {
-		final Obs obsCreationDate = new Obs();
-		obsCreationDate.setConcept(
-		        this.conceptService.getConceptByUuid(OPENMRSUUIDs.DATA_PEDIDO_EXAMES_LABORATORIAIS_FORM_UUID));
-		obsCreationDate.setValueDatetime(testOrderPOC.getDateCreation());
-		encounter.addObs(obsCreationDate);
 	}
 	
 	private Encounter getEncounterByRules(final Patient patient, final Provider provider, final Location location,
@@ -314,20 +308,6 @@ public class TestOrderServiceImpl extends BaseOpenmrsService implements TestOrde
 			
 			return this.createEncounter(patient, provider, location, encounterDate, encounterType, encounterRole);
 		}
-	}
-	
-	private void createObs(final Encounter encounter, final Order order, final TestOrderItem orderItem) {
-		
-		final Obs obsGroup = new Obs();
-		obsGroup.setConcept(orderItem.getCategory());
-		obsGroup.setOrder(order);
-		
-		final Obs obsTest = new Obs();
-		obsTest.setConcept(orderItem.getTestOrder().getConcept());
-		obsTest.setOrder(order);
-		
-		obsGroup.addGroupMember(obsTest);
-		encounter.addObs(obsGroup);
 	}
 	
 	private Encounter createEncounter(final Patient patient, final Provider provider, final Location location,

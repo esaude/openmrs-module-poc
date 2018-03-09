@@ -7,7 +7,7 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.poc.api.testorder.dao;
+package org.openmrs.module.poc.api.pocheuristic.dao;
 
 import java.util.Date;
 import java.util.List;
@@ -22,7 +22,7 @@ import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.module.poc.api.common.util.DateUtils;
 
-public class TestOrderDAOImpl implements TestOrderDAO {
+public class PocHeuristicDAOImpl implements PocHeuristicCAO {
 	
 	private SessionFactory sessionFactory;
 	

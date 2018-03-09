@@ -10,7 +10,7 @@
 /**
  *
  */
-package org.openmrs.module.poc.api.testorderrequest.dao;
+package org.openmrs.module.poc.api.testrequest.dao;
 
 import java.util.List;
 import java.util.Locale;
@@ -18,7 +18,7 @@ import java.util.Locale;
 import org.hibernate.SessionFactory;
 import org.openmrs.Concept;
 
-public class TestOrderRequestDAOImpl implements TestOrderRequestDAO {
+public class TestRequestDAOImpl implements TestRequestDAO {
 	
 	private SessionFactory sessionFactory;
 	

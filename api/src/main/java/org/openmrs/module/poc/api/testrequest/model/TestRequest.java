@@ -7,23 +7,23 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.poc.api.testorderrequest.model;
+package org.openmrs.module.poc.api.testrequest.model;
 
 import org.openmrs.BaseOpenmrsData;
 import org.openmrs.Concept;
 
-public class TestOrderRequest extends BaseOpenmrsData {
+public class TestRequest extends BaseOpenmrsData {
 	
 	private Concept testOrder;
 	
 	private Concept category;
 	
-	public TestOrderRequest(final Concept testOrder, final Concept category) {
+	public TestRequest(final Concept testOrder, final Concept category) {
 		this.testOrder = testOrder;
 		this.category = category;
 	}
 	
-	public TestOrderRequest() {
+	public TestRequest() {
 	}
 	
 	public Concept getTestOrder() {

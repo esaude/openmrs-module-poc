@@ -12,8 +12,8 @@ package org.openmrs.module.poc.web.resource;
 import java.util.List;
 
 import org.openmrs.api.context.Context;
-import org.openmrs.module.poc.api.testorderrequest.model.TestOrderRequest;
-import org.openmrs.module.poc.api.testorderrequest.service.TestOrderRequestService;
+import org.openmrs.module.poc.api.testrequest.model.TestRequest;
+import org.openmrs.module.poc.api.testrequest.service.TestRequestService;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.PropertyGetter;
@@ -29,9 +29,9 @@ import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOp
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-        + "/testorderrequest", order = 2, supportedClass = TestOrderRequest.class, supportedOpenmrsVersions = {
+        + "/testrequest", order = 2, supportedClass = TestRequest.class, supportedOpenmrsVersions = {
         "1.11.*", "1.12.*" })
-public class TestOrderRequestResource extends DataDelegatingCrudResource<TestOrderRequest> {
+public class TestRequestResource extends DataDelegatingCrudResource<TestRequest> {
 	
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(final Representation rep) {
@@ -53,42 +53,42 @@ public class TestOrderRequestResource extends DataDelegatingCrudResource<TestOrd
 	}
 	
 	@Override
-	public TestOrderRequest newDelegate() {
+	public TestRequest newDelegate() {
 		
-		return new TestOrderRequest();
+		return new TestRequest();
 	}
 	
 	@Override
-	public TestOrderRequest save(final TestOrderRequest delegate) {
+	public TestRequest save(final TestRequest delegate) {
 		throw new ResourceDoesNotSupportOperationException();
 	}
 	
 	@Override
-	public TestOrderRequest getByUniqueId(final String uniqueId) {
+	public TestRequest getByUniqueId(final String uniqueId) {
 		throw new ResourceDoesNotSupportOperationException();
 	}
 	
 	@PropertyGetter("display")
-	public String getDisplayString(final TestOrderRequest item) {
+	public String getDisplayString(final TestRequest item) {
 		return item.getTestOrder().getDisplayString();
 	}
 	
 	@Override
-	protected void delete(final TestOrderRequest delegate, final String reason, final RequestContext context)
+	protected void delete(final TestRequest delegate, final String reason, final RequestContext context)
 	        throws ResponseException {
 		throw new ResourceDoesNotSupportOperationException();
 	}
 	
 	@Override
-	public void purge(final TestOrderRequest delegate, final RequestContext context) throws ResponseException {
+	public void purge(final TestRequest delegate, final RequestContext context) throws ResponseException {
 		throw new ResourceDoesNotSupportOperationException();
 	}
 	
 	@Override
-	protected NeedsPaging<TestOrderRequest> doGetAll(final RequestContext context) {
+	protected NeedsPaging<TestRequest> doGetAll(final RequestContext context) {
 		
-		final TestOrderRequestService testOrderService = Context.getService(TestOrderRequestService.class);
-		final List<TestOrderRequest> testOrderRequests = testOrderService.findAllTestOrderRequest(Context.getLocale());
+		final TestRequestService testOrderService = Context.getService(TestRequestService.class);
+		final List<TestRequest> testOrderRequests = testOrderService.findAllTestOrderRequest(Context.getLocale());
 		return new NeedsPaging<>(testOrderRequests, context);
 	}
 }

@@ -18,8 +18,8 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.openmrs.Encounter;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.poc.api.testorder.model.TestOrderPOC;
-import org.openmrs.module.poc.api.testorder.service.TestOrderService;
+import org.openmrs.module.poc.testresult.model.TestOrderResult;
+import org.openmrs.module.poc.testresult.service.TestOrderResultService;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.PropertyGetter;
@@ -38,9 +38,9 @@ import org.openmrs.module.webservices.rest.web.response.ResponseException;
 import org.openmrs.module.webservices.rest.web.v1_0.resource.openmrs1_11.RestConstants1_11;
 
 @Resource(name = RestConstants.VERSION_1
-        + "/testorder", supportedClass = TestOrderPOC.class, supportedOpenmrsVersions = { "1.10.*", "1.11.*", "1.12.*",
-        "2.0.*", "2.1.*" })
-public class TestOrderResource extends DelegatingCrudResource<TestOrderPOC> {
+        + "/testorderresult", supportedClass = TestOrderResult.class, supportedOpenmrsVersions = { "1.10.*", "1.11.*",
+        "1.12.*", "2.0.*", "2.1.*" })
+public class TestOrderResultResource extends DelegatingCrudResource<TestOrderResult> {
 	
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(final Representation rep) {
@@ -49,12 +49,14 @@ public class TestOrderResource extends DelegatingCrudResource<TestOrderPOC> {
 			
 			final DelegatingResourceDescription description = new DelegatingResourceDescription();
 			description.addProperty("display");
-			description.addProperty("encounter", Representation.REF);
+			description.addProperty("encounterRequest", Representation.REF);
+			description.addProperty("encounterResult", Representation.REF);
 			description.addProperty("provider", Representation.REF);
 			description.addProperty("patient", Representation.REF);
 			description.addProperty("location", Representation.REF);
 			description.addProperty("dateCreation");
-			description.addProperty("testOrderItems");
+			description.addProperty("status");
+			description.addProperty("items");
 			
 			description.addSelfLink();
 			
@@ -63,12 +65,14 @@ public class TestOrderResource extends DelegatingCrudResource<TestOrderPOC> {
 			
 			final DelegatingResourceDescription description = new DelegatingResourceDescription();
 			description.addProperty("display");
-			description.addProperty("encounter", Representation.REF);
+			description.addProperty("encounterRequest", Representation.REF);
+			description.addProperty("encounterResult", Representation.REF);
 			description.addProperty("provider", Representation.REF);
 			description.addProperty("patient", Representation.REF);
 			description.addProperty("location", Representation.REF);
 			description.addProperty("dateCreation");
-			description.addProperty("testOrderItems");
+			description.addProperty("status");
+			description.addProperty("items");
 			description.addSelfLink();
 			description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
 			
@@ -77,12 +81,14 @@ public class TestOrderResource extends DelegatingCrudResource<TestOrderPOC> {
 			
 			final DelegatingResourceDescription description = new DelegatingResourceDescription();
 			description.addProperty("display");
-			description.addProperty("encounter");
+			description.addProperty("encounterRequest", Representation.REF);
+			description.addProperty("encounterResult", Representation.REF);
 			description.addProperty("provider");
 			description.addProperty("patient");
 			description.addProperty("location");
 			description.addProperty("dateCreation");
-			description.addProperty("testOrderItems");
+			description.addProperty("status");
+			description.addProperty("items");
 			description.addSelfLink();
 			
 			return description;
@@ -92,27 +98,27 @@ public class TestOrderResource extends DelegatingCrudResource<TestOrderPOC> {
 	}
 	
 	@Override
-	public TestOrderPOC newDelegate() {
-		return new TestOrderPOC();
+	public TestOrderResult newDelegate() {
+		return new TestOrderResult();
 	}
 	
 	@Override
-	public TestOrderPOC save(final TestOrderPOC delegate) {
+	public TestOrderResult save(final TestOrderResult delegate) {
 		
-		return Context.getService(TestOrderService.class).createTestOder(delegate);
+		return Context.getService(TestOrderResultService.class).createTestOrderResult(delegate);
 	}
 	
 	@Override
-	public TestOrderPOC getByUniqueId(final String uniqueId) {
+	public TestOrderResult getByUniqueId(final String uniqueId) {
 		
 		final Encounter encounter = new Encounter();
 		encounter.setUuid(uniqueId);
-		return Context.getService(TestOrderService.class).findTestOrderByEncounter(encounter);
+		return Context.getService(TestOrderResultService.class).findTestOrderByTestRequest(encounter);
 	}
 	
 	@PropertyGetter("display")
-	public String getDisplayString(final TestOrderPOC item) {
-		return item.getDateCreation().toString();
+	public String getDisplayString(final TestOrderResult item) {
+		return item.getEncounterResult().getEncounterDatetime().toString();
 	}
 	
 	@Override
@@ -120,15 +126,15 @@ public class TestOrderResource extends DelegatingCrudResource<TestOrderPOC> {
 		final String patient = context.getParameter("patient");
 		
 		if (StringUtils.isNotBlank(patient)) {
-			return new NeedsPaging<>(Context.getService(TestOrderService.class).findTestOrdersByPatient(patient),
-			        context);
+			return new NeedsPaging<>(
+			        Context.getService(TestOrderResultService.class).findTestOrderResultsByPatient(patient), context);
 		}
 		
 		return new EmptySearchResult();
 	}
 	
 	@Override
-	protected void delete(final TestOrderPOC delegate, final String reason, final RequestContext context)
+	protected void delete(final TestOrderResult delegate, final String reason, final RequestContext context)
 	        throws ResponseException {
 		
 		throw new ResourceDoesNotSupportOperationException();
@@ -142,14 +148,16 @@ public class TestOrderResource extends DelegatingCrudResource<TestOrderPOC> {
 		description.addProperty("patient");
 		description.addProperty("dateCreation");
 		description.addProperty("location");
-		description.addProperty("testOrderItems");
+		description.addProperty("status");
+		description.addProperty("items");
+		description.addProperty("encounterRequest");
 		
 		return description;
 	}
 	
 	@Override
 	public List<String> getPropertiesToExposeAsSubResources() {
-		return Arrays.asList("testOrderItems");
+		return Arrays.asList("items");
 	}
 	
 	/**
@@ -159,7 +167,7 @@ public class TestOrderResource extends DelegatingCrudResource<TestOrderPOC> {
 	public DelegatingResourceDescription getUpdatableProperties() throws ResourceDoesNotSupportOperationException {
 		
 		final DelegatingResourceDescription description = super.getUpdatableProperties();
-		description.addProperty("testOrderItems");
+		description.addProperty("items");
 		
 		return description;
 	}
@@ -170,6 +178,6 @@ public class TestOrderResource extends DelegatingCrudResource<TestOrderPOC> {
 	}
 	
 	@Override
-	public void purge(final TestOrderPOC delegate, final RequestContext context) throws ResponseException {
+	public void purge(final TestOrderResult delegate, final RequestContext context) throws ResponseException {
 	}
 }

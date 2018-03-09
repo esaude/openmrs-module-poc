@@ -7,16 +7,11 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.poc.api.testorder.service;
+package org.openmrs.module.poc.testresult.service;
 
-import java.util.Date;
 import java.util.List;
 
 import org.openmrs.Encounter;
-import org.openmrs.EncounterType;
-import org.openmrs.Location;
-import org.openmrs.Patient;
-import org.openmrs.api.APIException;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.LocationService;
@@ -27,12 +22,12 @@ import org.openmrs.api.PersonService;
 import org.openmrs.api.ProviderService;
 import org.openmrs.module.poc.api.common.service.POCDbSessionManager;
 import org.openmrs.module.poc.api.pocheuristic.service.PocHeuristicService;
-import org.openmrs.module.poc.api.testorder.model.TestOrderItem;
-import org.openmrs.module.poc.api.testorder.model.TestOrderPOC;
+import org.openmrs.module.poc.testresult.model.TestOrderResult;
+import org.openmrs.module.poc.testresult.model.TestOrderResultItem;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional(noRollbackFor = APIException.class)
-public interface TestOrderService extends OpenmrsService {
+@Transactional
+public interface TestOrderResultService extends OpenmrsService {
 	
 	void setPocHeuristicService(PocHeuristicService pocHeuristicService);
 	
@@ -52,19 +47,16 @@ public interface TestOrderService extends OpenmrsService {
 	
 	void setPOCDbSessionManager(POCDbSessionManager pOCDbSessionManager);
 	
-	TestOrderPOC createTestOder(TestOrderPOC testOrderPOC);
+	void setTestRequestResultService(final TestRequestResultService testRequestResultService);
 	
-	void deleteTestOrderItem(TestOrderItem testOrder, String reason);
+	TestOrderResult createTestOrderResult(TestOrderResult testOrderResult);
 	
-	TestOrderPOC findTestOrderByEncounter(Encounter encounter);
+	void deleteTestOrderResultItem(TestOrderResultItem testOrderResultItem, String reason);
 	
-	List<TestOrderPOC> findTestOrdersByPatient(String patientUUID);
+	TestOrderResult findTestOrderByTestRequest(Encounter request);
 	
-	TestOrderItem findTestOrderItemByUuid(String uuid);
+	List<TestOrderResult> findTestOrderResultsByPatient(String patientUUID);
 	
-	EncounterType findSeguimentoPacienteEncounterTypeByPatientAge(final Patient patient);
+	TestOrderResultItem findTestOrderResultItemByUuid(String uuid);
 	
-	Encounter findLastEncounterByPatientAndEncounterTypeAndLocationAndDateAndStatus(final Patient patient,
-	        final EncounterType encounterType, final Location location, final Date encounterDateTime)
-	        throws APIException;
 }

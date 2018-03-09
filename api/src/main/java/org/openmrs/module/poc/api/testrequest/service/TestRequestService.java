@@ -7,20 +7,20 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.poc.api.testorderrequest.service;
+package org.openmrs.module.poc.api.testrequest.service;
 
 import java.util.List;
 import java.util.Locale;
 
 import org.openmrs.api.OpenmrsService;
-import org.openmrs.module.poc.api.testorderrequest.dao.TestOrderRequestDAO;
-import org.openmrs.module.poc.api.testorderrequest.model.TestOrderRequest;
+import org.openmrs.module.poc.api.testrequest.dao.TestRequestDAO;
+import org.openmrs.module.poc.api.testrequest.model.TestRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
-public interface TestOrderRequestService extends OpenmrsService {
+public interface TestRequestService extends OpenmrsService {
 	
-	public void setTestOrderRequestDAO(final TestOrderRequestDAO testOrderRequestDAO);
+	public void setTestRequestDAO(final TestRequestDAO testRequestDAO);
 	
-	List<TestOrderRequest> findAllTestOrderRequest(Locale locale);
+	List<TestRequest> findAllTestOrderRequest(Locale locale);
 }

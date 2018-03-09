@@ -7,7 +7,7 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.poc.api.testorder.dao;
+package org.openmrs.module.poc.api.pocheuristic.dao;
 
 import java.util.Date;
 import java.util.List;
@@ -19,7 +19,7 @@ import org.openmrs.Location;
 import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 
-public interface TestOrderDAO {
+public interface PocHeuristicCAO {
 	
 	void setSessionFactory(final SessionFactory sessionFactory);
 	
@@ -28,4 +28,5 @@ public interface TestOrderDAO {
 	        final boolean status) throws APIException;
 	
 	List<Encounter> findEncountersWithTestOrdersByPatient(String patientUUID);
+	
 }

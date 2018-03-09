@@ -10,7 +10,6 @@
 package org.openmrs.module.poc.api.testorder.validation;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +25,6 @@ import org.openmrs.Location;
 import org.openmrs.Order;
 import org.openmrs.OrderType;
 import org.openmrs.Patient;
-import org.openmrs.Person;
 import org.openmrs.Provider;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
@@ -39,7 +37,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class TestOrderRequestValidator {
 	
-	public void validate(final TestOrderPOC testOrder, final Date creationDate) {
+	public void validate(final TestOrderPOC testOrder) {
 		final TestOrderService testOrderService = Context.getService(TestOrderService.class);
 		
 		this.validatePatient(testOrder);
@@ -53,7 +51,7 @@ public class TestOrderRequestValidator {
 		final EncounterType encounterType = testOrderService.findSeguimentoPacienteEncounterTypeByPatientAge(patient);
 		
 		this.validateDuplicateTest(testOrderService, testOrder.getTestOrderItems(), patient, encounterType, location,
-		    creationDate);
+		    testOrder.getDateCreation());
 		
 	}
 	
@@ -76,10 +74,9 @@ public class TestOrderRequestValidator {
 			throw new APIException(Context.getMessageSourceService().getMessage("poc.error.provider.required"));
 		}
 		
-		final Person providerPerson = Context.getPersonService().getPersonByUuid(testOrder.getProvider().getUuid());
-		final Collection<Provider> providers = Context.getProviderService().getProvidersByPerson(providerPerson);
+		final Provider provider = Context.getProviderService().getProviderByUuid(testOrder.getProvider().getUuid());
 		
-		if ((providers == null) || providers.isEmpty()) {
+		if (provider == null) {
 			throw new APIException(Context.getMessageSourceService().getMessage("poc.error.provider.not.found.for.uuid",
 			    new String[] { testOrder.getProvider().getUuid() }, Context.getLocale()));
 		}
@@ -165,6 +162,7 @@ public class TestOrderRequestValidator {
 			
 		}
 		catch (final APIException e) {
+			
 			return;
 		}
 		

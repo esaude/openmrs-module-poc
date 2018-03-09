@@ -20,4 +20,91 @@
         for a list of supported elements and attributes
     -->
     
+    	<changeSet id="poc-v1.0.0-table-poc_test_request_result"
+		author="Guimino">
+
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="poc_test_request_result" />
+			</not>
+		</preConditions>
+
+		<comment>
+			Creating poc_test_request_result table
+		</comment>
+
+		<createTable tableName="poc_test_request_result">
+
+			<column name="test_request_result_id" type="int"
+				autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+
+			<column name="patient_id" type="int">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="test_request_id" type="int">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="test_result_id" type="int">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="uuid" type="char(38)">
+				<constraints nullable="false" unique="true" />
+			</column>
+
+			<column name="creator" defaultValueNumeric="0" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="date_created" type="datetime">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="changed_by" type="int" />
+			<column name="date_changed" type="datetime" />
+
+			<column defaultValueBoolean="false" name="retired" type="boolean">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="retired_by" type="int" />
+			<column name="date_retired" type="datetime" />
+			<column name="retire_reason" type="varchar(255)" />
+
+		</createTable>
+
+		<addForeignKeyConstraint
+			constraintName="poc_test_request_result_test_request_fk"
+			baseTableName="poc_test_request_result" baseColumnNames="test_request_id"
+			referencedTableName="encounter" referencedColumnNames="encounter_id" />
+
+		<addForeignKeyConstraint
+			constraintName="poc_test_request_result_test_result_fk"
+			baseTableName="poc_test_request_result" baseColumnNames="test_result_id"
+			referencedTableName="encounter" referencedColumnNames="encounter_id" />
+
+		<addForeignKeyConstraint constraintName="poc_test_request_result_creator_fk"
+			baseTableName="poc_test_request_result" baseColumnNames="creator"
+			referencedTableName="users" referencedColumnNames="user_id" />
+
+		<addForeignKeyConstraint constraintName="poc_test_request_result_changed_by_fk"
+			baseTableName="poc_test_request_result" baseColumnNames="changed_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+
+		<addForeignKeyConstraint constraintName="poc_test_request_result_retired_by_fk"
+			baseTableName="poc_test_request_result" baseColumnNames="retired_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+
+		<addForeignKeyConstraint constraintName="poc_test_request_result_patient_fk"
+			baseTableName="poc_test_request_result" baseColumnNames="patient_id"
+			referencedTableName="patient" referencedColumnNames="patient_id" />
+
+		<addUniqueConstraint tableName="poc_test_request_result"
+			columnNames="test_request_id, test_result_id" constraintName="poc_test_request_result_unique" />
+
+	</changeSet>
+    
 </databaseChangeLog>
