@@ -9,6 +9,8 @@
  */
 package org.openmrs.module.poc.testresult.dao;
 
+import java.util.List;
+
 import org.hibernate.SessionFactory;
 import org.openmrs.Encounter;
 import org.openmrs.module.poc.testresult.model.TestRequestResult;
@@ -28,5 +30,7 @@ public interface TestRequestResultDAO {
 	TestRequestResult findByResultEncounter(Encounter result);
 	
 	TestRequestResult findByRequestEncounter(Encounter request, boolean voided);
+	
+	List<TestRequestResult> findByPatientUuid(String patientUuid, boolean voided);
 	
 }

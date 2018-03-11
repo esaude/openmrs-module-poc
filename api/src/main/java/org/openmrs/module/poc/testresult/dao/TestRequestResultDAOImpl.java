@@ -9,10 +9,14 @@
  */
 package org.openmrs.module.poc.testresult.dao;
 
+import java.util.List;
+
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Encounter;
+import org.openmrs.Patient;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.poc.testresult.model.TestRequestResult;
 
 public class TestRequestResultDAOImpl implements TestRequestResultDAO {
@@ -59,5 +63,19 @@ public class TestRequestResultDAOImpl implements TestRequestResultDAO {
 		searchCriteria.add(Restrictions.eq("testRR.retired", voided));
 		
 		return (TestRequestResult) searchCriteria.uniqueResult();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<TestRequestResult> findByPatientUuid(final String patientUuid, final boolean voided) {
+		
+		final Patient patient = Context.getPatientService().getPatientByUuid(patientUuid);
+		
+		final Criteria searchCriteria = this.sessionFactory.getCurrentSession().createCriteria(TestRequestResult.class,
+		    "testRR");
+		searchCriteria.add(Restrictions.eq("testRR.patient", patient));
+		searchCriteria.add(Restrictions.eq("testRR.retired", voided));
+		
+		return searchCriteria.list();
 	}
 }

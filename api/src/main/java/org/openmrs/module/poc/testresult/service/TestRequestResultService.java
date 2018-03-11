@@ -10,6 +10,7 @@
 package org.openmrs.module.poc.testresult.service;
 
 import java.util.Date;
+import java.util.List;
 
 import org.openmrs.Encounter;
 import org.openmrs.api.EncounterService;
@@ -39,5 +40,7 @@ public interface TestRequestResultService extends OpenmrsService {
 	TestRequestResult findTestRequestResultByResultEncounter(Encounter result);
 	
 	TestRequestResult findTestRequestResultsByRequestEncounter(Encounter request);
+	
+	List<TestRequestResult> findTestRequestResultsByPatientUuid(String patientUuid);
 	
 }

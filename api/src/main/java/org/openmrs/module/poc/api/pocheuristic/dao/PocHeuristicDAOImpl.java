@@ -57,8 +57,10 @@ public class PocHeuristicDAOImpl implements PocHeuristicCAO {
 	@Override
 	public List<Encounter> findEncountersWithTestOrdersByPatient(final String patientUUID) {
 		
-		return this.sessionFactory.getCurrentSession()
-		        .createQuery("select distinct o.encounter from TestOrder o where o.patient.uuid =:patientUUID ")
+		return this.sessionFactory
+		        .getCurrentSession()
+		        .createQuery(
+		            "select distinct o.encounter from TestOrder o where o.patient.uuid =:patientUUID and o.voided = false ")
 		        .setParameter("patientUUID", patientUUID).list();
 	}
 	

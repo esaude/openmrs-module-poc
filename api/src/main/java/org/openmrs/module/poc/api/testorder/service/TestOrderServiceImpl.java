@@ -12,6 +12,7 @@ package org.openmrs.module.poc.api.testorder.service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -45,6 +46,8 @@ import org.openmrs.module.poc.api.testorder.model.TestOrderPOC;
 import org.openmrs.module.poc.api.testorder.validation.TestOrderRequestValidator;
 import org.openmrs.module.poc.api.testrequest.model.TestRequest;
 import org.openmrs.module.poc.api.testrequest.service.TestRequestService;
+import org.openmrs.module.poc.testresult.model.TestRequestResult;
+import org.openmrs.module.poc.testresult.service.TestRequestResultService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,6 +71,8 @@ public class TestOrderServiceImpl extends BaseOpenmrsService implements TestOrde
 	private ProviderService providerService;
 	
 	private POCDbSessionManager pOCDbSessionManager;
+	
+	private TestRequestResultService testRequestResultService;
 	
 	@Autowired
 	private TestOrderRequestValidator testOrderRequestValidator;
@@ -137,8 +142,17 @@ public class TestOrderServiceImpl extends BaseOpenmrsService implements TestOrde
 			final Encounter encounter = this.getEncounterByRules(patient, provider, location,
 			    testOrderPOC.getDateCreation());
 			
-			// this.setObsCreationDate(testOrderPOC, encounter);
-			
+			// final TestOrderPOC existingTestOrder =
+			// this.buildTestOrder(encounter,
+			// this.getMapCategoriesByTestConcept());
+			//
+			// if
+			// (!TestOrderPOC.STATUS.NEW.equals(existingTestOrder.getStatus()))
+			// {
+			//
+			// throw new APIException(Context.getMessageSourceService()
+			// .getMessage("poc.error.testorderitem.cannot.be.created.due.stage.results"));
+			// }
 			for (final TestOrderItem orderItem : testOrderPOC.getTestOrderItems()) {
 				
 				final Concept concept = this.conceptService
@@ -251,14 +265,21 @@ public class TestOrderServiceImpl extends BaseOpenmrsService implements TestOrde
 	private TestOrderPOC buildTestOrder(final Encounter encounter,
 	        final Map<Concept, Concept> mapCategoriesByTestConcept) {
 		
-		final Set<Order> orders = encounter.getOrders();
+		Encounter testResult = new Encounter();
+		final TestRequestResult testRequestResult = this.testRequestResultService
+		        .findTestRequestResultsByRequestEncounter(encounter);
+		
+		if (testRequestResult != null) {
+			testResult = testRequestResult.getTestResult();
+		}
+		final Set<Order> orders = this.mergeOrders(encounter.getOrders(), testResult.getOrders());
 		
 		if ((orders != null) && !orders.isEmpty()) {
 			
 			final List<TestOrderItem> items = new ArrayList<>();
 			for (final Order order : orders) {
 				
-				if (OrderType.TEST_ORDER_TYPE_UUID.equals(order.getOrderType().getUuid()) && order.isActive()) {
+				if (OrderType.TEST_ORDER_TYPE_UUID.equals(order.getOrderType().getUuid()) && !order.isVoided()) {
 					items.add(new TestOrderItem((TestOrder) order, mapCategoriesByTestConcept.get(order.getConcept())));
 				}
 			}
@@ -277,6 +298,35 @@ public class TestOrderServiceImpl extends BaseOpenmrsService implements TestOrde
 		}
 		
 		return null;
+	}
+	
+	private Set<Order> mergeOrders(final Set<Order> requestOrders, final Set<Order> resultOrders) {
+		
+		final Set<Order> result = new LinkedHashSet<>();
+		
+		final Map<Concept, Order> mapRequests = new HashMap<>();
+		final Map<Concept, Order> mapResults = new HashMap<>();
+		
+		for (final Order orderRequest : requestOrders) {
+			mapRequests.put(orderRequest.getConcept(), orderRequest);
+		}
+		
+		for (final Order orderResult : resultOrders) {
+			mapResults.put(orderResult.getConcept(), orderResult);
+		}
+		
+		for (final Concept order : mapRequests.keySet()) {
+			
+			if (mapResults.containsKey(order)) {
+				
+				result.add(mapResults.get(order));
+			} else {
+				
+				result.add(mapRequests.get(order));
+			}
+		}
+		
+		return result;
 	}
 	
 	private Map<Concept, Concept> getMapCategoriesByTestConcept() {
@@ -326,6 +376,11 @@ public class TestOrderServiceImpl extends BaseOpenmrsService implements TestOrde
 	private EncounterRole getEncounterRole() {
 		
 		return this.encounterService.getEncounterRoleByUuid(OPENMRSUUIDs.DEFAULT_ENCONTER_ROLE_UUID);
+	}
+	
+	@Override
+	public void setTestRequestResultService(final TestRequestResultService testRequestResultService) {
+		this.testRequestResultService = testRequestResultService;
 	}
 	
 }

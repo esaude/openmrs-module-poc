@@ -29,6 +29,7 @@ import org.openmrs.module.poc.api.common.service.POCDbSessionManager;
 import org.openmrs.module.poc.api.pocheuristic.service.PocHeuristicService;
 import org.openmrs.module.poc.api.testorder.model.TestOrderItem;
 import org.openmrs.module.poc.api.testorder.model.TestOrderPOC;
+import org.openmrs.module.poc.testresult.service.TestRequestResultService;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(noRollbackFor = APIException.class)
@@ -51,6 +52,8 @@ public interface TestOrderService extends OpenmrsService {
 	void setProviderService(ProviderService providerService);
 	
 	void setPOCDbSessionManager(POCDbSessionManager pOCDbSessionManager);
+	
+	void setTestRequestResultService(TestRequestResultService testRequestResultService);
 	
 	TestOrderPOC createTestOder(TestOrderPOC testOrderPOC);
 	

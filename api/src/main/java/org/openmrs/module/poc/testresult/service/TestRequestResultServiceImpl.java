@@ -10,6 +10,7 @@
 package org.openmrs.module.poc.testresult.service;
 
 import java.util.Date;
+import java.util.List;
 
 import org.openmrs.Encounter;
 import org.openmrs.EncounterRole;
@@ -57,7 +58,7 @@ public class TestRequestResultServiceImpl extends BaseOpenmrsService implements 
 		
 		if (testRequestResultFound != null) {
 			
-			return testRequestResult;
+			return testRequestResultFound;
 		}
 		
 		final Encounter testResult = this.generateTestResult(testRequest, date);
@@ -122,5 +123,11 @@ public class TestRequestResultServiceImpl extends BaseOpenmrsService implements 
 	public TestRequestResult findTestRequestResultsByRequestEncounter(final Encounter request) {
 		
 		return this.testRequestResultDAO.findByRequestEncounter(request, false);
+	}
+	
+	@Override
+	public List<TestRequestResult> findTestRequestResultsByPatientUuid(final String patientUuid) {
+		
+		return this.testRequestResultDAO.findByPatientUuid(patientUuid, false);
 	}
 }

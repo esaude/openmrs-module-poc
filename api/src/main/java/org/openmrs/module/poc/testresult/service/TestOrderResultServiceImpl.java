@@ -25,7 +25,6 @@ import org.openmrs.Order;
 import org.openmrs.Order.Action;
 import org.openmrs.OrderType;
 import org.openmrs.Provider;
-import org.openmrs.TestOrder;
 import org.openmrs.api.APIException;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.EncounterService;
@@ -152,7 +151,7 @@ public class TestOrderResultServiceImpl extends BaseOpenmrsService implements Te
 				
 				final Order revisedOrder = order.cloneForRevision();
 				revisedOrder.setOrderer(provider);
-				resultItem.setTestOrder((TestOrder) revisedOrder);
+				resultItem.setTestOrder(revisedOrder);
 				testResult.addOrder(revisedOrder);
 			}
 		}
@@ -173,8 +172,19 @@ public class TestOrderResultServiceImpl extends BaseOpenmrsService implements Te
 	
 	@Override
 	public List<TestOrderResult> findTestOrderResultsByPatient(final String patientUUID) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		final Map<Concept, Concept> categoriesByTestConcept = this.getMapCategoriesByTestConcept();
+		
+		final List<TestRequestResult> TestRequestResults = this.testRequestResultService
+		        .findTestRequestResultsByPatientUuid(patientUUID);
+		
+		final List<TestOrderResult> resutl = new ArrayList<>();
+		for (final TestRequestResult testRequestResult : TestRequestResults) {
+			
+			resutl.add(this.buildTestOrderResult(testRequestResult.getTestRequest(), testRequestResult.getTestResult(),
+			    categoriesByTestConcept));
+		}
+		return resutl;
 	}
 	
 	@Override
@@ -233,8 +243,9 @@ public class TestOrderResultServiceImpl extends BaseOpenmrsService implements Te
 		
 		if (!Action.NEW.equals(order.getAction())) {
 			
-			final Obs oldObsValue = this.getObsFromOrder(order);
-			Context.getObsService().voidObs(oldObsValue, "retired for update value");
+			final Obs oldObs = this.getObsFromOrder(order);
+			Context.getObsService().voidObs(oldObs, "retired for update value");
+			Context.getObsService().voidObs(oldObs.getObsGroup(), "retired for update value");
 		}
 		this.createObs(encounter, order, resultItem);
 	}
@@ -254,8 +265,8 @@ public class TestOrderResultServiceImpl extends BaseOpenmrsService implements Te
 					
 					value = this.getObsValue(order);
 				}
-				items.add(new TestOrderResultItem((TestOrder) order, mapCategoriesByTestConcept.get(order.getConcept()),
-				        value));
+				
+				items.add(new TestOrderResultItem(order, mapCategoriesByTestConcept.get(order.getConcept()), value));
 			}
 		}
 		if (!items.isEmpty()) {

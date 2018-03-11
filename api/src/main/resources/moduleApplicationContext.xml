@@ -156,6 +156,9 @@
 				<property name="pOCDbSessionManager">
 					<ref bean="pOCDbSessionManager" />
 				</property>
+				<property name="testRequestResultService">
+					<ref bean="testRequestResultService" />
+				</property>
 			</bean>
 		</property>
 		<property name="preInterceptors">

@@ -11,12 +11,12 @@ package org.openmrs.module.poc.testresult.model;
 
 import org.openmrs.BaseOpenmrsData;
 import org.openmrs.Concept;
+import org.openmrs.Order;
 import org.openmrs.Order.Action;
-import org.openmrs.TestOrder;
 
 public class TestOrderResultItem extends BaseOpenmrsData {
 	
-	private TestOrder testOrder;
+	private Order testOrder;
 	
 	private Concept category;
 	
@@ -31,7 +31,7 @@ public class TestOrderResultItem extends BaseOpenmrsData {
 		NEW, REVISE;
 	}
 	
-	public TestOrderResultItem(final TestOrder testOrder, final Concept category, final String value) {
+	public TestOrderResultItem(final Order testOrder, final Concept category, final String value) {
 		
 		this.testOrder = testOrder;
 		this.category = category;
@@ -42,11 +42,11 @@ public class TestOrderResultItem extends BaseOpenmrsData {
 	public TestOrderResultItem() {
 	}
 	
-	public TestOrder getTestOrder() {
+	public Order getTestOrder() {
 		return this.testOrder;
 	}
 	
-	public void setTestOrder(final TestOrder testOrder) {
+	public void setTestOrder(final Order testOrder) {
 		this.testOrder = testOrder;
 	}
 	

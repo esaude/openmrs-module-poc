@@ -11,6 +11,7 @@ package org.openmrs.module.poc.api.testorder.model;
 
 import org.openmrs.BaseOpenmrsData;
 import org.openmrs.Concept;
+import org.openmrs.Order.Action;
 import org.openmrs.TestOrder;
 
 public class TestOrderItem extends BaseOpenmrsData {
@@ -21,10 +22,17 @@ public class TestOrderItem extends BaseOpenmrsData {
 	
 	private TestOrderPOC parent;
 	
+	private ITEM_STATUS status;
+	
+	public enum ITEM_STATUS {
+		NEW, REVISE;
+	}
+	
 	public TestOrderItem(final TestOrder testOrder, final Concept category) {
 		
 		this.testOrder = testOrder;
 		this.category = category;
+		this.status = (Action.NEW.equals(testOrder.getAction())) ? ITEM_STATUS.NEW : ITEM_STATUS.REVISE;
 	}
 	
 	public TestOrderItem() {
@@ -55,10 +63,19 @@ public class TestOrderItem extends BaseOpenmrsData {
 		this.parent = parent;
 	}
 	
+	public ITEM_STATUS getStatus() {
+		return this.status;
+	}
+	
+	public void setStatus(final ITEM_STATUS status) {
+		this.status = status;
+	}
+	
 	@Override
 	public String toString() {
 		return "TestOrderItem [testOrder=" + this.testOrder + ", category=" + this.category + ", parent=" + this.parent
-		        + "]";
+		        + ", status="
+		        + this.status + "]";
 	}
 	
 	@Override

@@ -39,6 +39,7 @@ public class TestOrderItemResource extends DelegatingSubResource<TestOrderItem, 
 			description.addProperty("display");
 			description.addProperty("testOrder", Representation.REF);
 			description.addProperty("category", Representation.REF);
+			description.addProperty("status");
 			description.addSelfLink();
 			description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
 			
@@ -49,6 +50,7 @@ public class TestOrderItemResource extends DelegatingSubResource<TestOrderItem, 
 			description.addProperty("display");
 			description.addProperty("testOrder");
 			description.addProperty("category");
+			description.addProperty("status");
 			
 			return description;
 		}
@@ -107,6 +109,7 @@ public class TestOrderItemResource extends DelegatingSubResource<TestOrderItem, 
 		final DelegatingResourceDescription description = new DelegatingResourceDescription();
 		description.addProperty("testOrder");
 		description.addProperty("category");
+		description.addProperty("status");
 		return description;
 	}
 	
