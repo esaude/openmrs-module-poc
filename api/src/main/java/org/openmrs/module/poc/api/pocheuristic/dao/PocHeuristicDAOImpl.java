@@ -55,13 +55,13 @@ public class PocHeuristicDAOImpl implements PocHeuristicCAO {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Encounter> findEncountersWithTestOrdersByPatient(final String patientUUID) {
+	public List<Encounter> findEncountersWithTestOrdersByPatient(final String patientUUID, final boolean voided) {
 		
 		return this.sessionFactory
 		        .getCurrentSession()
 		        .createQuery(
-		            "select distinct o.encounter from TestOrder o where o.patient.uuid =:patientUUID and o.voided = false ")
-		        .setParameter("patientUUID", patientUUID).list();
+		            "select distinct o.encounter from TestOrder o where o.patient.uuid =:patientUUID and o.voided = :voided ")
+		        .setParameter("patientUUID", patientUUID).setParameter("voided", voided).list();
 	}
 	
 }

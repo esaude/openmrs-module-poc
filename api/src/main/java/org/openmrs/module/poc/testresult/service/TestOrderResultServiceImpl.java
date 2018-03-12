@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.openmrs.Concept;
 import org.openmrs.ConceptDatatype;
 import org.openmrs.Encounter;
@@ -136,13 +137,15 @@ public class TestOrderResultServiceImpl extends BaseOpenmrsService implements Te
 		
 		this.setObsCreationDate(testOrderResult, testResult);
 		
+		final Map<Concept, Concept> mapCategoriesByConcept = this.getMapCategoriesByTestConcept();
 		final List<Order> toVoid = new ArrayList<>();
 		for (final TestOrderResultItem resultItem : testOrderResult.getItems()) {
 			final Order order = this.orderService.getOrderByUuid(resultItem.getTestOrder().getUuid());
 			
 			try {
 				
-				this.generateObs(testResult, order, resultItem);
+				final Concept category = mapCategoriesByConcept.get(order.getConcept());
+				this.generateObs(testResult, order, resultItem, category);
 				
 			}
 			catch (final ParseException e) {
@@ -193,8 +196,7 @@ public class TestOrderResultServiceImpl extends BaseOpenmrsService implements Te
 		encounter.addOrder(newTestOrder);
 		
 		this.encounterService.saveEncounter(encounter);
-		this.orderService.voidOrder(order, "web service call");
-		
+		this.orderService.voidOrder(order, "voided due order revision");
 	}
 	
 	@Override
@@ -217,29 +219,33 @@ public class TestOrderResultServiceImpl extends BaseOpenmrsService implements Te
 	}
 	
 	private Map<Encounter, Encounter> mergeTestRequestResult(final List<Encounter> encounters,
-	        final List<TestRequestResult> TestRequestResults) {
+	        final List<TestRequestResult> testRequestResults) {
 		
 		final Map<Encounter, Encounter> result = new HashMap<>();
 		
+		for (final TestRequestResult testRequestResult : testRequestResults) {
+			
+			final Encounter encounterRequest = testRequestResult.getTestRequest();
+			final Encounter encounterResult = testRequestResult.getTestResult();
+			
+			if (encounters.contains(encounterRequest) && encounters.contains(encounterResult)) {
+				result.put(encounterRequest, encounterResult);
+				encounters.remove(encounterRequest);
+				encounters.remove(encounterResult);
+				continue;
+			} else if (encounters.contains(encounterRequest)) {
+				result.put(encounterRequest, new Encounter());
+				encounters.remove(encounterRequest);
+				continue;
+			} else if (encounters.contains(encounterResult)) {
+				result.put(encounterResult, new Encounter());
+				result.remove(encounterResult);
+				continue;
+			}
+		}
 		for (final Encounter request : encounters) {
 			
-			boolean found = false;
-			for (final TestRequestResult testRequestResult : TestRequestResults) {
-				
-				if (result.containsKey(testRequestResult.getTestRequest())) {
-					result.put(testRequestResult.getTestRequest(), testRequestResult.getTestResult());
-					found = true;
-					break;
-				}
-				if (result.containsKey(testRequestResult.getTestResult())) {
-					result.put(testRequestResult.getTestResult(), testRequestResult.getTestResult());
-					found = true;
-					break;
-				}
-			}
-			if (!found) {
-				result.put(request, new Encounter());
-			}
+			result.put(request, new Encounter());
 		}
 		
 		return result;
@@ -260,7 +266,7 @@ public class TestOrderResultServiceImpl extends BaseOpenmrsService implements Te
 			
 			final TestOrderResultItem testOrderResultItem = new TestOrderResultItem(order, category,
 			        this.getObsValue(order));
-			testOrderResultItem.setParent(this.findTestOrderByTestRequest(requestResult.getTestRequest()));
+			testOrderResultItem.setParent(this.findTestOrderResultByTestRequest(requestResult.getTestRequest()));
 			
 			return testOrderResultItem;
 		}
@@ -270,7 +276,7 @@ public class TestOrderResultServiceImpl extends BaseOpenmrsService implements Te
 	}
 	
 	@Override
-	public TestOrderResult findTestOrderByTestRequest(final Encounter encounter) {
+	public TestOrderResult findTestOrderResultByTestRequest(final Encounter encounter) {
 		
 		final Encounter requestEncounter = this.encounterService.getEncounterByUuid(encounter.getUuid());
 		final TestRequestResult resquestResult = this.testRequestResultService
@@ -286,18 +292,31 @@ public class TestOrderResultServiceImpl extends BaseOpenmrsService implements Te
 	}
 	
 	private void setObsCreationDate(final TestOrderResult testOrderResult, final Encounter encounter) {
+		final Concept conceptCreationExamDate = this.conceptService
+		        .getConceptByUuid(OPENMRSUUIDs.DATA_PEDIDO_EXAMES_LABORATORIAIS_FORM_UUID);
+		final Set<Obs> allObs = encounter.getAllObs(false);
+		
+		for (final Obs obs : allObs) {
+			
+			if (conceptCreationExamDate.equals(obs.getConcept())) {
+				
+				if (!DateUtils.isSameDay(obs.getValueDatetime(), testOrderResult.getDateCreation())) {
+					Context.getObsService().voidObs(obs, "voided due update of the date of creation Exams");
+				}
+				break;
+			}
+		}
 		final Obs obsCreationDate = new Obs();
-		obsCreationDate.setConcept(
-		        this.conceptService.getConceptByUuid(OPENMRSUUIDs.DATA_PEDIDO_EXAMES_LABORATORIAIS_FORM_UUID));
+		obsCreationDate.setConcept(conceptCreationExamDate);
 		obsCreationDate.setValueDatetime(testOrderResult.getDateCreation());
 		encounter.addObs(obsCreationDate);
 	}
 	
-	private void createObs(final Encounter encounter, final Order order, final TestOrderResultItem resultItem)
-	        throws ParseException {
+	private void createObs(final Encounter encounter, final Order order, final TestOrderResultItem resultItem,
+	        final Concept category) throws ParseException {
 		
 		final Obs obsGroup = new Obs();
-		obsGroup.setConcept(this.conceptService.getConceptByUuid(resultItem.getCategory().getUuid()));
+		obsGroup.setConcept(category);
 		obsGroup.setOrder(order);
 		
 		final Obs obsTest = new Obs();
@@ -314,8 +333,8 @@ public class TestOrderResultServiceImpl extends BaseOpenmrsService implements Te
 		encounter.addObs(obsGroup);
 	}
 	
-	private void generateObs(final Encounter encounter, final Order order, final TestOrderResultItem resultItem)
-	        throws ParseException {
+	private void generateObs(final Encounter encounter, final Order order, final TestOrderResultItem resultItem,
+	        final Concept category) throws ParseException {
 		
 		if (!Action.NEW.equals(order.getAction())) {
 			
@@ -323,7 +342,7 @@ public class TestOrderResultServiceImpl extends BaseOpenmrsService implements Te
 			Context.getObsService().voidObs(oldObs, "retired for update value");
 			Context.getObsService().voidObs(oldObs.getObsGroup(), "retired for update value");
 		}
-		this.createObs(encounter, order, resultItem);
+		this.createObs(encounter, order, resultItem, category);
 	}
 	
 	private TestOrderResult buildTestOrderResult(final Encounter requestEncounter, final Encounter resultEncounter,
@@ -348,9 +367,19 @@ public class TestOrderResultServiceImpl extends BaseOpenmrsService implements Te
 		}
 		if (!items.isEmpty()) {
 			
+			Encounter encounterSeguimentoPaciente;
+			if (OPENMRSUUIDs.MISAU_LABORATORIO_ENCOUNTER_TYPE_UUID
+			        .equals(requestEncounter.getEncounterType().getUuid())) {
+				final TestRequestResult testRequestResult = this.testRequestResultService
+				        .findTestRequestResultByResultEncounter(requestEncounter);
+				encounterSeguimentoPaciente = testRequestResult.getTestRequest();
+			} else {
+				encounterSeguimentoPaciente = requestEncounter;
+			}
+			
 			final TestOrderResult testOrder = new TestOrderResult();
 			testOrder.setPatient(requestEncounter.getPatient());
-			testOrder.setEncounterRequest(requestEncounter);
+			testOrder.setEncounterRequest(encounterSeguimentoPaciente);
 			testOrder.setEncounterResult(resultEncounter);
 			testOrder.setLocation(requestEncounter.getLocation());
 			testOrder.setDateCreation(requestEncounter.getEncounterDatetime());
@@ -422,33 +451,25 @@ public class TestOrderResultServiceImpl extends BaseOpenmrsService implements Te
 	private Set<Order> mergeOrders(final Set<Order> requestOrders, final Set<Order> resultOrders) {
 		
 		final Set<Order> result = new LinkedHashSet<>();
-		
-		final Map<Concept, Order> mapRequests = new HashMap<>();
-		final Map<Concept, Order> mapResults = new HashMap<>();
+		final Map<Concept, Order> map = new HashMap<>();
 		
 		for (final Order orderRequest : requestOrders) {
-			mapRequests.put(orderRequest.getConcept(), orderRequest);
+			if (!orderRequest.isVoided()) {
+				map.put(orderRequest.getConcept(), orderRequest);
+			}
 		}
 		
 		for (final Order orderResult : resultOrders) {
-			mapResults.put(orderResult.getConcept(), orderResult);
+			if (!orderResult.isVoided()) {
+				map.put(orderResult.getConcept(), orderResult);
+			}
 		}
 		
-		for (final Concept order : mapRequests.keySet()) {
+		for (final Entry<Concept, Order> mapConceptOrder : map.entrySet()) {
 			
-			Boolean found = false;
-			for (final Concept orderResult : mapResults.keySet()) {
-				
-				if (orderResult.equals(order)) {
-					result.add(mapResults.get(orderResult));
-					found = true;
-					break;
-				}
-			}
-			if (!found) {
-				result.add(mapRequests.get(order));
-			}
+			result.add(mapConceptOrder.getValue());
 		}
+		
 		return result;
 	}
 	

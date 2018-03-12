@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.openmrs.CareSetting;
@@ -165,8 +166,6 @@ public class TestOrderServiceImpl extends BaseOpenmrsService implements TestOrde
 				order.setCareSetting(careSetting);
 				order.setEncounter(encounter);
 				encounter.addOrder(order);
-				
-				// this.createObs(encounter, order, orderItem);
 			}
 			
 			this.encounterService.saveEncounter(encounter);
@@ -204,15 +203,24 @@ public class TestOrderServiceImpl extends BaseOpenmrsService implements TestOrde
 		
 		final Map<Concept, Concept> mapCategoriesByTestConcept = this.getMapCategoriesByTestConcept();
 		final List<Encounter> encounters = this.pocHeuristicService.findEncountersWithTestOrdersByPatient(patientUUID);
+		
+		final List<TestRequestResult> TestRequestResults = this.testRequestResultService
+		        .findTestRequestResultsByPatientUuid(patientUUID);
+		
 		final List<TestOrderPOC> result = new ArrayList<>();
 		
-		for (final Encounter encounter : encounters) {
+		final Map<Encounter, Encounter> mapEncounters = this.mergeTestRequestResult(encounters, TestRequestResults);
+		
+		for (final Entry<Encounter, Encounter> keyValue : mapEncounters.entrySet()) {
 			
-			final TestOrderPOC testOrder = this.buildTestOrder(encounter, mapCategoriesByTestConcept);
+			final TestOrderPOC testOrder = this.buildTestOrder(keyValue.getKey(), keyValue.getValue(),
+			    mapCategoriesByTestConcept);
+			
 			if (testOrder != null) {
 				result.add(testOrder);
 			}
 		}
+		
 		return result;
 	}
 	
@@ -230,7 +238,14 @@ public class TestOrderServiceImpl extends BaseOpenmrsService implements TestOrde
 		final Encounter encounterByUuid = this.encounterService.getEncounterByUuid(encounter.getUuid());
 		final Map<Concept, Concept> mapCategories = this.getMapCategoriesByTestConcept();
 		
-		final TestOrderPOC testOrder = this.buildTestOrder(encounterByUuid, mapCategories);
+		final TestRequestResult testRequestResult = this.testRequestResultService
+		        .findTestRequestResultsByRequestEncounter(encounterByUuid);
+		
+		Encounter resultEncounter = new Encounter();
+		if (testRequestResult != null) {
+			resultEncounter = testRequestResult.getTestResult();
+		}
+		final TestOrderPOC testOrder = this.buildTestOrder(encounterByUuid, resultEncounter, mapCategories);
 		
 		if (testOrder != null) {
 			return testOrder;
@@ -262,17 +277,10 @@ public class TestOrderServiceImpl extends BaseOpenmrsService implements TestOrde
 		        .getMessage("poc.error.testorderitem.not.found.for.uuid", new String[] { uuid }, Context.getLocale()));
 	}
 	
-	private TestOrderPOC buildTestOrder(final Encounter encounter,
+	private TestOrderPOC buildTestOrder(final Encounter requestEncounter, final Encounter resultEncounter,
 	        final Map<Concept, Concept> mapCategoriesByTestConcept) {
 		
-		Encounter testResult = new Encounter();
-		final TestRequestResult testRequestResult = this.testRequestResultService
-		        .findTestRequestResultsByRequestEncounter(encounter);
-		
-		if (testRequestResult != null) {
-			testResult = testRequestResult.getTestResult();
-		}
-		final Set<Order> orders = this.mergeOrders(encounter.getOrders(), testResult.getOrders());
+		final Set<Order> orders = this.mergeOrders(requestEncounter.getOrders(), resultEncounter.getOrders());
 		
 		if ((orders != null) && !orders.isEmpty()) {
 			
@@ -286,11 +294,11 @@ public class TestOrderServiceImpl extends BaseOpenmrsService implements TestOrde
 			if (!items.isEmpty()) {
 				
 				final TestOrderPOC testOrder = new TestOrderPOC();
-				testOrder.setPatient(encounter.getPatient());
-				testOrder.setEncounter(encounter);
-				testOrder.setProvider(encounter.getEncounterProviders().iterator().next().getProvider());
-				testOrder.setLocation(encounter.getLocation());
-				testOrder.setDateCreation(encounter.getEncounterDatetime());
+				testOrder.setPatient(requestEncounter.getPatient());
+				testOrder.setEncounter(requestEncounter);
+				testOrder.setProvider(requestEncounter.getEncounterProviders().iterator().next().getProvider());
+				testOrder.setLocation(requestEncounter.getLocation());
+				testOrder.setDateCreation(requestEncounter.getEncounterDatetime());
 				testOrder.setTestOrderItems(items);
 				
 				return testOrder;
@@ -300,30 +308,59 @@ public class TestOrderServiceImpl extends BaseOpenmrsService implements TestOrde
 		return null;
 	}
 	
+	private Map<Encounter, Encounter> mergeTestRequestResult(final List<Encounter> encounters,
+	        final List<TestRequestResult> testRequestResults) {
+		
+		final Map<Encounter, Encounter> result = new HashMap<>();
+		
+		for (final TestRequestResult testRequestResult : testRequestResults) {
+			
+			final Encounter encounterRequest = testRequestResult.getTestRequest();
+			final Encounter encounterResult = testRequestResult.getTestResult();
+			
+			if (encounters.contains(encounterRequest) && encounters.contains(encounterResult)) {
+				result.put(encounterRequest, encounterResult);
+				encounters.remove(encounterRequest);
+				encounters.remove(encounterResult);
+				continue;
+			} else if (encounters.contains(encounterRequest)) {
+				result.put(encounterRequest, new Encounter());
+				encounters.remove(encounterRequest);
+				continue;
+			} else if (encounters.contains(encounterResult)) {
+				result.put(encounterResult, new Encounter());
+				result.remove(encounterResult);
+				continue;
+			}
+		}
+		for (final Encounter request : encounters) {
+			
+			result.put(request, new Encounter());
+		}
+		
+		return result;
+	}
+	
 	private Set<Order> mergeOrders(final Set<Order> requestOrders, final Set<Order> resultOrders) {
 		
 		final Set<Order> result = new LinkedHashSet<>();
-		
-		final Map<Concept, Order> mapRequests = new HashMap<>();
-		final Map<Concept, Order> mapResults = new HashMap<>();
+		final Map<Concept, Order> map = new HashMap<>();
 		
 		for (final Order orderRequest : requestOrders) {
-			mapRequests.put(orderRequest.getConcept(), orderRequest);
+			if (!orderRequest.isVoided()) {
+				map.put(orderRequest.getConcept(), orderRequest);
+			}
 		}
 		
 		for (final Order orderResult : resultOrders) {
-			mapResults.put(orderResult.getConcept(), orderResult);
+			if (!orderResult.isVoided()) {
+				map.put(orderResult.getConcept(), orderResult);
+			}
 		}
 		
-		for (final Concept order : mapRequests.keySet()) {
+		for (final Entry<Concept, Order> mapConceptOrder : map.entrySet()) {
 			
-			if (mapResults.containsKey(order)) {
-				
-				result.add(mapResults.get(order));
-			} else {
-				
-				result.add(mapRequests.get(order));
-			}
+			result.add(mapConceptOrder.getValue());
 		}
 		
 		return result;

@@ -87,6 +87,12 @@ public class TestOrderRequestValidator {
 		if (testOrder.getDateCreation() == null) {
 			throw new APIException(Context.getMessageSourceService().getMessage("poc.error.creationDate.required"));
 		}
+		if (testOrder.getDateCreation().after(new Date())) {
+			
+			throw new APIException(
+			        Context.getMessageSourceService().getMessage("poc.error.testorder.creationDate.isAfterCurrentDate",
+			            new String[] { testOrder.getDateCreation().toString() }, Context.getLocale()));
+		}
 	}
 	
 	private void validateTestOrderItems(final TestOrderPOC testOrder) {

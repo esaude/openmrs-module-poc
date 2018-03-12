@@ -55,6 +55,6 @@ public class PocHeuristicServiceImpl extends BaseOpenmrsService implements PocHe
 	
 	@Override
 	public List<Encounter> findEncountersWithTestOrdersByPatient(final String patientUUID) {
-		return this.pocHeuristicCAO.findEncountersWithTestOrdersByPatient(patientUUID);
+		return this.pocHeuristicCAO.findEncountersWithTestOrdersByPatient(patientUUID, false);
 	}
 }

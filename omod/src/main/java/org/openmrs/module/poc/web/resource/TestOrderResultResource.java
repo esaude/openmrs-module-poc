@@ -116,7 +116,7 @@ public class TestOrderResultResource extends DelegatingCrudResource<TestOrderRes
 		
 		final Encounter encounter = new Encounter();
 		encounter.setUuid(uniqueId);
-		return Context.getService(TestOrderResultService.class).findTestOrderByTestRequest(encounter);
+		return Context.getService(TestOrderResultService.class).findTestOrderResultByTestRequest(encounter);
 	}
 	
 	@PropertyGetter("display")
@@ -148,13 +148,10 @@ public class TestOrderResultResource extends DelegatingCrudResource<TestOrderRes
 	public DelegatingResourceDescription getCreatableProperties() {
 		final DelegatingResourceDescription description = new DelegatingResourceDescription();
 		
-		description.addProperty("provider");
-		description.addProperty("patient");
-		description.addProperty("dateCreation");
-		description.addProperty("location");
-		description.addProperty("status");
-		description.addProperty("items");
 		description.addProperty("encounterRequest");
+		description.addProperty("provider");
+		description.addProperty("dateCreation");
+		description.addProperty("items");
 		
 		return description;
 	}

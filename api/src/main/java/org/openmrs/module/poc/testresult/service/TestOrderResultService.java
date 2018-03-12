@@ -53,7 +53,7 @@ public interface TestOrderResultService extends OpenmrsService {
 	
 	void deleteTestOrderResultItem(TestOrderResultItem testOrderResultItem, String reason);
 	
-	TestOrderResult findTestOrderByTestRequest(Encounter request);
+	TestOrderResult findTestOrderResultByTestRequest(Encounter request);
 	
 	List<TestOrderResult> findTestOrderResultsByPatient(String patientUUID);
 	

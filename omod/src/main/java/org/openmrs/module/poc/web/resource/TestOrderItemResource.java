@@ -110,9 +110,6 @@ public class TestOrderItemResource extends DelegatingSubResource<TestOrderItem, 
 	public DelegatingResourceDescription getCreatableProperties() {
 		final DelegatingResourceDescription description = new DelegatingResourceDescription();
 		description.addProperty("testOrder");
-		description.addProperty("category");
-		description.addProperty("status");
 		return description;
 	}
-	
 }

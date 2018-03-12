@@ -27,6 +27,6 @@ public interface PocHeuristicCAO {
 	        final EncounterType encounterType, final Location location, final Date encounterDateTime,
 	        final boolean status) throws APIException;
 	
-	List<Encounter> findEncountersWithTestOrdersByPatient(String patientUUID);
+	List<Encounter> findEncountersWithTestOrdersByPatient(String patientUUID, boolean voided);
 	
 }

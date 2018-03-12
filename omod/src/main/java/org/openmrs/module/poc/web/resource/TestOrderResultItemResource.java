@@ -114,9 +114,7 @@ public class TestOrderResultItemResource
 	public DelegatingResourceDescription getCreatableProperties() {
 		final DelegatingResourceDescription description = new DelegatingResourceDescription();
 		description.addProperty("testOrder");
-		description.addProperty("category");
 		description.addProperty("value");
-		description.addProperty("status");
 		return description;
 	}
 }

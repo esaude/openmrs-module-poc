@@ -148,7 +148,6 @@ public class TestOrderResource extends DelegatingCrudResource<TestOrderPOC> {
 		description.addProperty("dateCreation");
 		description.addProperty("location");
 		description.addProperty("testOrderItems");
-		description.addProperty("status");
 		
 		return description;
 	}
