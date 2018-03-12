@@ -48,6 +48,7 @@ public class TestOrderResultResource extends DelegatingCrudResource<TestOrderRes
 		if (rep instanceof RefRepresentation) {
 			
 			final DelegatingResourceDescription description = new DelegatingResourceDescription();
+			description.addProperty("uuid");
 			description.addProperty("display");
 			description.addProperty("encounterRequest", Representation.REF);
 			description.addProperty("encounterResult", Representation.REF);
@@ -64,6 +65,7 @@ public class TestOrderResultResource extends DelegatingCrudResource<TestOrderRes
 		} else if (rep instanceof DefaultRepresentation) {
 			
 			final DelegatingResourceDescription description = new DelegatingResourceDescription();
+			description.addProperty("uuid");
 			description.addProperty("display");
 			description.addProperty("encounterRequest", Representation.REF);
 			description.addProperty("encounterResult", Representation.REF);
@@ -80,6 +82,7 @@ public class TestOrderResultResource extends DelegatingCrudResource<TestOrderRes
 		} else if (rep instanceof FullRepresentation) {
 			
 			final DelegatingResourceDescription description = new DelegatingResourceDescription();
+			description.addProperty("uuid");
 			description.addProperty("display");
 			description.addProperty("encounterRequest", Representation.REF);
 			description.addProperty("encounterResult", Representation.REF);
@@ -118,7 +121,8 @@ public class TestOrderResultResource extends DelegatingCrudResource<TestOrderRes
 	
 	@PropertyGetter("display")
 	public String getDisplayString(final TestOrderResult item) {
-		return item.getEncounterResult().getEncounterDatetime().toString();
+		return item.getEncounterResult().getEncounterDatetime() != null
+		        ? item.getEncounterResult().getEncounterDatetime().toString() : StringUtils.EMPTY;
 	}
 	
 	@Override

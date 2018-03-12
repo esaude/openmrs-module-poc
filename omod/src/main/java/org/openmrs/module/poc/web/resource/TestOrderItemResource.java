@@ -36,6 +36,7 @@ public class TestOrderItemResource extends DelegatingSubResource<TestOrderItem, 
 		if ((rep instanceof DefaultRepresentation) || (rep instanceof RefRepresentation)) {
 			
 			final DelegatingResourceDescription description = new DelegatingResourceDescription();
+			description.addProperty("uuid");
 			description.addProperty("display");
 			description.addProperty("testOrder", Representation.REF);
 			description.addProperty("category", Representation.REF);
@@ -47,6 +48,7 @@ public class TestOrderItemResource extends DelegatingSubResource<TestOrderItem, 
 		} else if (rep instanceof FullRepresentation) {
 			
 			final DelegatingResourceDescription description = new DelegatingResourceDescription();
+			description.addProperty("uuid");
 			description.addProperty("display");
 			description.addProperty("testOrder");
 			description.addProperty("category");

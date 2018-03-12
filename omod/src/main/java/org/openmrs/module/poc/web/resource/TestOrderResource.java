@@ -63,6 +63,7 @@ public class TestOrderResource extends DelegatingCrudResource<TestOrderPOC> {
 		} else if (rep instanceof DefaultRepresentation) {
 			
 			final DelegatingResourceDescription description = new DelegatingResourceDescription();
+			description.addProperty("uuid");
 			description.addProperty("display");
 			description.addProperty("encounter", Representation.REF);
 			description.addProperty("provider", Representation.REF);
@@ -78,6 +79,7 @@ public class TestOrderResource extends DelegatingCrudResource<TestOrderPOC> {
 		} else if (rep instanceof FullRepresentation) {
 			
 			final DelegatingResourceDescription description = new DelegatingResourceDescription();
+			description.addProperty("uuid");
 			description.addProperty("display");
 			description.addProperty("encounter");
 			description.addProperty("provider");

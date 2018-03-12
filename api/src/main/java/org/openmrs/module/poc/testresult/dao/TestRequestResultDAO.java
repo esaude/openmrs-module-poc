@@ -27,7 +27,7 @@ public interface TestRequestResultDAO {
 	
 	TestRequestResult findByUuid(String uuid);
 	
-	TestRequestResult findByResultEncounter(Encounter result);
+	TestRequestResult findByResultEncounter(Encounter result, boolean voided);
 	
 	TestRequestResult findByRequestEncounter(Encounter request, boolean voided);
 	

@@ -116,7 +116,7 @@ public class TestRequestResultServiceImpl extends BaseOpenmrsService implements 
 	
 	@Override
 	public TestRequestResult findTestRequestResultByResultEncounter(final Encounter result) {
-		return null;
+		return this.testRequestResultDAO.findByResultEncounter(result, false);
 	}
 	
 	@Override

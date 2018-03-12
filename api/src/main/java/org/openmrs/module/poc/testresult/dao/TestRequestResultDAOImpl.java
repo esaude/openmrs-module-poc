@@ -50,8 +50,13 @@ public class TestRequestResultDAOImpl implements TestRequestResultDAO {
 	}
 	
 	@Override
-	public TestRequestResult findByResultEncounter(final Encounter result) {
-		return null;
+	public TestRequestResult findByResultEncounter(final Encounter result, final boolean voided) {
+		final Criteria searchCriteria = this.sessionFactory.getCurrentSession().createCriteria(TestRequestResult.class,
+		    "testRR");
+		searchCriteria.add(Restrictions.eq("testRR.testResult", result));
+		searchCriteria.add(Restrictions.eq("testRR.retired", voided));
+		
+		return (TestRequestResult) searchCriteria.uniqueResult();
 	}
 	
 	@Override
