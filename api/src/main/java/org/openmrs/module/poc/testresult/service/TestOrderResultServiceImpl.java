@@ -476,7 +476,7 @@ public class TestOrderResultServiceImpl extends BaseOpenmrsService implements Te
 	private Map<Concept, Concept> getMapCategoriesByTestConcept() {
 		
 		final List<TestRequest> findAllTestOrderRequest = Context.getService(TestRequestService.class)
-		        .findAllTestOrderRequest(Context.getLocale());
+		        .findAllTestRequests(Context.getLocale());
 		
 		final Map<Concept, Concept> map = new HashMap<>();
 		

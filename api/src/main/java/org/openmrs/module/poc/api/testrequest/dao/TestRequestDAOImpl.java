@@ -26,13 +26,9 @@ public class TestRequestDAOImpl implements TestRequestDAO {
 	
 	private final String CONCEPT_CLASS_TEST_UUID = "8d4907b2-c2cc-11de-8d13-0010c6dffd0f";
 	
-	private final String HIV_CARGA_VIRAL_LOG_CONCEPT_UUID = "e1dc4bf6-1d5f-11e0-b929-000c29ad1d07";
-	
-	private final String VIH_CARGA_VIRAL_QUALITATIVA_CONCEPT_UUID = "e1da2704-1d5f-11e0-b929-000c29ad1d07";
-	
 	private final String findAll = "select distinct c from Concept c join c.names cn  where c.conceptId in ( "
 	        + "  select fieldConcept.conceptId from FormField ff join ff.field f join f.concept fieldConcept join fieldConcept.names cname "
-	        + "  where ff.form.uuid = :formUUID and c.conceptClass.uuid = :testConcepClasstUUID and cname.locale = :locale and fieldConcept.retired = :retired  and c.uuid not in (:class1, :class2))";
+	        + "  where ff.form.uuid = :formUUID and c.conceptClass.uuid = :testConcepClasstUUID and cname.locale = :locale and fieldConcept.retired = :retired )";
 	
 	@Override
 	public void setSessionFactory(final SessionFactory sessionFactory) {
@@ -46,9 +42,7 @@ public class TestRequestDAOImpl implements TestRequestDAO {
 		return this.sessionFactory.getCurrentSession().createQuery(this.findAll)
 		        .setParameter("formUUID", this.LABORATORIO_GERAL_FORM_UUID)
 		        .setParameter("testConcepClasstUUID", this.CONCEPT_CLASS_TEST_UUID).setParameter("retired", false)
-		        .setParameter("class1", this.HIV_CARGA_VIRAL_LOG_CONCEPT_UUID)
-		        .setParameter("class2", this.VIH_CARGA_VIRAL_QUALITATIVA_CONCEPT_UUID).setParameter("locale", locale)
-		        .list();
+		        .setParameter("locale", locale).list();
 	}
 	
 }

@@ -22,5 +22,5 @@ public interface TestRequestService extends OpenmrsService {
 	
 	public void setTestRequestDAO(final TestRequestDAO testRequestDAO);
 	
-	List<TestRequest> findAllTestOrderRequest(Locale locale);
+	List<TestRequest> findAllTestRequests(Locale locale);
 }

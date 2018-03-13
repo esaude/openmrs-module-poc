@@ -147,9 +147,6 @@
 				<property name="conceptService">
 					<ref bean="conceptService" />
 				</property>
-				<property name="personService">
-					<ref bean="personService" />
-				</property>
 				<property name="providerService">
 					<ref bean="providerService" />
 				</property>

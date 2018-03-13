@@ -13,8 +13,6 @@
 package org.openmrs.module.poc.api.testrequest.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
@@ -31,13 +29,13 @@ public class TestRequestServiceImpl extends BaseOpenmrsService implements TestRe
 	
 	private TestRequestDAO testRequestDAO;
 	
-	private final Collection<String> CATEGORIES_UUID = Arrays
-	        .asList(new String[] { OPENMRSUUIDs.BIOQUIMICA_LABORATORIO_CONCEPT_SET_UUID,
-	                OPENMRSUUIDs.HEMOGRAMA_KX21N_CONCEPT_SET_UUID, OPENMRSUUIDs.IMMUNOLOGIA_CONCEPT_SET_UUID,
-	                OPENMRSUUIDs.TESTAGEM_VIROLOGIA_CONCEPT_SET_UUID, OPENMRSUUIDs.PCR_CONCEPT_SET_UUID });
+	@Override
+	public void setTestRequestDAO(final TestRequestDAO testRequestDAO) {
+		this.testRequestDAO = testRequestDAO;
+	}
 	
 	@Override
-	public List<TestRequest> findAllTestOrderRequest(final Locale locale) {
+	public List<TestRequest> findAllTestRequests(final Locale locale) {
 		
 		final List<Concept> allConcepts = this.testRequestDAO.findAll(locale);
 		
@@ -46,26 +44,26 @@ public class TestRequestServiceImpl extends BaseOpenmrsService implements TestRe
 		final List<TestRequest> testOrderRequests = new ArrayList<>();
 		for (final Concept concept : allConcepts) {
 			
-			final List<ConceptSet> ConceptSets = conceptService.getSetsContainingConcept(concept);
+			final List<ConceptSet> conceptSets = conceptService.getSetsContainingConcept(concept);
 			
 			final List<Concept> categories = new ArrayList<>();
-			for (final ConceptSet conceptSet : ConceptSets) {
-				if (this.CATEGORIES_UUID.contains(conceptSet.getConceptSet().getUuid())
-				        && !(OPENMRSUUIDs.GAMA_GLUTAMIL_TRANSFERASE.equals(concept.getUuid())
-				        && OPENMRSUUIDs.HEMOGRAMA_KX21N_CONCEPT_SET_UUID
-				                .equals(conceptSet.getConceptSet().getUuid()))) {
-					categories.add(conceptSet.getConceptSet());
-				}
+			for (final ConceptSet conceptSet : conceptSets) {
+				categories.add(conceptSet.getConceptSet());
 			}
+			
+			if (OPENMRSUUIDs.RAPID_PLASMA_REAGIN_CONCEP_UUID.equals(concept.getUuid()) && categories.isEmpty()) {
+				categories.add(Context.getConceptService().getConceptByUuid(OPENMRSUUIDs.IMMUNOLOGIA_CONCEPT_SET_UUID));
+			}
+			
+			if (OPENMRSUUIDs.DVRL_CONCEPT_UUID.equals(concept.getUuid()) && categories.isEmpty()) {
+				categories.add(
+				        Context.getConceptService().getConceptByUuid(OPENMRSUUIDs.HEMOGRAMA_KX21N_CONCEPT_SET_UUID));
+			}
+			
 			if (!categories.isEmpty()) {
 				testOrderRequests.add(new TestRequest(concept, categories.iterator().next()));
 			}
 		}
 		return testOrderRequests;
-	}
-	
-	@Override
-	public void setTestRequestDAO(final TestRequestDAO testRequestDAO) {
-		this.testRequestDAO = testRequestDAO;
 	}
 }

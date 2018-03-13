@@ -23,7 +23,6 @@ import org.openmrs.api.LocationService;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.PatientService;
-import org.openmrs.api.PersonService;
 import org.openmrs.api.ProviderService;
 import org.openmrs.module.poc.api.common.service.POCDbSessionManager;
 import org.openmrs.module.poc.api.pocheuristic.service.PocHeuristicService;
@@ -46,8 +45,6 @@ public interface TestOrderService extends OpenmrsService {
 	void setLocationService(final LocationService locationService);
 	
 	void setConceptService(final ConceptService conceptService);
-	
-	void setPersonService(final PersonService personService);
 	
 	void setProviderService(ProviderService providerService);
 	
