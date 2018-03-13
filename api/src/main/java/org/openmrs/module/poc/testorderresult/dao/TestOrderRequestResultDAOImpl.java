@@ -39,7 +39,7 @@ public class TestOrderRequestResultDAOImpl implements TestOrderRequestResultDAO 
 	public TestOrderRequestResult findByResultEncounter(final Encounter result, final boolean voided) {
 		final Criteria searchCriteria = this.sessionFactory.getCurrentSession()
 		        .createCriteria(TestOrderRequestResult.class, "testRR");
-		searchCriteria.add(Restrictions.eq("testRR.testResult", result));
+		searchCriteria.add(Restrictions.eq("testRR.testOrderResult", result));
 		searchCriteria.add(Restrictions.eq("testRR.retired", voided));
 		
 		return (TestOrderRequestResult) searchCriteria.uniqueResult();
@@ -50,7 +50,7 @@ public class TestOrderRequestResultDAOImpl implements TestOrderRequestResultDAO 
 		
 		final Criteria searchCriteria = this.sessionFactory.getCurrentSession()
 		        .createCriteria(TestOrderRequestResult.class, "testRR");
-		searchCriteria.add(Restrictions.eq("testRR.testRequest", request));
+		searchCriteria.add(Restrictions.eq("testRR.testOrderRequest", request));
 		searchCriteria.add(Restrictions.eq("testRR.retired", voided));
 		
 		return (TestOrderRequestResult) searchCriteria.uniqueResult();
