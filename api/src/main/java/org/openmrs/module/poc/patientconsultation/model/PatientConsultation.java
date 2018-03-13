@@ -55,6 +55,7 @@ public class PatientConsultation extends BaseOpenmrsData implements Serializable
 	
 	@Override
 	public void setId(final Integer arg0) {
+		// this is a wrapper entity
 	}
 	
 	public PatientConsultationSummary getParent() {

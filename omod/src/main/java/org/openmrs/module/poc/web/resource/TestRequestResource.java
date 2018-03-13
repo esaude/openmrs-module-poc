@@ -10,8 +10,8 @@
 package org.openmrs.module.poc.web.resource;
 
 import org.openmrs.api.context.Context;
-import org.openmrs.module.poc.api.testrequest.model.TestRequest;
-import org.openmrs.module.poc.api.testrequest.service.TestRequestService;
+import org.openmrs.module.poc.testrequest.model.TestRequest;
+import org.openmrs.module.poc.testrequest.service.TestRequestService;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.PropertyGetter;
@@ -27,10 +27,10 @@ import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOp
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-+ "/testrequest", order = 2, supportedClass = TestRequest.class, supportedOpenmrsVersions = { "1.11.*",
-"1.12.*" })
+        + "/testrequest", order = 2, supportedClass = TestRequest.class, supportedOpenmrsVersions = { "1.11.*",
+        "1.12.*" })
 public class TestRequestResource extends DataDelegatingCrudResource<TestRequest> {
-
+	
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(final Representation rep) {
 		if ((rep instanceof DefaultRepresentation) || (rep instanceof RefRepresentation)) {
@@ -49,43 +49,43 @@ public class TestRequestResource extends DataDelegatingCrudResource<TestRequest>
 		}
 		return null;
 	}
-
+	
 	@Override
 	public TestRequest newDelegate() {
-
+		
 		return new TestRequest();
 	}
-
+	
 	@Override
 	public TestRequest save(final TestRequest delegate) {
 		throw new ResourceDoesNotSupportOperationException();
 	}
-
+	
 	@Override
 	public TestRequest getByUniqueId(final String uniqueId) {
 		throw new ResourceDoesNotSupportOperationException();
 	}
-
+	
 	@PropertyGetter("display")
 	public String getDisplayString(final TestRequest item) {
 		return item.getTestOrder().getDisplayString();
 	}
-
+	
 	@Override
 	protected void delete(final TestRequest delegate, final String reason, final RequestContext context)
-			throws ResponseException {
+	        throws ResponseException {
 		throw new ResourceDoesNotSupportOperationException();
 	}
-
+	
 	@Override
 	public void purge(final TestRequest delegate, final RequestContext context) throws ResponseException {
 		throw new ResourceDoesNotSupportOperationException();
 	}
-
+	
 	@Override
 	protected NeedsPaging<TestRequest> doGetAll(final RequestContext context) {
-
+		
 		return new NeedsPaging<>(Context.getService(TestRequestService.class).findAllTestRequests(Context.getLocale()),
-				context);
+		        context);
 	}
 }

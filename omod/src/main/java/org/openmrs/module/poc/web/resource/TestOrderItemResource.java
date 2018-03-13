@@ -10,9 +10,9 @@
 package org.openmrs.module.poc.web.resource;
 
 import org.openmrs.api.context.Context;
-import org.openmrs.module.poc.api.testorder.model.TestOrderItem;
-import org.openmrs.module.poc.api.testorder.model.TestOrderPOC;
-import org.openmrs.module.poc.api.testorder.service.TestOrderService;
+import org.openmrs.module.poc.testorder.model.TestOrderItem;
+import org.openmrs.module.poc.testorder.model.TestOrderPOC;
+import org.openmrs.module.poc.testorder.service.TestOrderService;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.PropertyGetter;

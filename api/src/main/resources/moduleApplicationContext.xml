@@ -80,9 +80,9 @@
 			<ref bean="transactionManager" />
 		</property>
 		<property name="target">
-			<bean class="org.openmrs.module.poc.api.testrequest.service.TestRequestServiceImpl">
+			<bean class="org.openmrs.module.poc.testrequest.service.TestRequestServiceImpl">
 				<property name="testRequestDAO">
-					<bean class="org.openmrs.module.poc.api.testrequest.dao.TestRequestDAOImpl">
+					<bean class="org.openmrs.module.poc.testrequest.dao.TestRequestDAOImpl">
 						<property name="sessionFactory">
 							<ref bean="sessionFactory" />
 						</property>
@@ -104,9 +104,9 @@
 			<ref bean="transactionManager" />
 		</property>
 		<property name="target">
-			<bean class="org.openmrs.module.poc.api.pocheuristic.service.PocHeuristicServiceImpl">
+			<bean class="org.openmrs.module.poc.pocheuristic.service.PocHeuristicServiceImpl">
 				<property name="pocHeuristicCAO">
-					<bean class="org.openmrs.module.poc.api.pocheuristic.dao.PocHeuristicDAOImpl">
+					<bean class="org.openmrs.module.poc.pocheuristic.dao.PocHeuristicDAOImpl">
 						<property name="sessionFactory">
 							<ref bean="sessionFactory" />
 						</property>
@@ -128,7 +128,7 @@
 			<ref bean="transactionManager" />
 		</property>
 		<property name="target">
-			<bean class="org.openmrs.module.poc.api.testorder.service.TestOrderServiceImpl">
+			<bean class="org.openmrs.module.poc.testorder.service.TestOrderServiceImpl">
 				<property name="pocHeuristicService">
 				<ref bean="pocHeuristicService"/>
 				</property>
@@ -153,8 +153,8 @@
 				<property name="pOCDbSessionManager">
 					<ref bean="pOCDbSessionManager" />
 				</property>
-				<property name="testRequestResultService">
-					<ref bean="testRequestResultService" />
+				<property name="testOrderRequestResultService">
+					<ref bean="testOrderRequestResultService" />
 				</property>
 			</bean>
 		</property>
@@ -166,15 +166,15 @@
 		</property>
 	</bean>
 	
-	<bean id="testRequestResultService"
+	<bean id="testOrderRequestResultService"
 		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
 		<property name="transactionManager">
 			<ref bean="transactionManager" />
 		</property>
 		<property name="target">
-			<bean class="org.openmrs.module.poc.testresult.service.TestRequestResultServiceImpl">
-				<property name="testRequestResultDAO">
-					<bean class="org.openmrs.module.poc.testresult.dao.TestRequestResultDAOImpl">
+			<bean class="org.openmrs.module.poc.testorderresult.service.TestOrderRequestResultServiceImpl">
+				<property name="testOrderRequestResultDAO">
+					<bean class="org.openmrs.module.poc.testorderresult.dao.TestOrderRequestResultDAOImpl">
 						<property name="sessionFactory">
 							<ref bean="sessionFactory" />
 						</property>
@@ -184,9 +184,6 @@
 					<ref bean="encounterService"/>
 				</property>
 			</bean>
-		</property>
-		<property name="preInterceptors">
-			<ref bean="serviceInterceptors" />
 		</property>
 		<property name="transactionAttributeSource">
 			<ref bean="transactionAttributeSource" />
@@ -200,36 +197,24 @@
 			<ref bean="transactionManager" />
 		</property>
 		<property name="target">
-			<bean class="org.openmrs.module.poc.testresult.service.TestOrderResultServiceImpl">
+			<bean class="org.openmrs.module.poc.testorderresult.service.TestOrderResultServiceImpl">
 				<property name="pocHeuristicService">
 				<ref bean="pocHeuristicService"/>
 				</property>
 				<property name="orderService">
 					<ref bean="orderService" />
 				</property>
-				<property name="patientService">
-					<ref bean="patientService" />
-				</property>
 				<property name="encounterService">
 					<ref bean="encounterService" />
-				</property>
-				<property name="locationService">
-					<ref bean="locationService" />
 				</property>
 				<property name="conceptService">
 					<ref bean="conceptService" />
 				</property>
-				<property name="personService">
-					<ref bean="personService" />
-				</property>
 				<property name="providerService">
 					<ref bean="providerService" />
 				</property>
-				<property name="testRequestResultService">
-					<ref bean="testRequestResultService" />
-				</property>
-				<property name="pOCDbSessionManager">
-					<ref bean="pOCDbSessionManager" />
+				<property name="testOrderRequestResultService">
+					<ref bean="testOrderRequestResultService" />
 				</property>
 			</bean>
 		</property>
@@ -262,7 +247,7 @@
 	<bean parent="serviceContext">
 		<property name="moduleService">
 			<list>
-				<value>org.openmrs.module.poc.api.testrequest.service.TestRequestService</value>
+				<value>org.openmrs.module.poc.testrequest.service.TestRequestService</value>
 				<ref local="testRequestService"/>
 			</list>
 		</property>
@@ -271,7 +256,7 @@
 	<bean parent="serviceContext">
 		<property name="moduleService">
 			<list>
-				<value>org.openmrs.module.poc.api.testorder.service.TestOrderService</value>
+				<value>org.openmrs.module.poc.testorder.service.TestOrderService</value>
 				<ref local="testOrderService"/>
 			</list>
 		</property>
@@ -280,7 +265,7 @@
 	<bean parent="serviceContext">
 		<property name="moduleService">
 			<list>
-				<value>org.openmrs.module.poc.api.pocheuristic.service.PocHeuristicService</value>
+				<value>org.openmrs.module.poc.pocheuristic.service.PocHeuristicService</value>
 				<ref local="pocHeuristicService"/>
 			</list>
 		</property>
@@ -289,8 +274,8 @@
 	<bean parent="serviceContext">
 		<property name="moduleService">
 			<list>
-				<value>org.openmrs.module.poc.testresult.service.TestRequestResultService</value>
-				<ref local="testRequestResultService"/>
+				<value>org.openmrs.module.poc.testorderresult.service.TestOrderRequestResultService</value>
+				<ref local="testOrderRequestResultService"/>
 			</list>
 		</property>
 	</bean>
@@ -298,7 +283,7 @@
 	 <bean parent="serviceContext">
 		<property name="moduleService">
 			<list>
-				<value>org.openmrs.module.poc.testresult.service.TestOrderResultService</value>
+				<value>org.openmrs.module.poc.testorderresult.service.TestOrderResultService</value>
 				<ref local="testOrderResultService"/>
 			</list>
 		</property>

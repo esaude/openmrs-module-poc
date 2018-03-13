@@ -55,6 +55,7 @@ public class PatientConsultationSummary extends BaseOpenmrsData
 	
 	@Override
 	public void setId(final Integer arg0) {
+		// this is a wrapper entity
 	}
 	
 	@Override

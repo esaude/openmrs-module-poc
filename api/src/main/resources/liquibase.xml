@@ -20,7 +20,7 @@
         for a list of supported elements and attributes
     -->
     
-    	<changeSet id="poc-v1.0.0-table-poc_test_request_result"
+    	<changeSet id="poc-v1.0.0-table-poc_test_order_request_result"
 		author="Guimino">
 
 		<preConditions onFail="MARK_RAN">
@@ -30,12 +30,12 @@
 		</preConditions>
 
 		<comment>
-			Creating poc_test_request_result table
+			Creating poc_test_order_request_result table
 		</comment>
 
-		<createTable tableName="poc_test_request_result">
+		<createTable tableName="poc_test_order_request_result">
 
-			<column name="test_request_result_id" type="int"
+			<column name="test_order_request_result_id" type="int"
 				autoIncrement="true">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
@@ -44,11 +44,11 @@
 				<constraints nullable="false" />
 			</column>
 
-			<column name="test_request_id" type="int">
+			<column name="test_order_request_id" type="int">
 				<constraints nullable="false" />
 			</column>
 
-			<column name="test_result_id" type="int">
+			<column name="test_order_result_id" type="int">
 				<constraints nullable="false" />
 			</column>
 
@@ -77,33 +77,33 @@
 		</createTable>
 
 		<addForeignKeyConstraint
-			constraintName="poc_test_request_result_test_request_fk"
-			baseTableName="poc_test_request_result" baseColumnNames="test_request_id"
+			constraintName="poc_test_order_rr_request_fk"
+			baseTableName="poc_test_order_request_result" baseColumnNames="test_order_request_id"
 			referencedTableName="encounter" referencedColumnNames="encounter_id" />
 
 		<addForeignKeyConstraint
-			constraintName="poc_test_request_result_test_result_fk"
-			baseTableName="poc_test_request_result" baseColumnNames="test_result_id"
+			constraintName="poc_test_order_rr_result_fk"
+			baseTableName="poc_test_order_request_result" baseColumnNames="test_order_result_id"
 			referencedTableName="encounter" referencedColumnNames="encounter_id" />
 
-		<addForeignKeyConstraint constraintName="poc_test_request_result_creator_fk"
-			baseTableName="poc_test_request_result" baseColumnNames="creator"
+		<addForeignKeyConstraint constraintName="poc_test_order_rr_creator_fk"
+			baseTableName="poc_test_order_request_result" baseColumnNames="creator"
 			referencedTableName="users" referencedColumnNames="user_id" />
 
-		<addForeignKeyConstraint constraintName="poc_test_request_result_changed_by_fk"
-			baseTableName="poc_test_request_result" baseColumnNames="changed_by"
+		<addForeignKeyConstraint constraintName="poc_test_order_rr_changed_by_fk"
+			baseTableName="poc_test_order_request_result" baseColumnNames="changed_by"
 			referencedTableName="users" referencedColumnNames="user_id" />
 
-		<addForeignKeyConstraint constraintName="poc_test_request_result_retired_by_fk"
-			baseTableName="poc_test_request_result" baseColumnNames="retired_by"
+		<addForeignKeyConstraint constraintName="poc_test_order_rr_retired_by_fk"
+			baseTableName="poc_test_order_request_result" baseColumnNames="retired_by"
 			referencedTableName="users" referencedColumnNames="user_id" />
 
-		<addForeignKeyConstraint constraintName="poc_test_request_result_patient_fk"
-			baseTableName="poc_test_request_result" baseColumnNames="patient_id"
+		<addForeignKeyConstraint constraintName="poc_test_order_rr_patient_fk"
+			baseTableName="poc_test_order_request_result" baseColumnNames="patient_id"
 			referencedTableName="patient" referencedColumnNames="patient_id" />
 
-		<addUniqueConstraint tableName="poc_test_request_result"
-			columnNames="test_request_id, test_result_id" constraintName="poc_test_request_result_unique" />
+		<addUniqueConstraint tableName="poc_test_order_request_result"
+			columnNames="test_order_request_id, test_order_result_id" constraintName="poc_test_order_rr_unique" />
 
 	</changeSet>
     
