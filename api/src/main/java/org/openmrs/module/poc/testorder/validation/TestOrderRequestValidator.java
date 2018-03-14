@@ -175,7 +175,7 @@ public class TestOrderRequestValidator {
 		final List<String> alreadyCreatedTests = new ArrayList<>();
 		for (final Order order : encounter.getOrders()) {
 			
-			if (OrderType.TEST_ORDER_TYPE_UUID.equals(order.getOrderType().getUuid())) {
+			if (!order.isVoided() && OrderType.TEST_ORDER_TYPE_UUID.equals(order.getOrderType().getUuid())) {
 				alreadyCreatedTests.add(order.getConcept().getUuid());
 			}
 		}
