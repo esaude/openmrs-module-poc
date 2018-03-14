@@ -9,13 +9,9 @@
  */
 package org.openmrs.module.poc.testorder.service;
 
-import java.util.Date;
 import java.util.List;
 
 import org.openmrs.Encounter;
-import org.openmrs.EncounterType;
-import org.openmrs.Location;
-import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.EncounterService;
@@ -61,10 +57,5 @@ public interface TestOrderService extends OpenmrsService {
 	List<TestOrderPOC> findTestOrdersByPatient(String patientUUID);
 	
 	TestOrderItem findTestOrderItemByUuid(String uuid);
-	
-	EncounterType findSeguimentoPacienteEncounterTypeByPatientAge(final Patient patient);
-	
-	Encounter findLastEncounterByPatientAndEncounterTypeAndLocationAndDateAndStatus(final Patient patient,
-	        final EncounterType encounterType, final Location location, final Date encounterDateTime);
 	
 }

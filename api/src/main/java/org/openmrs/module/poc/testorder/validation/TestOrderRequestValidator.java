@@ -29,16 +29,16 @@ import org.openmrs.Provider;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.poc.api.common.util.OPENMRSUUIDs;
+import org.openmrs.module.poc.pocheuristic.service.PocHeuristicService;
 import org.openmrs.module.poc.testorder.model.TestOrderItem;
 import org.openmrs.module.poc.testorder.model.TestOrderPOC;
-import org.openmrs.module.poc.testorder.service.TestOrderService;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TestOrderRequestValidator {
 	
 	public void validate(final TestOrderPOC testOrder) {
-		final TestOrderService testOrderService = Context.getService(TestOrderService.class);
+		final PocHeuristicService pocHeuristicService = Context.getService(PocHeuristicService.class);
 		
 		this.validatePatient(testOrder);
 		this.validateLocation(testOrder);
@@ -48,9 +48,10 @@ public class TestOrderRequestValidator {
 		
 		final Patient patient = Context.getPatientService().getPatientByUuid(testOrder.getPatient().getUuid());
 		final Location location = Context.getLocationService().getLocationByUuid(testOrder.getLocation().getUuid());
-		final EncounterType encounterType = testOrderService.findSeguimentoPacienteEncounterTypeByPatientAge(patient);
+		final EncounterType encounterType = pocHeuristicService
+		        .findSeguimentoPacienteEncounterTypeByPatientAge(patient);
 		
-		this.validateDuplicateTest(testOrderService, testOrder.getTestOrderItems(), patient, encounterType, location,
+		this.validateDuplicateTest(pocHeuristicService, testOrder.getTestOrderItems(), patient, encounterType, location,
 		    testOrder.getDateCreation());
 		
 	}
@@ -154,17 +155,16 @@ public class TestOrderRequestValidator {
 			throw new APIException(Context.getMessageSourceService().getMessage("poc.error.patient.not.found.for.uuid",
 			    new String[] { testOrder.getPatient().getUuid() }, Context.getLocale()));
 		}
-		
 	}
 	
-	private void validateDuplicateTest(final TestOrderService testOrderService, final List<TestOrderItem> items,
+	private void validateDuplicateTest(final PocHeuristicService pocHeuristicService, final List<TestOrderItem> items,
 	        final Patient patient, final EncounterType encounterType, final Location location,
 	        final Date creationDate) {
 		
 		final Encounter encounter;
 		try {
-			encounter = testOrderService.findLastEncounterByPatientAndEncounterTypeAndLocationAndDateAndStatus(patient,
-			    encounterType, location, creationDate);
+			encounter = pocHeuristicService.findLastEncounterByPatientAndEncounterTypeAndLocationAndDateAndStatus(
+			    patient, encounterType, location, creationDate);
 			
 		}
 		catch (final APIException e) {

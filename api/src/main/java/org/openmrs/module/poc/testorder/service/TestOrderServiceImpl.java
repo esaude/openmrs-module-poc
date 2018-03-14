@@ -172,17 +172,6 @@ public class TestOrderServiceImpl extends BaseOpenmrsService implements TestOrde
 	}
 	
 	@Override
-	public EncounterType findSeguimentoPacienteEncounterTypeByPatientAge(final Patient patient) {
-		if (patient != null) {
-			return Context.getEncounterService()
-			        .getEncounterTypeByUuid(patient.getAge() < 15 ? OPENMRSUUIDs.ARV_FOLLOW_UP_CHILD_ENCOUNTER_TYPE_UUID
-			                : OPENMRSUUIDs.ARV_FOLLOW_UP_ADULT_ENCOUNTER_TYPE_UUID);
-		}
-		throw new APIException(
-		        Context.getMessageSourceService().getMessage("poc.error.encountetype.notfound.for.non.given.patient"));
-	}
-	
-	@Override
 	public List<TestOrderPOC> findTestOrdersByPatient(final String patientUUID) {
 		
 		final Map<Concept, Concept> mapCategoriesByTestConcept = this.testOrderUtil.getMapCategoriesByTestConcept();
@@ -206,14 +195,6 @@ public class TestOrderServiceImpl extends BaseOpenmrsService implements TestOrde
 		}
 		
 		return result;
-	}
-	
-	@Override
-	public Encounter findLastEncounterByPatientAndEncounterTypeAndLocationAndDateAndStatus(final Patient patient,
-	        final EncounterType encounterType, final Location location, final Date encounterDateTime) {
-		
-		return this.pocHeuristicService.findLastEncounterByPatientAndEncounterTypeAndLocationAndDateAndStatus(patient,
-		    encounterType, location, encounterDateTime);
 	}
 	
 	@Override
@@ -295,11 +276,12 @@ public class TestOrderServiceImpl extends BaseOpenmrsService implements TestOrde
 	private Encounter getEncounterByRules(final Patient patient, final Provider provider, final Location location,
 	        final Date encounterDate) {
 		
-		final EncounterType encounterType = this.findSeguimentoPacienteEncounterTypeByPatientAge(patient);
+		final EncounterType encounterType = this.pocHeuristicService
+		        .findSeguimentoPacienteEncounterTypeByPatientAge(patient);
 		
 		try {
-			return this.findLastEncounterByPatientAndEncounterTypeAndLocationAndDateAndStatus(patient, encounterType,
-			    location, encounterDate);
+			return this.pocHeuristicService.findLastEncounterByPatientAndEncounterTypeAndLocationAndDateAndStatus(
+			    patient, encounterType, location, encounterDate);
 		}
 		catch (final APIException e) {
 			final EncounterRole encounterRole = this.encounterService
@@ -321,5 +303,4 @@ public class TestOrderServiceImpl extends BaseOpenmrsService implements TestOrde
 		
 		return encounter;
 	}
-	
 }
