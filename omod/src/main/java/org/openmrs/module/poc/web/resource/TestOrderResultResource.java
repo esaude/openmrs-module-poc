@@ -57,6 +57,7 @@ public class TestOrderResultResource extends DelegatingCrudResource<TestOrderRes
 			description.addProperty("location", Representation.REF);
 			description.addProperty("dateCreation");
 			description.addProperty("status");
+			description.addProperty("codeSequence");
 			description.addProperty("items");
 			
 			description.addSelfLink();
@@ -74,6 +75,7 @@ public class TestOrderResultResource extends DelegatingCrudResource<TestOrderRes
 			description.addProperty("location", Representation.REF);
 			description.addProperty("dateCreation");
 			description.addProperty("status");
+			description.addProperty("codeSequence");
 			description.addProperty("items");
 			description.addSelfLink();
 			description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
@@ -91,6 +93,7 @@ public class TestOrderResultResource extends DelegatingCrudResource<TestOrderRes
 			description.addProperty("location");
 			description.addProperty("dateCreation");
 			description.addProperty("status");
+			description.addProperty("codeSequence");
 			description.addProperty("items");
 			description.addSelfLink();
 			

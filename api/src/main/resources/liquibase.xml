@@ -1,26 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
+<!-- This Source Code Form is subject to the terms of the Mozilla Public 
+	License, v. 2.0. If a copy of the MPL was not distributed with this file, 
+	You can obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed 
+	under the terms of the Healthcare Disclaimer located at http://openmrs.org/license. 
+	Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS 
+	graphic logo is a trademark of OpenMRS Inc. -->
 
-    This Source Code Form is subject to the terms of the Mozilla Public License,
-    v. 2.0. If a copy of the MPL was not distributed with this file, You can
-    obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
-    the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
-
-    Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
-    graphic logo is a trademark of OpenMRS Inc.
-
--->
- 
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
-    <!--
-        See http://www.liquibase.org/manual/home#available_database_refactorings
-        for a list of supported elements and attributes
-    -->
-    
-    	<changeSet id="poc-v1.0.0-table-poc_test_order_request_result"
+	<!-- See http://www.liquibase.org/manual/home#available_database_refactorings 
+		for a list of supported elements and attributes -->
+
+	<changeSet id="poc-v1.0.0-table-poc_test_order_request_result"
 		author="Guimino">
 
 		<preConditions onFail="MARK_RAN">
@@ -76,13 +69,11 @@
 
 		</createTable>
 
-		<addForeignKeyConstraint
-			constraintName="poc_test_order_rr_request_fk"
+		<addForeignKeyConstraint constraintName="poc_test_order_rr_request_fk"
 			baseTableName="poc_test_order_request_result" baseColumnNames="test_order_request_id"
 			referencedTableName="encounter" referencedColumnNames="encounter_id" />
 
-		<addForeignKeyConstraint
-			constraintName="poc_test_order_rr_result_fk"
+		<addForeignKeyConstraint constraintName="poc_test_order_rr_result_fk"
 			baseTableName="poc_test_order_request_result" baseColumnNames="test_order_result_id"
 			referencedTableName="encounter" referencedColumnNames="encounter_id" />
 
@@ -103,8 +94,40 @@
 			referencedTableName="patient" referencedColumnNames="patient_id" />
 
 		<addUniqueConstraint tableName="poc_test_order_request_result"
-			columnNames="test_order_request_id, test_order_result_id" constraintName="poc_test_order_rr_unique" />
+			columnNames="test_order_request_id, test_order_result_id"
+			constraintName="poc_test_order_rr_unique" />
 
 	</changeSet>
-    
+
+	<changeSet id="poc-v1.0.0-poc_sequence_generator" author="Guimino">
+
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="poc_sequence_generator" />
+			</not>
+		</preConditions>
+
+		<comment>
+			Creating poc_sequence_generator table
+		</comment>
+
+		<createTable tableName="poc_sequence_generator">
+			
+			<column name="sequence_generator_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+
+			<column name="sequence_name" type="char(38)">
+				<constraints nullable="false"  unique="true"/>
+			</column>
+			<column name="sequence_value" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="uuid" type="char(38)">
+				<constraints nullable="false" unique="true" />
+			</column>
+		</createTable>
+			
+	</changeSet>
+
 </databaseChangeLog>

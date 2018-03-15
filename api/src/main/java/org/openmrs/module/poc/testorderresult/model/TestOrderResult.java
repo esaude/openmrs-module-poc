@@ -35,6 +35,8 @@ public class TestOrderResult extends BaseOpenmrsData {
 	
 	private List<TestOrderResultItem> items;
 	
+	private String codeSequence;
+	
 	public enum STATUS {
 		PENDING, COMPLETE;
 	}
@@ -109,11 +111,20 @@ public class TestOrderResult extends BaseOpenmrsData {
 		return STATUS.COMPLETE;
 	}
 	
+	public String getCodeSequence() {
+		return this.codeSequence;
+	}
+	
+	public void setCodeSequence(final String codeSequence) {
+		this.codeSequence = codeSequence;
+	}
+	
 	@Override
 	public String toString() {
 		return "TestOrderResult [patient=" + this.patient + ", provider=" + this.provider + ", location="
 		        + this.location + ", dateCreation=" + this.dateCreation + ", encounterRequest=" + this.encounterRequest
-		        + ", encounterResult=" + this.encounterResult + ", testOrderItems=" + this.items + "]";
+		        + ", encounterResult=" + this.encounterResult + ", items=" + this.items + ", codeSequence="
+		        + this.codeSequence + "]";
 	}
 	
 	@Override

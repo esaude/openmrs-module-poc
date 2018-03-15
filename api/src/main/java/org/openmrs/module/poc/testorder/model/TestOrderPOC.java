@@ -34,6 +34,10 @@ public class TestOrderPOC extends BaseOpenmrsData implements Serializable {
 	
 	private Encounter encounter;
 	
+	private String provenance;
+	
+	private String codeSequence;
+	
 	private List<TestOrderItem> testOrderItems;
 	
 	public enum STATUS {
@@ -88,6 +92,22 @@ public class TestOrderPOC extends BaseOpenmrsData implements Serializable {
 		this.encounter = encounter;
 	}
 	
+	public String getProvenance() {
+		return this.provenance;
+	}
+	
+	public void setProvenance(final String provenance) {
+		this.provenance = provenance;
+	}
+	
+	public String getCodeSequence() {
+		return this.codeSequence;
+	}
+	
+	public void setCodeSequence(final String codeSequence) {
+		this.codeSequence = codeSequence;
+	}
+	
 	public STATUS getStatus() {
 		
 		if (this.testOrderItems.isEmpty()) {
@@ -117,8 +137,10 @@ public class TestOrderPOC extends BaseOpenmrsData implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "PocTestOrder [patient=" + this.patient + ", provider=" + this.provider + ", creationDate="
-		        + this.dateCreation + ", items=" + this.testOrderItems + "]";
+		return "TestOrderPOC [patient=" + this.patient + ", provider=" + this.provider + ", location=" + this.location
+		        + ", dateCreation=" + this.dateCreation + ", encounter=" + this.encounter + ", provenance="
+		        + this.provenance + ", codeSequence=" + this.codeSequence + ", testOrderItems=" + this.testOrderItems
+		        + "]";
 	}
 	
 	@Override

@@ -22,6 +22,7 @@ import org.openmrs.api.PatientService;
 import org.openmrs.api.ProviderService;
 import org.openmrs.module.poc.api.common.service.POCDbSessionManager;
 import org.openmrs.module.poc.pocheuristic.service.PocHeuristicService;
+import org.openmrs.module.poc.sequencegenerator.service.PocSequenceGeneratorService;
 import org.openmrs.module.poc.testorder.model.TestOrderItem;
 import org.openmrs.module.poc.testorder.model.TestOrderPOC;
 import org.openmrs.module.poc.testorderresult.service.TestOrderRequestResultService;
@@ -47,6 +48,8 @@ public interface TestOrderService extends OpenmrsService {
 	void setPOCDbSessionManager(POCDbSessionManager pOCDbSessionManager);
 	
 	void setTestOrderRequestResultService(TestOrderRequestResultService testOrderRequestResultService);
+	
+	void setPocSequenceGeneratorService(PocSequenceGeneratorService pocSequenceGeneratorService);
 	
 	TestOrderPOC createTestOder(TestOrderPOC testOrderPOC);
 	

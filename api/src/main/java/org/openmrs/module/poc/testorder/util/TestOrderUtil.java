@@ -17,12 +17,15 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openmrs.Concept;
 import org.openmrs.Encounter;
+import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.OrderType;
 import org.openmrs.TestOrder;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.poc.api.common.util.OPENMRSUUIDs;
 import org.openmrs.module.poc.testorder.model.TestOrderItem;
 import org.openmrs.module.poc.testorder.model.TestOrderPOC;
 import org.openmrs.module.poc.testrequest.model.TestRequest;
@@ -54,6 +57,8 @@ public class TestOrderUtil {
 				testOrder.setProvider(requestEncounter.getEncounterProviders().iterator().next().getProvider());
 				testOrder.setLocation(requestEncounter.getLocation());
 				testOrder.setDateCreation(requestEncounter.getEncounterDatetime());
+				testOrder.setProvenance(this.getProvenance(requestEncounter));
+				testOrder.setCodeSequence(this.getCodeSequence(requestEncounter));
 				testOrder.setTestOrderItems(items);
 				
 				return testOrder;
@@ -76,6 +81,38 @@ public class TestOrderUtil {
 		}
 		
 		return map;
+	}
+	
+	private String getProvenance(final Encounter encounter) {
+		
+		final Concept provenanceConcept = Context.getConceptService()
+		        .getConceptByUuid(OPENMRSUUIDs.ENTRY_POINT_INTO_HIV_CARE);
+		
+		final Set<Obs> allObs = encounter.getAllObs(false);
+		for (final Obs obs : allObs) {
+			
+			if (provenanceConcept.equals(obs.getConcept())) {
+				
+				return obs.getValueText();
+			}
+		}
+		return StringUtils.EMPTY;
+	}
+	
+	private String getCodeSequence(final Encounter encounter) {
+		
+		final Concept codeSequenceConcept = Context.getConceptService()
+		        .getConceptByUuid(OPENMRSUUIDs.REFERENCE_TYPE);
+		
+		final Set<Obs> allObs = encounter.getAllObs(false);
+		for (final Obs obs : allObs) {
+			
+			if (codeSequenceConcept.equals(obs.getConcept())) {
+				return obs.getValueText();
+				
+			}
+		}
+		return StringUtils.EMPTY;
 	}
 	
 	private Set<Order> mergeOrders(final Set<Order> requestOrders, final Set<Order> resultOrders) {

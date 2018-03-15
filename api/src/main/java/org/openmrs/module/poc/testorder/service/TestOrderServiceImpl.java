@@ -15,13 +15,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openmrs.CareSetting;
 import org.openmrs.Concept;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterRole;
 import org.openmrs.EncounterType;
 import org.openmrs.Location;
+import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
@@ -38,6 +41,8 @@ import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.poc.api.common.service.POCDbSessionManager;
 import org.openmrs.module.poc.api.common.util.OPENMRSUUIDs;
 import org.openmrs.module.poc.pocheuristic.service.PocHeuristicService;
+import org.openmrs.module.poc.sequencegenerator.service.PocSequenceGeneratorService;
+import org.openmrs.module.poc.sequencegenerator.util.SequenceNames;
 import org.openmrs.module.poc.testorder.model.TestOrderItem;
 import org.openmrs.module.poc.testorder.model.TestOrderPOC;
 import org.openmrs.module.poc.testorder.util.TestOrderUtil;
@@ -67,6 +72,8 @@ public class TestOrderServiceImpl extends BaseOpenmrsService implements TestOrde
 	private POCDbSessionManager pOCDbSessionManager;
 	
 	private TestOrderRequestResultService testOrderRequestResultService;
+	
+	private PocSequenceGeneratorService pocSequenceGeneratorService;
 	
 	@Autowired
 	private TestOrderRequestValidator testOrderRequestValidator;
@@ -120,48 +127,56 @@ public class TestOrderServiceImpl extends BaseOpenmrsService implements TestOrde
 	}
 	
 	@Override
-	public TestOrderPOC createTestOder(final TestOrderPOC testOrderPOC) {
+	public void setPocSequenceGeneratorService(final PocSequenceGeneratorService pocSequenceGeneratorService) {
+		
+		this.pocSequenceGeneratorService = pocSequenceGeneratorService;
+	}
+	
+	@Override
+	public TestOrderPOC createTestOder(final TestOrderPOC testOrderPoc) {
 		
 		try {
 			
 			// workaround to controll the hibernate sessions commits
 			this.pOCDbSessionManager.setManualFlushMode();
 			
-			this.testOrderRequestValidator.validate(testOrderPOC);
+			this.testOrderRequestValidator.validate(testOrderPoc);
 			
-			final Patient patient = this.patientService.getPatientByUuid(testOrderPOC.getPatient().getUuid());
+			final Patient patient = this.patientService.getPatientByUuid(testOrderPoc.getPatient().getUuid());
 			
-			final Provider provider = this.providerService.getProviderByUuid(testOrderPOC.getProvider().getUuid());
+			final Provider provider = this.providerService.getProviderByUuid(testOrderPoc.getProvider().getUuid());
 			final CareSetting careSetting = this.orderService
 			        .getCareSettingByUuid(OPENMRSUUIDs.OUT_PUT_PATIENT_CARE_SETTINGS_CARESETTINGS_UUID);
-			final Location location = this.locationService.getLocationByUuid(testOrderPOC.getLocation().getUuid());
+			final Location location = this.locationService.getLocationByUuid(testOrderPoc.getLocation().getUuid());
 			
 			final Encounter encounter = this.getEncounterByRules(patient, provider, location,
-			    testOrderPOC.getDateCreation());
+			    testOrderPoc.getDateCreation());
 			
-			for (final TestOrderItem orderItem : testOrderPOC.getTestOrderItems()) {
+			for (final TestOrderItem orderItem : testOrderPoc.getTestOrderItems()) {
 				
 				final Concept concept = this.conceptService
 				        .getConceptByUuid(orderItem.getTestOrder().getConcept().getUuid());
 				
 				final TestOrder order = new TestOrder();
 				order.setConcept(concept);
-				order.setPatient(testOrderPOC.getPatient());
+				order.setPatient(testOrderPoc.getPatient());
 				order.setOrderer(provider);
 				order.setCareSetting(careSetting);
 				order.setEncounter(encounter);
 				encounter.addOrder(order);
 			}
 			
+			this.setProvenance(encounter, testOrderPoc);
+			this.setSequenciaOrderNumber(testOrderPoc, encounter);
 			this.encounterService.saveEncounter(encounter);
-			testOrderPOC.setEncounter(encounter);
+			testOrderPoc.setEncounter(encounter);
 		}
 		finally {
 			// Context.flushSession();
 			this.pOCDbSessionManager.setAutoFlushMode();
 		}
 		
-		return testOrderPOC;
+		return testOrderPoc;
 	}
 	
 	@Override
@@ -240,6 +255,67 @@ public class TestOrderServiceImpl extends BaseOpenmrsService implements TestOrde
 		
 		throw new APIException(Context.getMessageSourceService()
 		        .getMessage("poc.error.testorderitem.not.found.for.uuid", new String[] { uuid }, Context.getLocale()));
+	}
+	
+	private void setSequenciaOrderNumber(final TestOrderPOC testOrderPoc, final Encounter encounter) {
+		
+		final Concept sequencialConcept = this.conceptService.getConceptByUuid(OPENMRSUUIDs.REFERENCE_TYPE);
+		
+		final boolean hasSequence = StringUtils.isNotBlank(testOrderPoc.getCodeSequence()) ? true : false;
+		
+		final Set<Obs> allObs = encounter.getAllObs(false);
+		boolean needNewSequencial = true;
+		
+		for (final Obs obs : allObs) {
+			
+			if (sequencialConcept.equals(obs.getConcept())) {
+				
+				if (hasSequence && !testOrderPoc.getCodeSequence().trim().equalsIgnoreCase(obs.getValueText().trim())) {
+					Context.getObsService().voidObs(obs, "voided due change of sequencial number");
+				} else {
+					needNewSequencial = false;
+				}
+				break;
+			}
+		}
+		
+		if (needNewSequencial) {
+			
+			final String newSequencialCode = hasSequence ? testOrderPoc.getCodeSequence()
+			        : "ORD-0" + this.pocSequenceGeneratorService.getNextSequenceNumber(SequenceNames.TEST_ORDER);
+			
+			final Obs obs = new Obs();
+			obs.setConcept(sequencialConcept);
+			obs.setValueText(newSequencialCode);
+			encounter.addObs(obs);
+		}
+	}
+	
+	private void setProvenance(final Encounter encounter, final TestOrderPOC testOrderPoc) {
+		
+		final Concept provenanceConcept = this.conceptService.getConceptByUuid(OPENMRSUUIDs.ENTRY_POINT_INTO_HIV_CARE);
+		
+		final Set<Obs> allObs = encounter.getAllObs(false);
+		boolean foundAndEquals = false;
+		for (final Obs obs : allObs) {
+			
+			if (provenanceConcept.equals(obs.getConcept())) {
+				
+				if (!testOrderPoc.getProvenance().trim().equalsIgnoreCase(obs.getValueText().trim())) {
+					Context.getObsService().voidObs(obs, "voided due update the provenance");
+				} else {
+					foundAndEquals = true;
+				}
+				break;
+			}
+		}
+		
+		if (!foundAndEquals) {
+			final Obs obs = new Obs();
+			obs.setConcept(provenanceConcept);
+			obs.setValueText(testOrderPoc.getProvenance());
+			encounter.addObs(obs);
+		}
 	}
 	
 	private Map<Encounter, Encounter> mergeTestRequestResult(final List<Encounter> encounters,

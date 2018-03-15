@@ -152,6 +152,9 @@
 				<property name="testOrderRequestResultService">
 					<ref bean="testOrderRequestResultService" />
 				</property>
+				<property name="pocSequenceGeneratorService">
+					<ref bean="pocSequenceGeneratorService" />
+				</property>				
 			</bean>
 		</property>
 		<property name="preInterceptors">
@@ -222,6 +225,30 @@
 		</property>
 	</bean>
 	
+	<bean id="pocSequenceGeneratorService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+		<property name="target">
+			<bean class="org.openmrs.module.poc.sequencegenerator.service.PocSequenceGeneratorServiceImpl">
+				<property name="pocSequenceGeneratorDAO">
+					<bean class="org.openmrs.module.poc.sequencegenerator.dao.PocSequenceGeneratorDAOImpl">
+						<property name="sessionFactory">
+							<ref bean="sessionFactory" />
+						</property>
+					</bean>
+				</property>
+			</bean>
+		</property>
+		<property name="preInterceptors">
+			<ref bean="serviceInterceptors" />
+		</property>
+		<property name="transactionAttributeSource">
+			<ref bean="transactionAttributeSource" />
+		</property>
+	</bean>
+	
 	<bean parent="serviceContext">
 		<property name="moduleService">
 			<list>
@@ -281,6 +308,15 @@
 			<list>
 				<value>org.openmrs.module.poc.testorderresult.service.TestOrderResultService</value>
 				<ref local="testOrderResultService"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean parent="serviceContext">
+		<property name="moduleService">
+			<list>
+				<value>org.openmrs.module.poc.sequencegenerator.service.PocSequenceGeneratorService</value>
+				<ref local="pocSequenceGeneratorService"/>
 			</list>
 		</property>
 	</bean>

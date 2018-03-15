@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openmrs.Concept;
 import org.openmrs.ConceptDatatype;
 import org.openmrs.Encounter;
@@ -72,22 +73,23 @@ public class TestOrderResultUtils {
 				encounterSeguimentoPaciente = requestEncounter;
 			}
 			
-			final TestOrderResult testOrder = new TestOrderResult();
-			testOrder.setPatient(requestEncounter.getPatient());
-			testOrder.setEncounterRequest(encounterSeguimentoPaciente);
-			testOrder.setEncounterResult(resultEncounter);
-			testOrder.setLocation(requestEncounter.getLocation());
-			testOrder.setDateCreation(requestEncounter.getEncounterDatetime());
-			testOrder.setItems(items);
+			final TestOrderResult testOrderResult = new TestOrderResult();
+			testOrderResult.setPatient(requestEncounter.getPatient());
+			testOrderResult.setEncounterRequest(encounterSeguimentoPaciente);
+			testOrderResult.setEncounterResult(resultEncounter);
+			testOrderResult.setLocation(requestEncounter.getLocation());
+			testOrderResult.setDateCreation(requestEncounter.getEncounterDatetime());
+			testOrderResult.setCodeSequence(this.getCodeSequence(encounterSeguimentoPaciente));
+			testOrderResult.setItems(items);
 			
 			Provider provider = requestEncounter.getEncounterProviders().iterator().next().getProvider();
 			if ((resultEncounter.getEncounterProviders() != null)
 			        && !resultEncounter.getEncounterProviders().isEmpty()) {
 				provider = resultEncounter.getEncounterProviders().iterator().next().getProvider();
 			}
-			testOrder.setProvider(provider);
+			testOrderResult.setProvider(provider);
 			
-			return testOrder;
+			return testOrderResult;
 		}
 		
 		return null;
@@ -166,6 +168,20 @@ public class TestOrderResultUtils {
 		}
 		
 		return result;
+	}
+	
+	private String getCodeSequence(final Encounter encounter) {
+		
+		final Concept sequencialConcept = Context.getConceptService().getConceptByUuid(OPENMRSUUIDs.REFERENCE_TYPE);
+		final Set<Obs> allObs = encounter.getAllObs(false);
+		
+		for (final Obs obs : allObs) {
+			
+			if (sequencialConcept.equals(obs.getConcept())) {
+				return obs.getValueText();
+			}
+		}
+		return StringUtils.EMPTY;
 	}
 	
 	public Map<Concept, Concept> getMapCategoriesByTestConcept() {
