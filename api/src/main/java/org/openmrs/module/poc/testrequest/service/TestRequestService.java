@@ -10,17 +10,16 @@
 package org.openmrs.module.poc.testrequest.service;
 
 import java.util.List;
-import java.util.Locale;
 
+import org.openmrs.api.ConceptService;
 import org.openmrs.api.OpenmrsService;
-import org.openmrs.module.poc.testrequest.dao.TestRequestDAO;
 import org.openmrs.module.poc.testrequest.model.TestRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 public interface TestRequestService extends OpenmrsService {
 	
-	public void setTestRequestDAO(final TestRequestDAO testRequestDAO);
+	void setConceptService(ConceptService conceptService);
 	
-	List<TestRequest> findAllTestRequests(Locale locale);
+	List<TestRequest> findAllTestRequests();
 }

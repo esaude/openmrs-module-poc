@@ -81,12 +81,8 @@
 		</property>
 		<property name="target">
 			<bean class="org.openmrs.module.poc.testrequest.service.TestRequestServiceImpl">
-				<property name="testRequestDAO">
-					<bean class="org.openmrs.module.poc.testrequest.dao.TestRequestDAOImpl">
-						<property name="sessionFactory">
-							<ref bean="sessionFactory" />
-						</property>
-					</bean>
+				<property name="conceptService">
+					<ref bean="conceptService" />
 				</property>
 			</bean>
 		</property>

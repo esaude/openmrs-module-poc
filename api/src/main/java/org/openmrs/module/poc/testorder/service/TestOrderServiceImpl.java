@@ -232,7 +232,8 @@ public class TestOrderServiceImpl extends BaseOpenmrsService implements TestOrde
 			final Concept category = mapCategoriesByTestConcept.get(order.getConcept());
 			
 			final TestOrderItem testOrderItem = new TestOrderItem((TestOrder) order, category);
-			testOrderItem.setParent(this.findTestOrderByEncounter(order.getEncounter()));
+			final Encounter encounter = this.encounterService.getEncounter(order.getEncounter().getEncounterId());
+			testOrderItem.setParent(this.findTestOrderByEncounter(encounter));
 			
 			return testOrderItem;
 		}

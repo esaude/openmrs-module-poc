@@ -18,6 +18,7 @@ import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.hamcrest.collection.IsCollectionWithSize;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openmrs.Concept;
 import org.openmrs.Encounter;
@@ -80,7 +81,7 @@ public class TestOrderServiceTest extends POCBaseModuleContextSensitiveTest {
 	public void shouldCreateTestOder() throws Exception {
 		this.executeDataSet("testorder/shouldCreateTestOder-dataset.xml");
 		
-		final TestOrderPOC testOrder = this.generateTestOrderPOC(OPENMRSUUIDs.DVRL_CONCEPT_UUID,
+		final TestOrderPOC testOrder = this.generateTestOrderPOC(OPENMRSUUIDs.VDRL_CONCEPT_UUID,
 		    OPENMRSUUIDs.RAPID_PLASMA_REAGIN_CONCEP_UUID);
 		TestOrderPOC createTestOder = Context.getService(TestOrderService.class).createTestOder(testOrder);
 		createTestOder = Context.getService(TestOrderService.class)
@@ -93,6 +94,28 @@ public class TestOrderServiceTest extends POCBaseModuleContextSensitiveTest {
 		Assert.assertEquals(TestOrderPOC.STATUS.NEW, createTestOder.getStatus());
 		MatcherAssert.assertThat(createTestOder.getTestOrderItems(), CoreMatchers.notNullValue());
 		MatcherAssert.assertThat(createTestOder.getTestOrderItems(), IsCollectionWithSize.hasSize(2));
+	}
+	
+	@Test
+	@Ignore
+	public void shouldDeleteTestOrderItem() throws Exception {
+		this.executeDataSet("testorder/shouldDeleteTestOrderItem-dataset.xml");
+		
+		final TestOrderItem testOrderItem = new TestOrderItem();
+		testOrderItem.setUuid("1c96f25c-4949ww-order-item-to-delete");
+		
+		Context.getService(TestOrderService.class).deleteTestOrderItem(testOrderItem, "cancel the order");
+		
+		final Encounter encounter = new Encounter();
+		encounter.setUuid("6519d653-find-test-orders-by-encounter");
+		
+		final TestOrderPOC testOrderPOC = Context.getService(TestOrderService.class)
+		        .findTestOrderByEncounter(encounter);
+		final TestOrderItem afterDelete = testOrderPOC.getTestOrderItems().iterator().next();
+		
+		Assert.assertNotNull(afterDelete);
+		Assert.assertTrue(afterDelete.isVoided());
+		
 	}
 	
 	private TestOrderPOC generateTestOrderPOC(final String... uuids) {

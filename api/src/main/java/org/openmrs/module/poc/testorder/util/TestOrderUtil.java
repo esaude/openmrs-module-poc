@@ -66,7 +66,7 @@ public class TestOrderUtil {
 	public Map<Concept, Concept> getMapCategoriesByTestConcept() {
 		
 		final List<TestRequest> findAllTestOrderRequest = Context.getService(TestRequestService.class)
-		        .findAllTestRequests(Context.getLocale());
+		        .findAllTestRequests();
 		
 		final Map<Concept, Concept> map = new HashMap<>();
 		

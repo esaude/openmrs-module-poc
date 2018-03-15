@@ -25,14 +25,11 @@ public class TestRequestServiceTest extends POCBaseModuleContextSensitiveTest {
 	
 	@Test
 	public void shouldFindAllTestRequests() throws Exception {
-		this.executeDataSet("testrequest/shouldFindAllTestRequests-dataset.xml");
 		
-		final List<TestRequest> testRequests = Context.getService(TestRequestService.class)
-		        .findAllTestRequests(Context.getLocale());
+		final List<TestRequest> testRequests = Context.getService(TestRequestService.class).findAllTestRequests();
 		
 		Assert.assertNotNull(testRequests);
-		
 		MatcherAssert.assertThat(testRequests, CoreMatchers.notNullValue());
-		MatcherAssert.assertThat(testRequests, IsCollectionWithSize.hasSize(5));
+		MatcherAssert.assertThat(testRequests, IsCollectionWithSize.hasSize(6));
 	}
 }

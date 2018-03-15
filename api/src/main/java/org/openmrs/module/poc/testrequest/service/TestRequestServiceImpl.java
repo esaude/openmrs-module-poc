@@ -14,56 +14,41 @@ package org.openmrs.module.poc.testrequest.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import org.openmrs.Concept;
-import org.openmrs.ConceptSet;
 import org.openmrs.api.ConceptService;
-import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
-import org.openmrs.module.poc.api.common.util.OPENMRSUUIDs;
-import org.openmrs.module.poc.testrequest.dao.TestRequestDAO;
 import org.openmrs.module.poc.testrequest.model.TestRequest;
+import org.openmrs.module.poc.testrequest.util.LaboratoryGeralSets;
+import org.openmrs.module.poc.testrequest.util.MappedLaboratoryGeralSet;
 
 public class TestRequestServiceImpl extends BaseOpenmrsService implements TestRequestService {
 	
-	private TestRequestDAO testRequestDAO;
+	private ConceptService conceptService;
 	
 	@Override
-	public void setTestRequestDAO(final TestRequestDAO testRequestDAO) {
-		this.testRequestDAO = testRequestDAO;
+	public void setConceptService(final ConceptService conceptService) {
+		this.conceptService = conceptService;
 	}
 	
 	@Override
-	public List<TestRequest> findAllTestRequests(final Locale locale) {
+	public List<TestRequest> findAllTestRequests() {
 		
-		final List<Concept> allConcepts = this.testRequestDAO.findAll(locale);
+		final List<TestRequest> testRequests = new ArrayList<>();
 		
-		final ConceptService conceptService = Context.getConceptService();
-		
-		final List<TestRequest> testOrderRequests = new ArrayList<>();
-		for (final Concept concept : allConcepts) {
+		for (final LaboratoryGeralSets laboratoryGeralSet : LaboratoryGeralSets.values()) {
 			
-			final List<ConceptSet> conceptSets = conceptService.getSetsContainingConcept(concept);
+			final List<String> conceptsUUids = MappedLaboratoryGeralSet.getLaboratoryConceptTests(laboratoryGeralSet);
 			
-			final List<Concept> categories = new ArrayList<>();
-			for (final ConceptSet conceptSet : conceptSets) {
-				categories.add(conceptSet.getConceptSet());
-			}
+			final Concept category = this.conceptService.getConceptByUuid(laboratoryGeralSet.getUuid());
 			
-			if (OPENMRSUUIDs.RAPID_PLASMA_REAGIN_CONCEP_UUID.equals(concept.getUuid()) && categories.isEmpty()) {
-				categories.add(Context.getConceptService().getConceptByUuid(OPENMRSUUIDs.IMMUNOLOGIA_CONCEPT_SET_UUID));
-			}
-			
-			if (OPENMRSUUIDs.DVRL_CONCEPT_UUID.equals(concept.getUuid()) && categories.isEmpty()) {
-				categories.add(
-				        Context.getConceptService().getConceptByUuid(OPENMRSUUIDs.HEMOGRAMA_KX21N_CONCEPT_SET_UUID));
-			}
-			
-			if (!categories.isEmpty()) {
-				testOrderRequests.add(new TestRequest(concept, categories.iterator().next()));
+			for (final String uuid : conceptsUUids) {
+				final Concept concept = this.conceptService.getConceptByUuid(uuid);
+				if ((concept != null) && (category != null) && category.isSet()) {
+					testRequests.add(new TestRequest(concept, category));
+				}
 			}
 		}
-		return testOrderRequests;
+		return testRequests;
 	}
 }

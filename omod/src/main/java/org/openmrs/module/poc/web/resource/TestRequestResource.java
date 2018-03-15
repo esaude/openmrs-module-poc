@@ -85,7 +85,6 @@ public class TestRequestResource extends DataDelegatingCrudResource<TestRequest>
 	@Override
 	protected NeedsPaging<TestRequest> doGetAll(final RequestContext context) {
 		
-		return new NeedsPaging<>(Context.getService(TestRequestService.class).findAllTestRequests(Context.getLocale()),
-		        context);
+		return new NeedsPaging<>(Context.getService(TestRequestService.class).findAllTestRequests(), context);
 	}
 }
