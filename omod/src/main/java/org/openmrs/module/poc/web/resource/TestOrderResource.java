@@ -55,7 +55,6 @@ public class TestOrderResource extends DelegatingCrudResource<TestOrderPOC> {
 			description.addProperty("location", Representation.REF);
 			description.addProperty("dateCreation");
 			description.addProperty("testOrderItems");
-			description.addProperty("provenance");
 			description.addProperty("codeSequence");
 			
 			description.addProperty("status");
@@ -74,7 +73,6 @@ public class TestOrderResource extends DelegatingCrudResource<TestOrderPOC> {
 			description.addProperty("location", Representation.REF);
 			description.addProperty("dateCreation");
 			description.addProperty("testOrderItems");
-			description.addProperty("provenance");
 			description.addProperty("codeSequence");
 			description.addProperty("status");
 			description.addSelfLink();
@@ -92,7 +90,6 @@ public class TestOrderResource extends DelegatingCrudResource<TestOrderPOC> {
 			description.addProperty("location");
 			description.addProperty("dateCreation");
 			description.addProperty("testOrderItems");
-			description.addProperty("provenance");
 			description.addProperty("codeSequence");
 			description.addProperty("status");
 			description.addSelfLink();
@@ -155,7 +152,6 @@ public class TestOrderResource extends DelegatingCrudResource<TestOrderPOC> {
 		description.addProperty("dateCreation");
 		description.addProperty("location");
 		description.addProperty("testOrderItems");
-		description.addProperty("provenance");
 		description.addProperty("codeSequence");
 		
 		return description;

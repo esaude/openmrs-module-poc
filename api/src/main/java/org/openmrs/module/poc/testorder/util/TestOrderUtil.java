@@ -57,7 +57,6 @@ public class TestOrderUtil {
 				testOrder.setProvider(requestEncounter.getEncounterProviders().iterator().next().getProvider());
 				testOrder.setLocation(requestEncounter.getLocation());
 				testOrder.setDateCreation(requestEncounter.getEncounterDatetime());
-				testOrder.setProvenance(this.getProvenance(requestEncounter));
 				testOrder.setCodeSequence(this.getCodeSequence(requestEncounter));
 				testOrder.setTestOrderItems(items);
 				
@@ -83,26 +82,9 @@ public class TestOrderUtil {
 		return map;
 	}
 	
-	private String getProvenance(final Encounter encounter) {
-		
-		final Concept provenanceConcept = Context.getConceptService()
-		        .getConceptByUuid(OPENMRSUUIDs.ENTRY_POINT_INTO_HIV_CARE);
-		
-		final Set<Obs> allObs = encounter.getAllObs(false);
-		for (final Obs obs : allObs) {
-			
-			if (provenanceConcept.equals(obs.getConcept())) {
-				
-				return obs.getValueText();
-			}
-		}
-		return StringUtils.EMPTY;
-	}
-	
 	private String getCodeSequence(final Encounter encounter) {
 		
-		final Concept codeSequenceConcept = Context.getConceptService()
-		        .getConceptByUuid(OPENMRSUUIDs.REFERENCE_TYPE);
+		final Concept codeSequenceConcept = Context.getConceptService().getConceptByUuid(OPENMRSUUIDs.REFERENCE_TYPE);
 		
 		final Set<Obs> allObs = encounter.getAllObs(false);
 		for (final Obs obs : allObs) {

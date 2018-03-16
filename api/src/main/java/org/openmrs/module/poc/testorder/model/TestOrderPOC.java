@@ -34,8 +34,6 @@ public class TestOrderPOC extends BaseOpenmrsData implements Serializable {
 	
 	private Encounter encounter;
 	
-	private String provenance;
-	
 	private String codeSequence;
 	
 	private List<TestOrderItem> testOrderItems;
@@ -92,14 +90,6 @@ public class TestOrderPOC extends BaseOpenmrsData implements Serializable {
 		this.encounter = encounter;
 	}
 	
-	public String getProvenance() {
-		return this.provenance;
-	}
-	
-	public void setProvenance(final String provenance) {
-		this.provenance = provenance;
-	}
-	
 	public String getCodeSequence() {
 		return this.codeSequence;
 	}
@@ -138,9 +128,8 @@ public class TestOrderPOC extends BaseOpenmrsData implements Serializable {
 	@Override
 	public String toString() {
 		return "TestOrderPOC [patient=" + this.patient + ", provider=" + this.provider + ", location=" + this.location
-		        + ", dateCreation=" + this.dateCreation + ", encounter=" + this.encounter + ", provenance="
-		        + this.provenance + ", codeSequence=" + this.codeSequence + ", testOrderItems=" + this.testOrderItems
-		        + "]";
+		        + ", dateCreation=" + this.dateCreation + ", encounter=" + this.encounter + ", codeSequence="
+		        + this.codeSequence + ", testOrderItems=" + this.testOrderItems + "]";
 	}
 	
 	@Override

@@ -166,7 +166,6 @@ public class TestOrderServiceImpl extends BaseOpenmrsService implements TestOrde
 				encounter.addOrder(order);
 			}
 			
-			this.setProvenance(encounter, testOrderPoc);
 			this.setSequenciaOrderNumber(testOrderPoc, encounter);
 			this.encounterService.saveEncounter(encounter);
 			testOrderPoc.setEncounter(encounter);
@@ -287,33 +286,6 @@ public class TestOrderServiceImpl extends BaseOpenmrsService implements TestOrde
 			final Obs obs = new Obs();
 			obs.setConcept(sequencialConcept);
 			obs.setValueText(newSequencialCode);
-			encounter.addObs(obs);
-		}
-	}
-	
-	private void setProvenance(final Encounter encounter, final TestOrderPOC testOrderPoc) {
-		
-		final Concept provenanceConcept = this.conceptService.getConceptByUuid(OPENMRSUUIDs.ENTRY_POINT_INTO_HIV_CARE);
-		
-		final Set<Obs> allObs = encounter.getAllObs(false);
-		boolean foundAndEquals = false;
-		for (final Obs obs : allObs) {
-			
-			if (provenanceConcept.equals(obs.getConcept())) {
-				
-				if (!testOrderPoc.getProvenance().trim().equalsIgnoreCase(obs.getValueText().trim())) {
-					Context.getObsService().voidObs(obs, "voided due update the provenance");
-				} else {
-					foundAndEquals = true;
-				}
-				break;
-			}
-		}
-		
-		if (!foundAndEquals) {
-			final Obs obs = new Obs();
-			obs.setConcept(provenanceConcept);
-			obs.setValueText(testOrderPoc.getProvenance());
 			encounter.addObs(obs);
 		}
 	}

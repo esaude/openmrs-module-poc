@@ -161,7 +161,5 @@ public interface OPENMRSUUIDs {
 	////
 	String SPUTUM_FOR_ACID_FAST_BACILLI_CONCEPT_UUID = "e1d1564c-1d5f-11e0-b929-000c29ad1d07";
 	
-	String ENTRY_POINT_INTO_HIV_CARE = "e1dcded6-1d5f-11e0-b929-000c29ad1d07";
-	
 	String REFERENCE_TYPE = "e1dc08da-1d5f-11e0-b929-000c29ad1d07";
 }

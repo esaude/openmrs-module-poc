@@ -669,7 +669,6 @@
 	<concept_set concept_set_id="104" concept_id="1001" concept_set="1002" sort_weight="1.0" creator="1" date_created="2008-08-18 12:38:58.0" uuid="90893230-d9e7-11e3-9c1a-0800200c9XY4"/>
 	<concept_set concept_set_id="105" concept_id="1007" concept_set="1002" sort_weight="1.0" creator="1" date_created="2008-08-18 12:38:58.0" uuid="90893230-d9e7-11e3-9c1a-0800200c9XY5"/>
 	
-	<concept concept_id="1008" retired="false" datatype_id="3" class_id="7" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="e1dcded6-1d5f-11e0-b929-000c29ad1d07"/>
 	<concept concept_id="1009" retired="false" datatype_id="3" class_id="7" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="e1dc08da-1d5f-11e0-b929-000c29ad1d07"/>
 
 </dataset>

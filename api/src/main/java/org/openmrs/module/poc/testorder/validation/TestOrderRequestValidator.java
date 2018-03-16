@@ -18,7 +18,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.commons.lang3.StringUtils;
 import org.openmrs.Concept;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
@@ -46,7 +45,6 @@ public class TestOrderRequestValidator {
 		this.validateProvider(testOrder);
 		this.validateCreationDate(testOrder);
 		this.validateTestOrderItems(testOrder);
-		this.validateProvenance(testOrder);
 		
 		final Patient patient = Context.getPatientService().getPatientByUuid(testOrder.getPatient().getUuid());
 		final Location location = Context.getLocationService().getLocationByUuid(testOrder.getLocation().getUuid());
@@ -95,14 +93,6 @@ public class TestOrderRequestValidator {
 			throw new APIException(
 			        Context.getMessageSourceService().getMessage("poc.error.testorder.creationDate.isAfterCurrentDate",
 			            new String[] { testOrder.getDateCreation().toString() }, Context.getLocale()));
-		}
-	}
-	
-	private void validateProvenance(final TestOrderPOC testOrder) {
-		
-		if (StringUtils.isBlank(testOrder.getProvenance())) {
-			throw new APIException(
-			        Context.getMessageSourceService().getMessage("poc.error.testorder.provenance.required"));
 		}
 	}
 	

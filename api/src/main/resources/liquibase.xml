@@ -23,7 +23,7 @@
 		</preConditions>
 
 		<comment>
-			Creating poc_test_order_request_result table
+			Created TABLE poc_test_order_request_result to link all Lab Test results with theirs Lab Test requests
 		</comment>
 
 		<createTable tableName="poc_test_order_request_result">
@@ -99,7 +99,7 @@
 
 	</changeSet>
 
-	<changeSet id="poc-v1.0.0-poc_sequence_generator" author="Guimino">
+	<changeSet id="poc-v1.0.0-table-poc_sequence_generator" author="Guimino">
 
 		<preConditions onFail="MARK_RAN">
 			<not>
@@ -108,7 +108,7 @@
 		</preConditions>
 
 		<comment>
-			Creating poc_sequence_generator table
+			Created table poc_sequence_generator to store all sequences needed for the business logic of the module
 		</comment>
 
 		<createTable tableName="poc_sequence_generator">

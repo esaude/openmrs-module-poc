@@ -133,7 +133,6 @@ public class TestOrderServiceTest extends POCBaseModuleContextSensitiveTest {
 		location.setUuid("8d6c993e-c2cc-11de-8d13-0010c6dffd0f");
 		testOrder.setLocation(location);
 		testOrder.setDateCreation(new Date());
-		testOrder.setProvenance("Local desconhecido");
 		testOrder.setCodeSequence("001");
 		
 		final List<TestOrderItem> items = new ArrayList<>();
