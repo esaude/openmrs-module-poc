@@ -113,7 +113,7 @@ public class TestOrderResultServiceImpl extends BaseOpenmrsService implements Te
 			
 			try {
 				
-				final Concept category = mapCategoriesByConcept.get(order.getConcept());
+				final Concept category = this.getCategoryByTestConcept(mapCategoriesByConcept, order.getConcept());
 				this.generateObs(testResult, order, resultItem, category);
 				
 			}
@@ -142,6 +142,19 @@ public class TestOrderResultServiceImpl extends BaseOpenmrsService implements Te
 		testOrderResult.setEncounterResult(testResult);
 		
 		return testOrderResult;
+	}
+	
+	private Concept getCategoryByTestConcept(final Map<Concept, Concept> mapCategoriesByConcepts,
+	        final Concept testConcept) {
+		
+		final Concept category = mapCategoriesByConcepts.get(testConcept);
+		
+		if (category == null) {
+			throw new APIException(Context.getMessageSourceService().getMessage(
+			    "poc.error.testorderitemresult.category.notFound.for.testConcept",
+			    new String[] { testConcept.getDisplayString(), testConcept.getUuid() }, Context.getLocale()));
+		}
+		return category;
 	}
 	
 	@Override
@@ -292,9 +305,8 @@ public class TestOrderResultServiceImpl extends BaseOpenmrsService implements Te
 	private void createObs(final Encounter encounter, final Order order, final TestOrderResultItem resultItem,
 	        final Concept category) throws ParseException {
 		
-		final Obs obsGroup = new Obs();
+		final Obs obsGroup = this.getGroupObsByTestCategory(encounter, category);
 		obsGroup.setConcept(category);
-		obsGroup.setOrder(order);
 		
 		final Obs obsTest = new Obs();
 		obsTest.setConcept(order.getConcept());
@@ -308,6 +320,21 @@ public class TestOrderResultServiceImpl extends BaseOpenmrsService implements Te
 		}
 		obsGroup.addGroupMember(obsTest);
 		encounter.addObs(obsGroup);
+	}
+	
+	private Obs getGroupObsByTestCategory(final Encounter encounter, final Concept category) {
+		
+		final Set<Obs> allObs = encounter.getAllObs(false);
+		
+		for (final Obs obs : allObs) {
+			
+			if (obs.isObsGrouping() && obs.getConcept().equals(category)) {
+				return obs;
+			}
+		}
+		final Obs obs = new Obs();
+		obs.setConcept(category);
+		return obs;
 	}
 	
 	private void generateObs(final Encounter encounter, final Order order, final TestOrderResultItem resultItem,

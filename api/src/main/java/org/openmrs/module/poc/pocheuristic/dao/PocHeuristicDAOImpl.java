@@ -31,6 +31,7 @@ public class PocHeuristicDAOImpl implements PocHeuristicCAO {
 		this.sessionFactory = sessionFactory;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public Encounter findLastEncounterByPatientAndEncounterTypeAndLocationAndDateAndStatus(final Patient patient,
 	        final EncounterType encounterType, final Location location, final Date encounterDateTime,
@@ -62,6 +63,27 @@ public class PocHeuristicDAOImpl implements PocHeuristicCAO {
 		        .createQuery(
 		            "select distinct o.encounter from TestOrder o where o.patient.uuid =:patientUUID and o.voided = :voided ")
 		        .setParameter("patientUUID", patientUUID).setParameter("voided", voided).list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Encounter> findEncountersByPatientAndEncounterType(final Patient patient,
+	        final EncounterType encounterType) {
+		
+		return this.sessionFactory
+		        .getCurrentSession()
+		        .createQuery(
+		            "select enc from Encounter enc left join fetch enc.orders ord left join fetch ord.drug where enc.encounterType = :encounterType and enc.patient = :patient")
+		        .setParameter("patient", patient).setParameter("encounterType", encounterType).list();
+		
+		// final Criteria searchCriteria =
+		// this.sessionFactory.getCurrentSession().createCriteria(Encounter.class,
+		// "enc");
+		// searchCriteria.add(Restrictions.eq("enc.patient", patient));
+		// searchCriteria.setFetchMode("orders", FetchMode.SELECT);
+		// searchCriteria.add(Restrictions.eq("enc.encounterType",
+		// encounterType));
+		// return searchCriteria.list();
 	}
 	
 }
