@@ -29,58 +29,294 @@
   		    http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 
 	<!-- Services accessible via Context.getService() -->
+	
+	
+	<bean id="clinicalServiceService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+		<property name="target">
+			<bean class="org.openmrs.module.poc.clinicalservice.service.ClinicalServiceServiceImpl">
+				<property name="obsService"><ref bean="obsService"/></property>
+        		<property name="encounterService"><ref bean="encounterService"/></property>
+			</bean>
+		</property>
+		<property name="preInterceptors">
+			<ref bean="serviceInterceptors" />
+		</property>
+		<property name="transactionAttributeSource">
+			<ref bean="transactionAttributeSource" />
+		</property>
+	</bean>
+	
+	<bean id="patientConsultationSummaryService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+		<property name="target">
+			<bean class="org.openmrs.module.poc.patientconsultation.service.PatientConsultationSummaryServiceImpl">
+				<property name="patientConsultationSummaryDAO">
+					<bean class="org.openmrs.module.poc.patientconsultation.dao.PatientConsultationSummaryDAOImpl">
+						<property name="sessionFactory">
+							<ref bean="sessionFactory" />
+						</property>
+					</bean>
+				</property>
+			</bean>
+		</property>
+		<property name="preInterceptors">
+			<ref bean="serviceInterceptors" />
+		</property>
+		<property name="transactionAttributeSource">
+			<ref bean="transactionAttributeSource" />
+		</property>
+	</bean>
+	
+	<bean id="testRequestService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+		<property name="target">
+			<bean class="org.openmrs.module.poc.testrequest.service.TestRequestServiceImpl">
+				<property name="conceptService">
+					<ref bean="conceptService" />
+				</property>
+			</bean>
+		</property>
+		<property name="preInterceptors">
+			<ref bean="serviceInterceptors" />
+		</property>
+		<property name="transactionAttributeSource">
+			<ref bean="transactionAttributeSource" />
+		</property>
+	</bean>
+	
+	<bean id="pocHeuristicService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+		<property name="target">
+			<bean class="org.openmrs.module.poc.pocheuristic.service.PocHeuristicServiceImpl">
+				<property name="pocHeuristicCAO">
+					<bean class="org.openmrs.module.poc.pocheuristic.dao.PocHeuristicDAOImpl">
+						<property name="sessionFactory">
+							<ref bean="sessionFactory" />
+						</property>
+					</bean>
+				</property>
+			</bean>
+		</property>
+		<property name="preInterceptors">
+			<ref bean="serviceInterceptors" />
+		</property>
+		<property name="transactionAttributeSource">
+			<ref bean="transactionAttributeSource" />
+		</property>
+	</bean>
+	
+	<bean id="testOrderService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+		<property name="target">
+			<bean class="org.openmrs.module.poc.testorder.service.TestOrderServiceImpl">
+				<property name="pocHeuristicService">
+				<ref bean="pocHeuristicService"/>
+				</property>
+				<property name="orderService">
+					<ref bean="orderService" />
+				</property>
+				<property name="patientService">
+					<ref bean="patientService" />
+				</property>
+				<property name="encounterService">
+					<ref bean="encounterService" />
+				</property>
+				<property name="locationService">
+					<ref bean="locationService" />
+				</property>
+				<property name="conceptService">
+					<ref bean="conceptService" />
+				</property>
+				<property name="providerService">
+					<ref bean="providerService" />
+				</property>
+				<property name="pOCDbSessionManager">
+					<ref bean="pOCDbSessionManager" />
+				</property>
+				<property name="testOrderRequestResultService">
+					<ref bean="testOrderRequestResultService" />
+				</property>
+				<property name="pocSequenceGeneratorService">
+					<ref bean="pocSequenceGeneratorService" />
+				</property>				
+			</bean>
+		</property>
+		<property name="preInterceptors">
+			<ref bean="serviceInterceptors" />
+		</property>
+		<property name="transactionAttributeSource">
+			<ref bean="transactionAttributeSource" />
+		</property>
+	</bean>
+	
+	<bean id="testOrderRequestResultService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+		<property name="target">
+			<bean class="org.openmrs.module.poc.testorderresult.service.TestOrderRequestResultServiceImpl">
+				<property name="testOrderRequestResultDAO">
+					<bean class="org.openmrs.module.poc.testorderresult.dao.TestOrderRequestResultDAOImpl">
+						<property name="sessionFactory">
+							<ref bean="sessionFactory" />
+						</property>
+					</bean>
+				</property>
+				<property name="encounterService">
+					<ref bean="encounterService"/>
+				</property>
+			</bean>
+		</property>
+		<property name="transactionAttributeSource">
+			<ref bean="transactionAttributeSource" />
+		</property>
+	</bean>
+	
+	
+	<bean id="testOrderResultService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+		<property name="target">
+			<bean class="org.openmrs.module.poc.testorderresult.service.TestOrderResultServiceImpl">
+				<property name="pocHeuristicService">
+				<ref bean="pocHeuristicService"/>
+				</property>
+				<property name="orderService">
+					<ref bean="orderService" />
+				</property>
+				<property name="encounterService">
+					<ref bean="encounterService" />
+				</property>
+				<property name="conceptService">
+					<ref bean="conceptService" />
+				</property>
+				<property name="providerService">
+					<ref bean="providerService" />
+				</property>
+				<property name="testOrderRequestResultService">
+					<ref bean="testOrderRequestResultService" />
+				</property>
+			</bean>
+		</property>
+		<property name="preInterceptors">
+			<ref bean="serviceInterceptors" />
+		</property>
+		<property name="transactionAttributeSource">
+			<ref bean="transactionAttributeSource" />
+		</property>
+	</bean>
+	
+	<bean id="pocSequenceGeneratorService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+		<property name="target">
+			<bean class="org.openmrs.module.poc.sequencegenerator.service.PocSequenceGeneratorServiceImpl">
+				<property name="pocSequenceGeneratorDAO">
+					<bean class="org.openmrs.module.poc.sequencegenerator.dao.PocSequenceGeneratorDAOImpl">
+						<property name="sessionFactory">
+							<ref bean="sessionFactory" />
+						</property>
+					</bean>
+				</property>
+			</bean>
+		</property>
+		<property name="preInterceptors">
+			<ref bean="serviceInterceptors" />
+		</property>
+		<property name="transactionAttributeSource">
+			<ref bean="transactionAttributeSource" />
+		</property>
+	</bean>
+	
 	<bean parent="serviceContext">
 		<property name="moduleService">
 			<list>
 				<value>org.openmrs.module.poc.clinicalservice.service.ClinicalServiceService</value>
-				<bean
-					class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-					<property name="transactionManager">
-						<ref bean="transactionManager" />
-					</property>
-					<property name="target">
-						<bean class="org.openmrs.module.poc.clinicalservice.service.ClinicalServiceServiceImpl">
-							<property name="obsService"><ref bean="obsService"/></property>
-			        		<property name="encounterService"><ref bean="encounterService"/></property>
-						</bean>
-					</property>
-					<property name="preInterceptors">
-						<ref bean="serviceInterceptors" />
-					</property>
-					<property name="transactionAttributeSource">
-						<ref bean="transactionAttributeSource" />
-					</property>
-				</bean>
+				<ref local="clinicalServiceService"/>
 			</list>
 		</property>
 	</bean>
+	
 	<bean parent="serviceContext">
 		<property name="moduleService">
 			<list>
 				<value>org.openmrs.module.poc.patientconsultation.service.PatientConsultationSummaryService</value>
-				<bean
-					class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-					<property name="transactionManager">
-						<ref bean="transactionManager" />
-					</property>
-					<property name="target">
-						<bean class="org.openmrs.module.poc.patientconsultation.service.PatientConsultationSummaryServiceImpl">
-							<property name="patientConsultationSummaryDAO">
-								<bean class="org.openmrs.module.poc.patientconsultation.dao.PatientConsultationSummaryDAOImpl">
-									<property name="sessionFactory">
-										<ref bean="sessionFactory" />
-									</property>
-								</bean>
-							</property>
-						</bean>
-					</property>
-					<property name="preInterceptors">
-						<ref bean="serviceInterceptors" />
-					</property>
-					<property name="transactionAttributeSource">
-						<ref bean="transactionAttributeSource" />
-					</property>
-				</bean>
+				<ref local="patientConsultationSummaryService"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean parent="serviceContext">
+		<property name="moduleService">
+			<list>
+				<value>org.openmrs.module.poc.testrequest.service.TestRequestService</value>
+				<ref local="testRequestService"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean parent="serviceContext">
+		<property name="moduleService">
+			<list>
+				<value>org.openmrs.module.poc.testorder.service.TestOrderService</value>
+				<ref local="testOrderService"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean parent="serviceContext">
+		<property name="moduleService">
+			<list>
+				<value>org.openmrs.module.poc.pocheuristic.service.PocHeuristicService</value>
+				<ref local="pocHeuristicService"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean parent="serviceContext">
+		<property name="moduleService">
+			<list>
+				<value>org.openmrs.module.poc.testorderresult.service.TestOrderRequestResultService</value>
+				<ref local="testOrderRequestResultService"/>
+			</list>
+		</property>
+	</bean>
+	
+	 <bean parent="serviceContext">
+		<property name="moduleService">
+			<list>
+				<value>org.openmrs.module.poc.testorderresult.service.TestOrderResultService</value>
+				<ref local="testOrderResultService"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean parent="serviceContext">
+		<property name="moduleService">
+			<list>
+				<value>org.openmrs.module.poc.sequencegenerator.service.PocSequenceGeneratorService</value>
+				<ref local="pocSequenceGeneratorService"/>
 			</list>
 		</property>
 	</bean>
@@ -101,5 +337,9 @@
 		<property name="cacheSeconds" value="5" />
 		<property name="defaultEncoding"><value>UTF-8</value></property>
 	</bean>
+	
+	<bean id="pOCDbSessionManager" class="org.openmrs.module.poc.api.common.service.POCDbSessionManagerImpl">
+        <property name="sessionFactory"><ref bean="dbSessionFactory"/></property>
+    </bean>
 	
 </beans>

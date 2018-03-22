@@ -30,6 +30,10 @@ public class DateUtils {
 		return aux.getTime();
 	}
 	
+	private DateUtils() {
+		
+	}
+	
 	/**
 	 * Retorna o valor do horário maximo para a data de referencia passada. <BR>
 	 * <BR>
