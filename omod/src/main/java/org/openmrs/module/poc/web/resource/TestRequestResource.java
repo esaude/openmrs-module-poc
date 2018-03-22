@@ -20,9 +20,10 @@ import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentat
 import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
+import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
+import org.openmrs.module.webservices.rest.web.resource.impl.AlreadyPaged;
 import org.openmrs.module.webservices.rest.web.resource.impl.DataDelegatingCrudResource;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
-import org.openmrs.module.webservices.rest.web.resource.impl.NeedsPaging;
 import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOperationException;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
@@ -83,8 +84,8 @@ public class TestRequestResource extends DataDelegatingCrudResource<TestRequest>
 	}
 	
 	@Override
-	protected NeedsPaging<TestRequest> doGetAll(final RequestContext context) {
+	protected PageableResult doGetAll(final RequestContext context) {
 		
-		return new NeedsPaging<>(Context.getService(TestRequestService.class).findAllTestRequests(), context);
+		return new AlreadyPaged<>(context, Context.getService(TestRequestService.class).findAllTestRequests(), true);
 	}
 }

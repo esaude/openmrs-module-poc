@@ -9,6 +9,8 @@
  */
 package org.openmrs.module.poc.testrequest.model;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.openmrs.BaseOpenmrsData;
 import org.openmrs.Concept;
 
@@ -44,40 +46,23 @@ public class TestRequest extends BaseOpenmrsData {
 	
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = (prime * result) + ((this.category == null) ? 0 : this.category.hashCode());
-		result = (prime * result) + ((this.testOrder == null) ? 0 : this.testOrder.hashCode());
-		return result;
+		
+		return new HashCodeBuilder().append(this.category.hashCode()).append(this.testOrder.hashCode()).toHashCode();
 	}
 	
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (!super.equals(obj)) {
+		
+		if (obj == null) {
 			return false;
 		}
-		if (this.getClass() != obj.getClass()) {
-			return false;
+		
+		if (obj instanceof TestRequest) {
+			final TestRequest other = (TestRequest) obj;
+			return new EqualsBuilder().append(this.getTestOrder(), other.getTestOrder())
+			        .append(this.getCategory(), other.getCategory()).isEquals();
 		}
-		final TestRequest other = (TestRequest) obj;
-		if (this.category == null) {
-			if (other.category != null) {
-				return false;
-			}
-		} else if (!this.category.equals(other.category)) {
-			return false;
-		}
-		if (this.testOrder == null) {
-			if (other.testOrder != null) {
-				return false;
-			}
-		} else if (!this.testOrder.equals(other.testOrder)) {
-			return false;
-		}
-		return true;
+		return false;
 	}
 	
 	@Override
@@ -89,5 +74,4 @@ public class TestRequest extends BaseOpenmrsData {
 	public void setId(final Integer arg0) {
 		// Its is a wrapper entity
 	}
-	
 }

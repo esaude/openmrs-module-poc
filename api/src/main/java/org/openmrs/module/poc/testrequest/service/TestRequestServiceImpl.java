@@ -43,9 +43,12 @@ public class TestRequestServiceImpl extends BaseOpenmrsService implements TestRe
 			final Concept category = this.conceptService.getConceptByUuid(laboratoryGeralSet.getUuid());
 			
 			for (final String uuid : conceptsUUids) {
+				
 				final Concept concept = this.conceptService.getConceptByUuid(uuid);
+				
 				if ((concept != null) && (category != null) && category.isSet()) {
 					testRequests.add(new TestRequest(concept, category));
+					
 				}
 			}
 		}
