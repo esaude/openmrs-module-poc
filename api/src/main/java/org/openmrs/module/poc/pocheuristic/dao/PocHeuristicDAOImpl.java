@@ -67,23 +67,15 @@ public class PocHeuristicDAOImpl implements PocHeuristicCAO {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Encounter> findEncountersByPatientAndEncounterType(final Patient patient,
-	        final EncounterType encounterType) {
+	public List<Encounter> findEncountersByPatientAndEncounterTypeAndOrderTypeUuid(final Patient patient,
+	        final EncounterType encounterType, final String orderTypeUuid) {
 		
 		return this.sessionFactory
 		        .getCurrentSession()
 		        .createQuery(
-		            "select enc from Encounter enc left join fetch enc.orders ord left join fetch ord.drug where enc.encounterType = :encounterType and enc.patient = :patient")
-		        .setParameter("patient", patient).setParameter("encounterType", encounterType).list();
-		
-		// final Criteria searchCriteria =
-		// this.sessionFactory.getCurrentSession().createCriteria(Encounter.class,
-		// "enc");
-		// searchCriteria.add(Restrictions.eq("enc.patient", patient));
-		// searchCriteria.setFetchMode("orders", FetchMode.SELECT);
-		// searchCriteria.add(Restrictions.eq("enc.encounterType",
-		// encounterType));
-		// return searchCriteria.list();
+		            "select distinct enc from Encounter enc left join fetch enc.orders ord left join fetch ord.drug where enc.encounterType = :encounterType and enc.patient = :patient and ord.orderType.uuid =:orderTypeUuid")
+		        .setParameter("patient", patient).setParameter("encounterType", encounterType)
+		        .setParameter("orderTypeUuid", orderTypeUuid).list();
 	}
 	
 }

@@ -15,6 +15,7 @@ import java.util.List;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
 import org.openmrs.Location;
+import org.openmrs.OrderType;
 import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
@@ -60,7 +61,8 @@ public class PocHeuristicServiceImpl extends BaseOpenmrsService implements PocHe
 	@Override
 	public List<Encounter> findEncountersByPatientAndEncounterType(final Patient patient,
 	        final EncounterType encounterType) {
-		
-		return this.pocHeuristicCAO.findEncountersByPatientAndEncounterType(patient, encounterType);
+		return this.pocHeuristicCAO.findEncountersByPatientAndEncounterTypeAndOrderTypeUuid(patient, encounterType,
+		    OrderType.DRUG_ORDER_TYPE_UUID);
 	}
+	
 }
