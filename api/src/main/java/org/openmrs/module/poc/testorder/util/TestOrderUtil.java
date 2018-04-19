@@ -23,7 +23,6 @@ import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.OrderType;
-import org.openmrs.TestOrder;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.poc.api.common.util.OPENMRSUUIDs;
 import org.openmrs.module.poc.testorder.model.TestOrderItem;
@@ -46,7 +45,7 @@ public class TestOrderUtil {
 			for (final Order order : orders) {
 				
 				if (OrderType.TEST_ORDER_TYPE_UUID.equals(order.getOrderType().getUuid()) && !order.isVoided()) {
-					items.add(new TestOrderItem((TestOrder) order, mapCategoriesByTestConcept.get(order.getConcept())));
+					items.add(new TestOrderItem(order, mapCategoriesByTestConcept.get(order.getConcept())));
 				}
 			}
 			if (!items.isEmpty()) {

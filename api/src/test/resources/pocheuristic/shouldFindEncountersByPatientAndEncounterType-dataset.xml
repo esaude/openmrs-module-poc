@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+
+    This Source Code Form is subject to the terms of the Mozilla Public License,
+    v. 2.0. If a copy of the MPL was not distributed with this file, You can
+    obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+    the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+
+    Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+    graphic logo is a trademark of OpenMRS Inc.
+
+-->
+
+<dataset>
+	
+	<encounter encounter_id="1000" encounter_type="3" patient_id="999" location_id="1" form_id="1" encounter_datetime="2018-01-01 00:00:00.0" creator="1" date_created="2018-01-18 14:09:05.0" voided="false" uuid="6519d653-393b-4118-9c83-a3715b82dnew"/>
+	
+	<orders order_id="1000" order_type_id="1" order_number="ORD-6" urgency="ROUTINE" order_action="NEW" concept_id="5497" orderer="1" date_activated="2008-09-19 09:24:10.0" auto_expire_date="2008-09-26 09:24:10.0" creator="1" date_created="2008-09-19 09:24:10.0" voided="false" patient_id="999" uuid="1c96f25c-4949-4f72-9931-d808fbc22xx1" care_setting="1" encounter_id="1000" />
+	<orders order_id="1001" order_type_id="1" order_number="ORD-6" urgency="ROUTINE" order_action="NEW" concept_id="5497" orderer="1" date_activated="2008-09-19 09:24:10.0" auto_expire_date="2008-09-26 09:24:10.0" creator="1" date_created="2008-09-19 09:24:10.0" voided="false" patient_id="999" uuid="1c96f25c-4949-4f72-9931-d808fbc22xx2" care_setting="1" encounter_id="1000" />
+	<orders order_id="1002" order_type_id="2" order_number="ORD-6" urgency="ROUTINE" order_action="NEW" concept_id="5497" orderer="1" date_activated="2008-09-19 09:24:10.0" auto_expire_date="2008-09-26 09:24:10.0" creator="1" date_created="2008-09-19 09:24:10.0" voided="false" patient_id="999" uuid="1c96f25c-4949-4f72-9931-d808fbc22xx3" care_setting="1" encounter_id="1000" />
+		
+	<drug_order order_id="1000" drug_inventory_id="3" dose="325.0" dose_units="50" as_needed="false" frequency="1" dosing_type="org.openmrs.SimpleDosingInstructions" route="22" quantity="1.0" quantity_units="51" num_refills="10" dispense_as_written="0" />
+	<drug_order order_id="1001" drug_inventory_id="3" dose="325.0" dose_units="50" as_needed="false" frequency="1" dosing_type="org.openmrs.SimpleDosingInstructions" route="22" quantity="1.0" quantity_units="51" num_refills="10" dispense_as_written="0" />	
+    <test_order order_id="1002" />
+		
+</dataset> 

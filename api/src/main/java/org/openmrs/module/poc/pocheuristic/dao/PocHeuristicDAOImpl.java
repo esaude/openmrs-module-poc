@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
@@ -23,20 +24,20 @@ import org.openmrs.api.APIException;
 import org.openmrs.module.poc.api.common.util.DateUtils;
 
 public class PocHeuristicDAOImpl implements PocHeuristicCAO {
-	
+
 	private SessionFactory sessionFactory;
-	
+
 	@Override
 	public void setSessionFactory(final SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public Encounter findLastEncounterByPatientAndEncounterTypeAndLocationAndDateAndStatus(final Patient patient,
-	        final EncounterType encounterType, final Location location, final Date encounterDateTime,
-	        final boolean status) {
-		
+			final EncounterType encounterType, final Location location, final Date encounterDateTime,
+			final boolean status) {
+
 		final Criteria searchCriteria = this.sessionFactory.getCurrentSession().createCriteria(Encounter.class, "enc");
 		searchCriteria.add(Restrictions.eq("enc.patient", patient));
 		searchCriteria.add(Restrictions.eq("enc.encounterType", encounterType));
@@ -46,44 +47,39 @@ public class PocHeuristicDAOImpl implements PocHeuristicCAO {
 		searchCriteria.add(Restrictions.eq("enc.voided", status));
 		searchCriteria.addOrder(org.hibernate.criterion.Order.desc("encounterDatetime"));
 		searchCriteria.addOrder(org.hibernate.criterion.Order.desc("encounterId"));
-		
+
 		final List<Encounter> result = searchCriteria.list();
 		if (result.isEmpty()) {
 			throw new APIException("encounter not found for given patient " + patient.getGivenName());
 		}
 		return result.get(0);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Encounter> findEncountersWithTestOrdersByPatient(final String patientUUID, final boolean voided) {
-		
-		return this.sessionFactory
-		        .getCurrentSession()
-		        .createQuery(
-		            "select distinct o.encounter from TestOrder o where o.patient.uuid =:patientUUID and o.voided = :voided ")
-		        .setParameter("patientUUID", patientUUID).setParameter("voided", voided).list();
+
+		return this.sessionFactory.getCurrentSession()
+				.createQuery(
+						"select distinct o.encounter from TestOrder o where o.patient.uuid =:patientUUID and o.voided = :voided ")
+				.setParameter("patientUUID", patientUUID).setParameter("voided", voided).list();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Encounter> findEncountersByPatientAndEncounterType(final Patient patient,
-	        final EncounterType encounterType) {
-		
-		return this.sessionFactory
-		        .getCurrentSession()
-		        .createQuery(
-		            "select enc from Encounter enc left join fetch enc.orders ord left join fetch ord.drug where enc.encounterType = :encounterType and enc.patient = :patient")
-		        .setParameter("patient", patient).setParameter("encounterType", encounterType).list();
-		
-		// final Criteria searchCriteria =
-		// this.sessionFactory.getCurrentSession().createCriteria(Encounter.class,
-		// "enc");
-		// searchCriteria.add(Restrictions.eq("enc.patient", patient));
-		// searchCriteria.setFetchMode("orders", FetchMode.SELECT);
-		// searchCriteria.add(Restrictions.eq("enc.encounterType",
-		// encounterType));
-		// return searchCriteria.list();
+	public List<Encounter> findEncountersByPatientAndEncounterTypeAndOrderTypeUuid(final Patient patient,
+			final EncounterType encounterType, final String orderTypeUuid, final boolean voided) {
+
+		final Criteria searchCriteria = this.sessionFactory.getCurrentSession().createCriteria(Encounter.class, "enc");
+		searchCriteria.add(Restrictions.eq("enc.patient", patient));
+		searchCriteria.add(Restrictions.eq("enc.encounterType", encounterType));
+		searchCriteria.add(Restrictions.eq("enc.voided", voided));
+		searchCriteria.createAlias("enc.orders", "ord", CriteriaSpecification.LEFT_JOIN);
+		searchCriteria.createAlias("ord.orderType", "oType");
+		searchCriteria.add(Restrictions.eq("oType.uuid", orderTypeUuid));
+		searchCriteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+
+		return searchCriteria.list();
 	}
-	
+
 }
