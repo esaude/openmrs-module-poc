@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
@@ -68,14 +69,27 @@ public class PocHeuristicDAOImpl implements PocHeuristicCAO {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Encounter> findEncountersByPatientAndEncounterTypeAndOrderTypeUuid(final Patient patient,
-	        final EncounterType encounterType, final String orderTypeUuid) {
+	        final EncounterType encounterType, final String orderTypeUuid, final boolean voided) {
 		
-		return this.sessionFactory
-		        .getCurrentSession()
-		        .createQuery(
-		            "select distinct enc from Encounter enc left join fetch enc.orders ord left join fetch ord.drug where enc.encounterType = :encounterType and enc.patient = :patient and ord.orderType.uuid =:orderTypeUuid")
-		        .setParameter("patient", patient).setParameter("encounterType", encounterType)
-		        .setParameter("orderTypeUuid", orderTypeUuid).list();
+		final Criteria searchCriteria = this.sessionFactory.getCurrentSession().createCriteria(Encounter.class, "enc");
+		searchCriteria.add(Restrictions.eq("enc.patient", patient));
+		searchCriteria.add(Restrictions.eq("enc.encounterType", encounterType));
+		searchCriteria.add(Restrictions.eq("enc.voided", voided));
+		searchCriteria.createAlias("enc.orders", "ord", CriteriaSpecification.LEFT_JOIN);
+		searchCriteria.createAlias("ord.orderType", "oType");
+		searchCriteria.add(Restrictions.eq("oType.uuid", orderTypeUuid));
+		searchCriteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+		
+		// return this.sessionFactory.getCurrentSession()
+		// .createQuery(
+		// "select distinct enc from Encounter enc left join fetch enc.orders
+		// ord left join fetch ord.drug where enc.encounterType = :encounterType
+		// and enc.patient = :patient and ord.orderType.uuid =:orderTypeUuid")
+		// .setParameter("patient", patient).setParameter("encounterType",
+		// encounterType)
+		// .setParameter("orderTypeUuid", orderTypeUuid).list();
+		
+		return searchCriteria.list();
 	}
 	
 }

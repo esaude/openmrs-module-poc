@@ -29,5 +29,5 @@ public interface PocHeuristicCAO {
 	List<Encounter> findEncountersWithTestOrdersByPatient(String patientUUID, boolean voided);
 	
 	List<Encounter> findEncountersByPatientAndEncounterTypeAndOrderTypeUuid(final Patient patient,
-	        final EncounterType encounterType, String orderTypeUuid);
+	        final EncounterType encounterType, String orderTypeUuid, boolean voided);
 }

@@ -116,7 +116,7 @@ public class PocHeuristicServiceTest extends POCBaseModuleContextSensitiveTest {
 	public void shouldFindEncountersByPatientAndEncounterType() throws Exception {
 		this.executeDataSet("pocheuristic/shouldFindEncountersByPatientAndEncounterType-dataset.xml");
 		
-		final Patient patient = new Patient(7);
+		final Patient patient = new Patient(999);
 		final EncounterType encounterType = new EncounterType(3);
 		
 		final List<Encounter> encounters = Context.getService(PocHeuristicService.class)
@@ -126,6 +126,6 @@ public class PocHeuristicServiceTest extends POCBaseModuleContextSensitiveTest {
 		MatcherAssert.assertThat(encounters, IsCollectionWithSize.hasSize(1));
 		
 		MatcherAssert.assertThat(encounters,
-		    CoreMatchers.hasItems(Matchers.<Encounter> hasProperty("orders", IsCollectionWithSize.hasSize(3))));
+		    CoreMatchers.hasItems(Matchers.<Encounter> hasProperty("orders", IsCollectionWithSize.hasSize(2))));
 	}
 }

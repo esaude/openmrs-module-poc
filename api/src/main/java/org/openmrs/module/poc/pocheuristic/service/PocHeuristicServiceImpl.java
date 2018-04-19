@@ -62,7 +62,7 @@ public class PocHeuristicServiceImpl extends BaseOpenmrsService implements PocHe
 	public List<Encounter> findEncountersByPatientAndEncounterType(final Patient patient,
 	        final EncounterType encounterType) {
 		return this.pocHeuristicCAO.findEncountersByPatientAndEncounterTypeAndOrderTypeUuid(patient, encounterType,
-		    OrderType.DRUG_ORDER_TYPE_UUID);
+		    OrderType.DRUG_ORDER_TYPE_UUID, false);
 	}
 	
 }
