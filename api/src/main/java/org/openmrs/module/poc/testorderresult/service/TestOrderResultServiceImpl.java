@@ -286,20 +286,24 @@ public class TestOrderResultServiceImpl extends BaseOpenmrsService implements Te
 		        .getConceptByUuid(OPENMRSUUIDs.DATA_PEDIDO_EXAMES_LABORATORIAIS_FORM_UUID);
 		final Set<Obs> allObs = encounter.getAllObs(false);
 		
+		boolean existsObsCreationDate = false;
 		for (final Obs obs : allObs) {
 			
 			if (conceptCreationExamDate.equals(obs.getConcept())) {
 				
 				if (!DateUtils.isSameDay(obs.getValueDatetime(), testOrderResult.getDateCreation())) {
 					Context.getObsService().voidObs(obs, "voided due update of the date of creation Exams");
+				} else {
+					existsObsCreationDate = true;
 				}
-				break;
 			}
 		}
-		final Obs obsCreationDate = new Obs();
-		obsCreationDate.setConcept(conceptCreationExamDate);
-		obsCreationDate.setValueDatetime(testOrderResult.getDateCreation());
-		encounter.addObs(obsCreationDate);
+		if (!existsObsCreationDate) {
+			final Obs obsCreationDate = new Obs();
+			obsCreationDate.setConcept(conceptCreationExamDate);
+			obsCreationDate.setValueDatetime(testOrderResult.getDateCreation());
+			encounter.addObs(obsCreationDate);
+		}
 	}
 	
 	private void createObs(final Encounter encounter, final Order order, final TestOrderResultItem resultItem,
