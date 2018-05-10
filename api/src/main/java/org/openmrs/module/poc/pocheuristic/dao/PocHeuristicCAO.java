@@ -13,9 +13,12 @@ import java.util.Date;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
+import org.openmrs.Concept;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
 import org.openmrs.Location;
+import org.openmrs.Obs;
+import org.openmrs.Order;
 import org.openmrs.Patient;
 
 public interface PocHeuristicCAO {
@@ -26,8 +29,14 @@ public interface PocHeuristicCAO {
 	        final EncounterType encounterType, final Location location, final Date encounterDateTime,
 	        final boolean status);
 	
-	List<Encounter> findEncountersWithTestOrdersByPatient(String patientUUID, boolean voided);
+	List<Encounter> findEncountersWithTestOrdersByPatient(Patient patient, EncounterType encounterType, boolean voided);
 	
 	List<Encounter> findEncountersByPatientAndEncounterTypeAndOrderTypeUuid(final Patient patient,
 	        final EncounterType encounterType, String orderTypeUuid, boolean voided);
+	
+	Obs findObsByOrderAndConceptAndEncounter(Order order, Concept concept, Encounter encounter, boolean voided);
+	
+	Obs findObsByEncounterAndConcept(Encounter encounter, Concept concept, boolean voided);
+	
+	List<Obs> findObsByGroup(Obs obsGroup, boolean voided);
 }

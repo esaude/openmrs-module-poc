@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.hibernate.SessionFactory;
 import org.openmrs.Encounter;
+import org.openmrs.Patient;
 import org.openmrs.module.poc.testorderresult.model.TestOrderRequestResult;
 
 public interface TestOrderRequestResultDAO {
@@ -25,6 +26,6 @@ public interface TestOrderRequestResultDAO {
 	
 	TestOrderRequestResult findByRequestEncounter(Encounter request, boolean voided);
 	
-	List<TestOrderRequestResult> findByPatientUuid(String patientUuid, boolean voided);
+	List<TestOrderRequestResult> findByPatientUuid(Patient patient, boolean voided);
 	
 }

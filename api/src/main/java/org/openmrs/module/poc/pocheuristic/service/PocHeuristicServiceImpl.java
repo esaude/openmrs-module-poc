@@ -12,9 +12,12 @@ package org.openmrs.module.poc.pocheuristic.service;
 import java.util.Date;
 import java.util.List;
 
+import org.openmrs.Concept;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
 import org.openmrs.Location;
+import org.openmrs.Obs;
+import org.openmrs.Order;
 import org.openmrs.OrderType;
 import org.openmrs.Patient;
 import org.openmrs.api.APIException;
@@ -54,8 +57,9 @@ public class PocHeuristicServiceImpl extends BaseOpenmrsService implements PocHe
 	}
 	
 	@Override
-	public List<Encounter> findEncountersWithTestOrdersByPatient(final String patientUUID) {
-		return this.pocHeuristicCAO.findEncountersWithTestOrdersByPatient(patientUUID, false);
+	public List<Encounter> findEncountersWithTestOrdersByPatient(final Patient patient,
+	        final EncounterType encounterType) {
+		return this.pocHeuristicCAO.findEncountersWithTestOrdersByPatient(patient, encounterType, false);
 	}
 	
 	@Override
@@ -65,4 +69,21 @@ public class PocHeuristicServiceImpl extends BaseOpenmrsService implements PocHe
 		    OrderType.DRUG_ORDER_TYPE_UUID, false);
 	}
 	
+	@Override
+	public Obs findObsByOrderAndConceptAndEncounter(final Order order, final Concept concept,
+	        final Encounter encounter) {
+		return this.pocHeuristicCAO.findObsByOrderAndConceptAndEncounter(order, concept, encounter, false);
+	}
+	
+	@Override
+	public Obs findObsByEncounterAndConcept(final Encounter encounter, final Concept concept) {
+		
+		return this.pocHeuristicCAO.findObsByEncounterAndConcept(encounter, concept, false);
+	}
+	
+	@Override
+	public List<Obs> findObsByGroup(final Obs obsGroup) {
+		
+		return this.pocHeuristicCAO.findObsByGroup(obsGroup, false);
+	}
 }

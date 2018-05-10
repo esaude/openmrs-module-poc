@@ -16,7 +16,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Encounter;
 import org.openmrs.Patient;
-import org.openmrs.api.context.Context;
 import org.openmrs.module.poc.testorderresult.model.TestOrderRequestResult;
 
 public class TestOrderRequestResultDAOImpl implements TestOrderRequestResultDAO {
@@ -58,9 +57,7 @@ public class TestOrderRequestResultDAOImpl implements TestOrderRequestResultDAO 
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<TestOrderRequestResult> findByPatientUuid(final String patientUuid, final boolean voided) {
-		
-		final Patient patient = Context.getPatientService().getPatientByUuid(patientUuid);
+	public List<TestOrderRequestResult> findByPatientUuid(final Patient patient, final boolean voided) {
 		
 		final Criteria searchCriteria = this.sessionFactory.getCurrentSession()
 		        .createCriteria(TestOrderRequestResult.class, "testRR");

@@ -42,6 +42,7 @@ public class TestOrderResultItemResource
 			description.addProperty("testOrder", Representation.REF);
 			description.addProperty("category", Representation.REF);
 			description.addProperty("value");
+			description.addProperty("unit");
 			description.addProperty("status");
 			description.addSelfLink();
 			description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
@@ -55,6 +56,7 @@ public class TestOrderResultItemResource
 			description.addProperty("testOrder");
 			description.addProperty("category");
 			description.addProperty("value");
+			description.addProperty("unit");
 			description.addProperty("status");
 			
 			return description;

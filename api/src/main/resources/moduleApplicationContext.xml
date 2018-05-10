@@ -215,6 +215,9 @@
 				<property name="testOrderRequestResultService">
 					<ref bean="testOrderRequestResultService" />
 				</property>
+				<property name="pOCDbSessionManager">
+					<ref bean="pOCDbSessionManager" />
+				</property>
 			</bean>
 		</property>
 		<property name="preInterceptors">

@@ -12,9 +12,12 @@ package org.openmrs.module.poc.pocheuristic.service;
 import java.util.Date;
 import java.util.List;
 
+import org.openmrs.Concept;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
 import org.openmrs.Location;
+import org.openmrs.Obs;
+import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
@@ -31,7 +34,13 @@ public interface PocHeuristicService extends OpenmrsService {
 	Encounter findLastEncounterByPatientAndEncounterTypeAndLocationAndDateAndStatus(final Patient patient,
 	        final EncounterType encounterType, final Location location, final Date encounterDateTime);
 	
-	List<Encounter> findEncountersWithTestOrdersByPatient(String patientUUID);
+	List<Encounter> findEncountersWithTestOrdersByPatient(Patient patient, EncounterType encounterType);
 	
 	List<Encounter> findEncountersByPatientAndEncounterType(Patient patient, EncounterType encounterType);
+	
+	Obs findObsByOrderAndConceptAndEncounter(Order order, Concept concept, Encounter encounter);
+	
+	Obs findObsByEncounterAndConcept(Encounter encounter, Concept concept);
+	
+	List<Obs> findObsByGroup(Obs obsGroup);
 }

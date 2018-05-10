@@ -11,7 +11,6 @@ package org.openmrs.module.poc.testorder.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -19,12 +18,14 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openmrs.Concept;
+import org.openmrs.ConceptDatatype;
 import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.Order;
-import org.openmrs.OrderType;
+import org.openmrs.Order.Action;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.poc.api.common.util.OPENMRSUUIDs;
+import org.openmrs.module.poc.pocheuristic.service.PocHeuristicService;
 import org.openmrs.module.poc.testorder.model.TestOrderItem;
 import org.openmrs.module.poc.testorder.model.TestOrderPOC;
 import org.openmrs.module.poc.testrequest.model.TestRequest;
@@ -37,17 +38,40 @@ public class TestOrderUtil {
 	public TestOrderPOC buildTestOrder(final Encounter requestEncounter, final Encounter resultEncounter,
 	        final Map<Concept, Concept> mapCategoriesByTestConcept) {
 		
-		final Set<Order> orders = this.mergeOrders(requestEncounter.getOrders(), resultEncounter.getOrders());
+		final Map<Order, Order> requestResultMap = this.mergeOrders(requestEncounter.getOrders(),
+		    resultEncounter.getOrders());
 		
-		if (!orders.isEmpty()) {
+		if (!requestResultMap.isEmpty()) {
 			
 			final List<TestOrderItem> items = new ArrayList<>();
-			for (final Order order : orders) {
+			
+			final PocHeuristicService pocHeuristicService = Context.getService(PocHeuristicService.class);
+			
+			for (final Entry<Order, Order> requestResult : requestResultMap.entrySet()) {
 				
-				if (OrderType.TEST_ORDER_TYPE_UUID.equals(order.getOrderType().getUuid()) && !order.isVoided()) {
-					items.add(new TestOrderItem(order, mapCategoriesByTestConcept.get(order.getConcept())));
+				final Order request = requestResult.getKey();
+				final Order result = requestResult.getValue();
+				
+				String value = null;
+				String unit = null;
+				if (!Action.NEW.equals(result.getAction())) {
+					
+					final Obs obs = pocHeuristicService.findObsByOrderAndConceptAndEncounter(result,
+					    result.getConcept(), result.getEncounter());
+					value = obs.getValueAsString(Context.getLocale());
+					
+					final ConceptDatatype datatype = obs.getConcept().getDatatype();
+					
+					if (datatype.isNumeric()) {
+						unit = Context.getConceptService().getConceptNumeric(obs.getConcept().getConceptId())
+						        .getUnits();
+					}
 				}
+				
+				items.add(new TestOrderItem(request, mapCategoriesByTestConcept.get(request.getConcept()),
+				        result.getAction(), value, unit));
 			}
+			
 			if (!items.isEmpty()) {
 				
 				final TestOrderPOC testOrder = new TestOrderPOC();
@@ -58,6 +82,7 @@ public class TestOrderUtil {
 				testOrder.setDateCreation(requestEncounter.getEncounterDatetime());
 				testOrder.setCodeSequence(this.getCodeSequence(requestEncounter));
 				testOrder.setTestOrderItems(items);
+				testOrder.setUuid(requestEncounter.getUuid());
 				
 				return testOrder;
 			}
@@ -96,29 +121,27 @@ public class TestOrderUtil {
 		return StringUtils.EMPTY;
 	}
 	
-	private Set<Order> mergeOrders(final Set<Order> requestOrders, final Set<Order> resultOrders) {
+	public Map<Order, Order> mergeOrders(final Set<Order> requestOrders, final Set<Order> resultOrders) {
 		
-		final Set<Order> result = new LinkedHashSet<>();
-		final Map<Concept, Order> map = new HashMap<>();
+		final Map<Order, Order> result = new HashMap<>();
 		
-		for (final Order orderRequest : requestOrders) {
-			if (!orderRequest.isVoided()) {
-				map.put(orderRequest.getConcept(), orderRequest);
-			}
-		}
-		
-		for (final Order orderResult : resultOrders) {
-			if (!orderResult.isVoided()) {
-				map.put(orderResult.getConcept(), orderResult);
-			}
-		}
-		
-		for (final Entry<Concept, Order> mapConceptOrder : map.entrySet()) {
+		for (final Order requestOrder : requestOrders) {
 			
-			result.add(mapConceptOrder.getValue());
+			for (final Order resultOrder : resultOrders) {
+				if (requestOrder.getConcept().equals(resultOrder.getConcept())) {
+					if (!requestOrder.isVoided() && !resultOrder.isVoided()) {
+						result.put(requestOrder, resultOrder);
+					}
+				}
+			}
 		}
-		
+		for (final Order requestOrder : requestOrders) {
+			
+			if (!result.containsKey(requestOrder) && !requestOrder.isVoided()) {
+				
+				result.put(requestOrder, new Order());
+			}
+		}
 		return result;
 	}
-	
 }

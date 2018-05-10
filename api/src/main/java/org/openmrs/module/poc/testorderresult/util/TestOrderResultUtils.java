@@ -24,54 +24,63 @@ import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.Order.Action;
-import org.openmrs.OrderType;
 import org.openmrs.Provider;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.poc.api.common.util.OPENMRSUUIDs;
-import org.openmrs.module.poc.testorderresult.model.TestOrderRequestResult;
+import org.openmrs.module.poc.pocheuristic.service.PocHeuristicService;
+import org.openmrs.module.poc.testorder.util.TestOrderUtil;
 import org.openmrs.module.poc.testorderresult.model.TestOrderResult;
 import org.openmrs.module.poc.testorderresult.model.TestOrderResultItem;
-import org.openmrs.module.poc.testorderresult.service.TestOrderRequestResultService;
 import org.openmrs.module.poc.testrequest.model.TestRequest;
 import org.openmrs.module.poc.testrequest.service.TestRequestService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TestOrderResultUtils {
 	
+	@Autowired
+	private TestOrderUtil testOrderUtil;
+	
 	public TestOrderResult buildTestOrderResult(final Encounter requestEncounter, final Encounter resultEncounter,
 	        final Map<Concept, Concept> mapCategoriesByTestConcept) {
 		
-		final Set<Order> orders = this.mergeOrders(requestEncounter.getOrders(), resultEncounter.getOrders());
+		final Map<Order, Order> requestResultOrders = this.testOrderUtil.mergeOrders(requestEncounter.getOrders(),
+		    resultEncounter.getOrders());
 		
 		final List<TestOrderResultItem> items = new ArrayList<>();
-		for (final Order order : orders) {
+		if (requestResultOrders != null) {
+			final PocHeuristicService pocHeuristicService = Context.getService(PocHeuristicService.class);
 			
-			if (OrderType.TEST_ORDER_TYPE_UUID.equals(order.getOrderType().getUuid()) && !order.isVoided()) {
+			for (final Entry<Order, Order> requestResult : requestResultOrders.entrySet()) {
 				
-				String value = "";
-				if (!Action.NEW.equals(order.getAction()) && OPENMRSUUIDs.MISAU_LABORATORIO_ENCOUNTER_TYPE_UUID
-				        .equals(order.getEncounter().getEncounterType().getUuid())) {
+				final Order request = requestResult.getKey();
+				final Order result = requestResult.getValue();
+				String value = StringUtils.EMPTY;
+				String unit = StringUtils.EMPTY;
+				if (!Action.NEW.equals(result.getAction())) {
 					
-					value = this.getObsValue(order);
+					final Obs obs = pocHeuristicService.findObsByOrderAndConceptAndEncounter(result,
+					    result.getConcept(), result.getEncounter());
+					value = this.getObsValue(result);
+					
+					final ConceptDatatype datatype = obs.getConcept().getDatatype();
+					
+					if (datatype.isNumeric()) {
+						unit = Context.getConceptService().getConceptNumeric(obs.getConcept().getConceptId())
+						        .getUnits();
+					}
 				}
-				
-				items.add(new TestOrderResultItem(order, mapCategoriesByTestConcept.get(order.getConcept()), value));
+				items.add(new TestOrderResultItem(Action.NEW.equals(result.getAction()) ? request : result,
+				        mapCategoriesByTestConcept.get(request.getConcept()), value, unit));
 			}
 		}
+		
 		if (!items.isEmpty()) {
 			
-			Encounter encounterSeguimentoPaciente;
-			if (OPENMRSUUIDs.MISAU_LABORATORIO_ENCOUNTER_TYPE_UUID
-			        .equals(requestEncounter.getEncounterType().getUuid())) {
-				
-				final TestOrderRequestResult testRequestResult = Context.getService(TestOrderRequestResultService.class)
-				        .findTestRequestResultByResultEncounter(requestEncounter);
-				encounterSeguimentoPaciente = testRequestResult.getTestOrderRequest();
-			} else {
-				encounterSeguimentoPaciente = requestEncounter;
-			}
+			final TestOrderResultItem item = items.iterator().next();
+			final Encounter encounterSeguimentoPaciente = item.getTestOrder().getEncounter();
 			
 			final TestOrderResult testOrderResult = new TestOrderResult();
 			testOrderResult.setPatient(requestEncounter.getPatient());
@@ -81,6 +90,7 @@ public class TestOrderResultUtils {
 			testOrderResult.setDateCreation(requestEncounter.getEncounterDatetime());
 			testOrderResult.setCodeSequence(this.getCodeSequence(encounterSeguimentoPaciente));
 			testOrderResult.setItems(items);
+			testOrderResult.setUuid(encounterSeguimentoPaciente.getUuid());
 			
 			Provider provider = requestEncounter.getEncounterProviders().iterator().next().getProvider();
 			if ((resultEncounter.getEncounterProviders() != null)
@@ -95,7 +105,7 @@ public class TestOrderResultUtils {
 		return null;
 	}
 	
-	public String getObsValue(final Order order) {
+	private String getObsValue(final Order order) {
 		
 		final Concept concept = order.getConcept();
 		final ConceptDatatype datatype = concept.getDatatype();

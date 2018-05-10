@@ -99,10 +99,13 @@ public class PocHeuristicServiceTest extends POCBaseModuleContextSensitiveTest {
 	public void shouldFindEncountersWithTestOrdersByPatient() throws Exception {
 		this.executeDataSet("pocheuristic/shouldFindEncountersWithTestOrdersByPatient-dataset.xml");
 		
-		final String patientUuid = "5946f880-b197-400b-9caa-a3c661d23041";
+		final Patient patient = Context.getPatientService().getPatient(7);
+		
+		final EncounterType encounterType = Context.getService(PocHeuristicService.class)
+		        .findSeguimentoPacienteEncounterTypeByPatientAge(patient);
 		
 		final List<Encounter> encounters = Context.getService(PocHeuristicService.class)
-		        .findEncountersWithTestOrdersByPatient(patientUuid);
+		        .findEncountersWithTestOrdersByPatient(patient, encounterType);
 		
 		MatcherAssert.assertThat(encounters, CoreMatchers.notNullValue());
 		MatcherAssert.assertThat(encounters, IsCollectionWithSize.hasSize(1));

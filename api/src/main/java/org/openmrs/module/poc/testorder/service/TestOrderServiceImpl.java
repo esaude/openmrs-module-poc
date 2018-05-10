@@ -26,6 +26,7 @@ import org.openmrs.EncounterType;
 import org.openmrs.Location;
 import org.openmrs.Obs;
 import org.openmrs.Order;
+import org.openmrs.Order.Action;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
 import org.openmrs.TestOrder;
@@ -48,7 +49,10 @@ import org.openmrs.module.poc.testorder.model.TestOrderPOC;
 import org.openmrs.module.poc.testorder.util.TestOrderUtil;
 import org.openmrs.module.poc.testorder.validation.TestOrderRequestValidator;
 import org.openmrs.module.poc.testorderresult.model.TestOrderRequestResult;
+import org.openmrs.module.poc.testorderresult.model.TestOrderResult;
+import org.openmrs.module.poc.testorderresult.model.TestOrderResultItem;
 import org.openmrs.module.poc.testorderresult.service.TestOrderRequestResultService;
+import org.openmrs.module.poc.testorderresult.service.TestOrderResultService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -171,7 +175,6 @@ public class TestOrderServiceImpl extends BaseOpenmrsService implements TestOrde
 			testOrderPoc.setEncounter(encounter);
 		}
 		finally {
-			// Context.flushSession();
 			this.pOCDbSessionManager.setAutoFlushMode();
 		}
 		
@@ -179,36 +182,70 @@ public class TestOrderServiceImpl extends BaseOpenmrsService implements TestOrde
 	}
 	
 	@Override
-	public void deleteTestOrderItem(final TestOrderItem testOrder, final String reason) {
+	public void deleteTestOrderItem(final TestOrderItem testOrderItem, final String reason) {
 		
-		final Order orderByUuid = this.orderService.getOrderByUuid(testOrder.getUuid());
+		final Concept examConcept = testOrderItem.getTestOrder().getConcept();
+		final TestOrderPOC testOrderPOC = this.findTestOrderByEncounter(testOrderItem.getParent().getEncounter());
+		
+		if (TestOrderPOC.STATUS.COMPLETE.equals(testOrderPOC.getStatus())) {
+			
+			throw new APIException(Context.getMessageSourceService().getMessage(
+			    "poc.error.testorderitem.cannot.be.deleted.due.complete.status",
+			    new String[] { examConcept.getDisplayString() }, Context.getLocale()));
+		}
+		this.deleteExistingOrderResult(testOrderItem, reason);
+		
+		final Order orderByUuid = this.orderService.getOrderByUuid(testOrderItem.getUuid());
 		this.orderService.voidOrder(orderByUuid, reason);
+	}
+	
+	private void deleteExistingOrderResult(final TestOrderItem testOrderItem, final String reason) {
+		
+		if (TestOrderItem.ITEM_STATUS.REVISE.equals(testOrderItem.getStatus())) {
+			
+			final Concept examConcept = testOrderItem.getTestOrder().getConcept();
+			
+			final TestOrderResultService testOrderResultService = Context.getService(TestOrderResultService.class);
+			
+			final TestOrderResult testOrderResult = testOrderResultService
+			        .findTestOrderResultByTestRequest(testOrderItem.getTestOrder().getEncounter());
+			
+			for (final TestOrderResultItem resultItem : testOrderResult.getItems()) {
+				
+				if (examConcept.equals(resultItem.getTestOrder().getConcept())) {
+					testOrderResultService.deleteTestOrderResultItem(resultItem, reason);
+					
+					final Encounter encounter = this.encounterService
+					        .getEncounter(testOrderItem.getTestOrder().getEncounter().getEncounterId());
+					final Set<Order> orders = encounter.getOrders();
+					
+					for (final Order order : orders) {
+						
+						if (Action.NEW.equals(order.getAction()) && !order.isVoided()
+						        && examConcept.equals(order.getConcept())
+						        && !testOrderItem.getUuid().equals(order.getUuid())) {
+							this.orderService.voidOrder(order, reason);
+						}
+					}
+					break;
+				}
+			}
+		}
 	}
 	
 	@Override
 	public List<TestOrderPOC> findTestOrdersByPatient(final String patientUUID) {
 		
+		final Patient patient = this.patientService.getPatientByUuid(patientUUID);
+		final EncounterType encounterType = this.pocHeuristicService
+		        .findSeguimentoPacienteEncounterTypeByPatientAge(patient);
 		final Map<Concept, Concept> mapCategoriesByTestConcept = this.testOrderUtil.getMapCategoriesByTestConcept();
-		final List<Encounter> encounters = this.pocHeuristicService.findEncountersWithTestOrdersByPatient(patientUUID);
-		
+		final List<Encounter> encounterRequests = this.pocHeuristicService
+		        .findEncountersWithTestOrdersByPatient(patient, encounterType);
 		final List<TestOrderRequestResult> testRequestResults = this.testOrderRequestResultService
-		        .findTestRequestResultsByPatientUuid(patientUUID);
+		        .findTestRequestResultsByPatient(patient);
 		
-		final List<TestOrderPOC> result = new ArrayList<>();
-		
-		final Map<Encounter, Encounter> mapEncounters = this.mergeTestRequestResult(encounters, testRequestResults);
-		
-		for (final Entry<Encounter, Encounter> keyValue : mapEncounters.entrySet()) {
-			
-			final TestOrderPOC testOrder = this.testOrderUtil.buildTestOrder(keyValue.getKey(), keyValue.getValue(),
-			    mapCategoriesByTestConcept);
-			
-			if (testOrder != null) {
-				result.add(testOrder);
-			}
-		}
-		
-		return result;
+		return this.mergeTestRequestResult(encounterRequests, testRequestResults, mapCategoriesByTestConcept);
 	}
 	
 	@Override
@@ -241,15 +278,31 @@ public class TestOrderServiceImpl extends BaseOpenmrsService implements TestOrde
 		
 		if (order != null) {
 			
+			final TestOrderRequestResult requestResult = this.testOrderRequestResultService
+			        .findTestRequestResultsByRequestEncounter(order.getEncounter());
+			
 			final Map<Concept, Concept> mapCategoriesByTestConcept = this.testOrderUtil.getMapCategoriesByTestConcept();
 			
-			final Concept category = mapCategoriesByTestConcept.get(order.getConcept());
+			final List<Encounter> encounterRequests = new ArrayList<>();
+			encounterRequests.add(order.getEncounter());
+			final List<TestOrderRequestResult> requestResults = new ArrayList<>();
+			if (requestResult != null) {
+				requestResults.add(requestResult);
+			}
 			
-			final TestOrderItem testOrderItem = new TestOrderItem((TestOrder) order, category);
-			final Encounter encounter = this.encounterService.getEncounter(order.getEncounter().getEncounterId());
-			testOrderItem.setParent(this.findTestOrderByEncounter(encounter));
+			final TestOrderPOC testOrderPOC = this
+			        .mergeTestRequestResult(encounterRequests, requestResults, mapCategoriesByTestConcept).iterator()
+			        .next();
 			
-			return testOrderItem;
+			for (final TestOrderItem item : testOrderPOC.getTestOrderItems()) {
+				
+				if (uuid.equals(item.getTestOrder().getUuid())) {
+					
+					testOrderPOC.setTestOrderItems(new ArrayList<TestOrderItem>());
+					item.setParent(testOrderPOC);
+					return item;
+				}
+			}
 		}
 		
 		throw new APIException(Context.getMessageSourceService()
@@ -290,35 +343,37 @@ public class TestOrderServiceImpl extends BaseOpenmrsService implements TestOrde
 		}
 	}
 	
-	private Map<Encounter, Encounter> mergeTestRequestResult(final List<Encounter> encounters,
-	        final List<TestOrderRequestResult> testRequestResults) {
+	private List<TestOrderPOC> mergeTestRequestResult(final List<Encounter> encounterRequests,
+	        final List<TestOrderRequestResult> testRequestResults,
+	        final Map<Concept, Concept> mapCategoriesByTestConcept) {
 		
-		final Map<Encounter, Encounter> result = new HashMap<>();
+		final Map<Encounter, Encounter> mapEncounters = new HashMap<>();
+		
+		final List<Encounter> encountersFound = new ArrayList<>();
 		
 		for (final TestOrderRequestResult testRequestResult : testRequestResults) {
 			
-			final Encounter encounterRequest = testRequestResult.getTestOrderRequest();
-			final Encounter encounterResult = testRequestResult.getTestOrderResult();
+			mapEncounters.put(testRequestResult.getTestOrderRequest(), testRequestResult.getTestOrderResult());
+			encountersFound.add(testRequestResult.getTestOrderRequest());
+		}
+		encounterRequests.removeAll(encountersFound);
+		
+		for (final Encounter request : encounterRequests) {
+			mapEncounters.put(request, new Encounter());
+		}
+		
+		final List<TestOrderPOC> result = new ArrayList<>();
+		
+		for (final Entry<Encounter, Encounter> keyValue : mapEncounters.entrySet()) {
 			
-			if (encounters.contains(encounterRequest) && encounters.contains(encounterResult)) {
-				result.put(encounterRequest, encounterResult);
-				encounters.remove(encounterRequest);
-				encounters.remove(encounterResult);
-				continue;
-			} else if (encounters.contains(encounterRequest)) {
-				result.put(encounterRequest, new Encounter());
-				encounters.remove(encounterRequest);
-				continue;
-			} else if (encounters.contains(encounterResult)) {
-				result.put(encounterResult, new Encounter());
-				result.remove(encounterResult);
-				continue;
+			final TestOrderPOC testOrder = this.testOrderUtil.buildTestOrder(keyValue.getKey(), keyValue.getValue(),
+			    mapCategoriesByTestConcept);
+			
+			if (testOrder != null) {
+				result.add(testOrder);
 			}
 		}
-		for (final Encounter request : encounters) {
-			
-			result.put(request, new Encounter());
-		}
+		
 		return result;
 	}
 	

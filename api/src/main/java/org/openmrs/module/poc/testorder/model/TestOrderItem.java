@@ -24,15 +24,20 @@ public class TestOrderItem extends BaseOpenmrsData {
 	
 	private ITEM_STATUS status;
 	
+	private Result result;
+	
 	public enum ITEM_STATUS {
 		NEW, REVISE;
 	}
 	
-	public TestOrderItem(final Order testOrder, final Concept category) {
+	public TestOrderItem(final Order testOrder, final Concept category, final Action action, final String value,
+	    final String unit) {
 		
 		this.testOrder = testOrder;
 		this.category = category;
-		this.status = (Action.NEW.equals(testOrder.getAction())) ? ITEM_STATUS.NEW : ITEM_STATUS.REVISE;
+		this.status = Action.NEW.equals(action) ? ITEM_STATUS.NEW : ITEM_STATUS.REVISE;
+		this.result = new Result(value, unit);
+		super.setUuid(testOrder.getUuid());
 	}
 	
 	public TestOrderItem() {
@@ -69,6 +74,14 @@ public class TestOrderItem extends BaseOpenmrsData {
 	
 	public void setStatus(final ITEM_STATUS status) {
 		this.status = status;
+	}
+	
+	public Result getResult() {
+		return this.result;
+	}
+	
+	public void setResult(final Result result) {
+		this.result = result;
 	}
 	
 	@Override
@@ -124,5 +137,34 @@ public class TestOrderItem extends BaseOpenmrsData {
 	@Override
 	public void setId(final Integer arg0) {
 		// this is a wrapper entity
+	}
+	
+	private class Result {
+		
+		private String value;
+		
+		private String unit;
+		
+		public Result(final String value, final String unit) {
+			this.unit = unit;
+			this.value = value;
+		}
+		
+		public String getValue() {
+			return this.value;
+		}
+		
+		public void setValue(final String value) {
+			this.value = value;
+		}
+		
+		public String getUnit() {
+			return this.unit;
+		}
+		
+		public void setUnit(final String unit) {
+			this.unit = unit;
+		}
+		
 	}
 }
