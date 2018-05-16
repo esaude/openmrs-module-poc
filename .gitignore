@@ -15,3 +15,5 @@ omod/maven-eclipse.xml
 *.orig
 api/*.orig
 omod/*.orig
+api/exported-data-set.xml
+

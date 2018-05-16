@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+
+	<person person_id="1" gender="M" birthdate_estimated="false"
+		dead="false" creator="1" date_created="2005-01-01 00:00:00.0"
+		changed_by="1" date_changed="2018-05-08 12:07:59.0" voided="false"
+		uuid="e2bc25aa-1d5f-11e0-b929-000c29ad1d07" deathdate_estimated="false" />
+
+	<users user_id="1" system_id="admin"
+		password="801603d176ad3fb932afd9056b3249564860f2335e931fa1a5fabfa1bd9f4f339a2701bd924ed88987a2ade846780af9cad66013134e1fae669edb51f5b27814"
+		salt="dba8a8c0b49b1d4eb2a0a3d332d7bb9d58eb20979333bebf6fa45c9b2a6a85569b72a8790c14b2a132ec3ab337998001196b87c03213b0b67006877539ae4d19"
+		creator="1" date_created="2005-01-01 00:00:00.0" changed_by="1"
+		date_changed="2015-06-12 11:40:19.0" retired="false"
+		uuid="85a05c5e-1e3d-11e0-acca-000c29d83bf2" />
+
+	<patient patient_id="1" creator="1" date_created="2018-05-09 14:14:42.0"
+		voided="false" />
+	<patient patient_id="2" creator="1" date_created="2018-05-09 14:14:42.0"
+		voided="false" />
+
+	<visit_type visit_type_id="3" name="SEGUIMENTO SEGUINTE S. TARV"
+		description="Visita seguinte de seguimento" uuid="3866891d-09c5-4d98-98de-6ae7916110fa"
+		creator="1" date_created="2013-01-08 16:39:15.0" changed_by="1"
+		date_changed="2013-01-18 16:46:59.0" retired="0" />
+	<visit_type visit_type_id="5" name="PRIMEIRO SEGUIMENTO S.TARV"
+		description="Primeira visita de seguimento no servico TARV" uuid="64a510a1-fbf4-465f-acd2-cd37bc321cee"
+		creator="1" date_created="2013-01-08 16:38:18.0" changed_by="1"
+		date_changed="2013-01-18 16:46:59.0" retired="0" />
+
+	<visit visit_id="1" patient_id="1" visit_type_id="3"
+		date_started="2018-05-08 18:00:00.0" date_stopped="2018-05-08 23:59:59.0"
+		location_id="1" creator="1" date_created="2018-05-08 18:27:21.0"
+		voided="false" uuid="f0cb9e60-70fa-4fbd-977c-645df716be74" />
+	<visit visit_id="2" patient_id="2" visit_type_id="5"
+		date_started="2018-05-08 19:00:00.0" date_stopped="2018-05-08 23:59:59.0"
+		location_id="1" creator="1" date_created="2018-05-08 18:27:21.0"
+		voided="true" uuid="f0cb9e60-70fa-4fbd-977c-645df716be75" />
+	<visit visit_id="3" patient_id="1" visit_type_id="5"
+		date_started="2018-05-09 18:00:00.0" date_stopped="2018-05-09 23:59:59.0"
+		location_id="1" creator="1" date_created="2018-05-09 18:27:21.0"
+		voided="false" uuid="f0cb9e60-70fa-4fbd-977c-645df716be76" />
+
+</dataset> 

@@ -15,11 +15,13 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
 import org.openmrs.Location;
 import org.openmrs.Patient;
+import org.openmrs.Visit;
 import org.openmrs.api.APIException;
 import org.openmrs.module.poc.api.common.util.DateUtils;
 
@@ -80,6 +82,30 @@ public class PocHeuristicDAOImpl implements PocHeuristicCAO {
 		searchCriteria.add(Restrictions.eq("oType.uuid", orderTypeUuid));
 		searchCriteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		
+		return searchCriteria.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Visit> findVisits(Patient patient, Boolean mostRecentOnly, Date startDate, Date endDate,
+	        Boolean voided) {
+		final Criteria searchCriteria = this.sessionFactory.getCurrentSession().createCriteria(Visit.class, "visit");
+		if (patient != null) {
+			searchCriteria.add(Restrictions.eq("visit.patient", patient));
+		}
+		if (startDate != null) {
+			searchCriteria.add(Restrictions.ge("visit.startDatetime", startDate));
+		}
+		if (endDate != null) {
+			searchCriteria.add(Restrictions.lt("visit.stopDatetime", endDate));
+		}
+		if (voided != null) {
+			searchCriteria.add(Restrictions.eq("visit.voided", voided));
+		}
+		if (mostRecentOnly != null && mostRecentOnly.booleanValue()) {
+			searchCriteria.setMaxResults(1);
+		}
+		searchCriteria.addOrder(Order.desc("visit.startDatetime"));
 		return searchCriteria.list();
 	}
 	

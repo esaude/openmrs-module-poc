@@ -9,14 +9,17 @@
  */
 package org.openmrs.module.poc.pocheuristic.service;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
 import org.openmrs.Location;
 import org.openmrs.OrderType;
 import org.openmrs.Patient;
+import org.openmrs.Visit;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
@@ -63,6 +66,21 @@ public class PocHeuristicServiceImpl extends BaseOpenmrsService implements PocHe
 	        final EncounterType encounterType) {
 		return this.pocHeuristicCAO.findEncountersByPatientAndEncounterTypeAndOrderTypeUuid(patient, encounterType,
 		    OrderType.DRUG_ORDER_TYPE_UUID, false);
+	}
+	
+	@Override
+	public List<Visit> findVisits(Patient patient, Boolean mostRecentOnly, Date date, Boolean voided) {
+		Date startDate = null;
+		Date endDate = null;
+		if (date != null) {
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(date);
+			calendar = DateUtils.truncate(calendar, Calendar.DAY_OF_MONTH);
+			startDate = calendar.getTime();
+			calendar.add(Calendar.DAY_OF_MONTH, 1);
+			endDate = calendar.getTime();
+		}
+		return pocHeuristicCAO.findVisits(patient, mostRecentOnly, startDate, endDate, voided);
 	}
 	
 }
