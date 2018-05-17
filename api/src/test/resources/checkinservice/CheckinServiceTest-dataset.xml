@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+
+	<person person_id="1000" gender="M" birthdate="1981-02-10 00:00:00.0"
+		birthdate_estimated="0" dead="false" creator="1" date_created="2005-01-01 00:00:00.0"
+		voided="false" uuid="ba1b19c2-3ed6-4f63-1111-f762dc8d7562" />
+	<patient patient_id="1000" creator="1" date_created="2005-09-22 00:00:00.0"
+		voided="false" />
+
+	<visit_type visit_type_id="1003" name="SEGUIMENTO SEGUINTE S. TARV"
+		description="Visita seguinte de seguimento" uuid="3866891d-09c5-4d98-98de-6ae7916110fa"
+		creator="1" date_created="2013-01-08 16:39:15.0" retired="0" />
+	<visit_type visit_type_id="1005" name="PRIMEIRO SEGUIMENTO S.TARV"
+		description="Primeira visita de seguimento no servico TARV" uuid="64a510a1-fbf4-465f-acd2-cd37bc321cee"
+		creator="1" date_created="2013-01-08 16:38:18.0" retired="0" />
+	<visit_type visit_type_id="1008" name="LEVANTAMENTO DE ARV"
+		description="Visita para levantamento de ARV" uuid="b5e7993c-7429-4c63-bb82-a66cd15553b0"
+		creator="1" date_created="2013-01-08 16:39:42.0" retired="0" />
+</dataset>
