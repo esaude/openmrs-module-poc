@@ -158,8 +158,20 @@ public class PocHeuristicServiceTest extends POCBaseModuleContextSensitiveTest {
 		executeDataSet("pocheuristic/visits-dataset.xml");
 		
 		PocHeuristicService heuristicService = Context.getService(PocHeuristicService.class);
-		List<Visit> visits = heuristicService.findVisits(null, null, null, false);
+		List<Visit> visits = heuristicService.findVisits(null, false, null, false);
 		Assert.assertEquals(4, visits.size());
+	}
+	
+	@Test
+	public void shouldFindVisitsFromSpecifiedDayOnly() throws Exception {
+		executeDataSet("pocheuristic/visits-dataset.xml");
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(2018, Calendar.MAY, 9);
+		PocHeuristicService heuristicService = Context.getService(PocHeuristicService.class);
+		List<Visit> visits = heuristicService.findVisits(null, null, calendar.getTime(), null);
+		Assert.assertEquals(1, visits.size());
+		Assert.assertEquals(Integer.valueOf(3), visits.get(0).getId());
 	}
 	
 	@Test
