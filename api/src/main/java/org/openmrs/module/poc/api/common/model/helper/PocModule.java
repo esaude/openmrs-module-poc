@@ -10,5 +10,5 @@
 package org.openmrs.module.poc.api.common.model.helper;
 
 public enum PocModule {
-	REGISTRATION, CLINIC, PHARMACY, VITALS
+	REGISTRATION, CLINIC, PHARMACY, VITALS, SOCIAL
 }
