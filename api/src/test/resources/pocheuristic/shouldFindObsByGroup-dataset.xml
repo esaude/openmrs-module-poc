@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+
+    This Source Code Form is subject to the terms of the Mozilla Public License,
+    v. 2.0. If a copy of the MPL was not distributed with this file, You can
+    obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+    the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+
+    Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+    graphic logo is a trademark of OpenMRS Inc.
+
+-->
+
+<dataset>
+	<encounter encounter_id="1000" encounter_type="3" patient_id="999" location_id="1" form_id="1" encounter_datetime="2018-01-01 00:00:00.0" creator="1" date_created="2018-01-18 14:09:05.0" voided="false" uuid="6519d653-393b-4118-9c83-a3715b82dnew"/>
+	<concept concept_id="60000" retired="false" datatype_id="4" class_id="10" is_set="true" creator="1" date_created="2008-08-18 12:38:58.0" version="" uuid="e1de3484-1d5f-11e0-b929-000c29ad1YXX"/>
+
+	<obs obs_id="1000" person_id="7" order_id="[NULL]" concept_id="60000" encounter_id="1000" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_numeric="61.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000001"/>
+	<obs obs_id="1001" person_id="7" order_id="[NULL]" concept_id="60000" encounter_id="1000" obs_group_id="1000" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_numeric="61.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000002"/>
+	<obs obs_id="1002" person_id="7" order_id="[NULL]" concept_id="60000" encounter_id="1000" obs_group_id="1000" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_numeric="61.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000003"/>
+	<obs obs_id="1003" person_id="7" order_id="[NULL]" concept_id="60000" encounter_id="1000" obs_group_id="1000" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_numeric="61.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000004"/>
+</dataset> 

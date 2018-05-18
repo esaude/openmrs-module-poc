@@ -24,6 +24,8 @@ public class TestOrderResultItem extends BaseOpenmrsData {
 	
 	private String value;
 	
+	private String unit;
+	
 	private TestOrderResult parent;
 	
 	public enum ITEM_STATUS {
@@ -31,12 +33,14 @@ public class TestOrderResultItem extends BaseOpenmrsData {
 		NEW, REVISE;
 	}
 	
-	public TestOrderResultItem(final Order testOrder, final Concept category, final String value) {
+	public TestOrderResultItem(final Order testOrder, final Concept category, final String value, final String unit) {
 		
 		this.testOrder = testOrder;
 		this.category = category;
 		this.value = value;
+		this.unit = unit;
 		this.status = (Action.NEW.equals(testOrder.getAction())) ? ITEM_STATUS.NEW : ITEM_STATUS.REVISE;
+		this.setUuid(testOrder.getUuid());
 	}
 	
 	public TestOrderResultItem() {
@@ -91,6 +95,14 @@ public class TestOrderResultItem extends BaseOpenmrsData {
 		this.value = value;
 	}
 	
+	public String getUnit() {
+		return this.unit;
+	}
+	
+	public void setUnit(final String unit) {
+		this.unit = unit;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -130,4 +142,5 @@ public class TestOrderResultItem extends BaseOpenmrsData {
 	public void setId(final Integer arg0) {
 		// wrapper entity
 	}
+	
 }

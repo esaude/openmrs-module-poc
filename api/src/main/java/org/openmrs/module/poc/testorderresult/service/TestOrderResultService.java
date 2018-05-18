@@ -17,6 +17,7 @@ import org.openmrs.api.EncounterService;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.ProviderService;
+import org.openmrs.module.poc.api.common.service.POCDbSessionManager;
 import org.openmrs.module.poc.pocheuristic.service.PocHeuristicService;
 import org.openmrs.module.poc.testorderresult.model.TestOrderResult;
 import org.openmrs.module.poc.testorderresult.model.TestOrderResultItem;
@@ -36,6 +37,8 @@ public interface TestOrderResultService extends OpenmrsService {
 	void setProviderService(ProviderService providerService);
 	
 	void setTestOrderRequestResultService(final TestOrderRequestResultService testOrderRequestResultService);
+	
+	void setPOCDbSessionManager(POCDbSessionManager pOCDbSessionManager);
 	
 	TestOrderResult createTestOrderResult(TestOrderResult testOrderResult);
 	
