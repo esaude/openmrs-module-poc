@@ -26,6 +26,7 @@ import org.openmrs.Location;
 import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.Patient;
+import org.openmrs.Visit;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.poc.api.POCBaseModuleContextSensitiveTest;
@@ -134,6 +135,64 @@ public class PocHeuristicServiceTest extends POCBaseModuleContextSensitiveTest {
 		MatcherAssert.assertThat(encounters,
 		    CoreMatchers.hasItems(Matchers.<Encounter> hasProperty("orders", IsCollectionWithSize.hasSize(2))));
 	}
+	
+	@Test
+	public void shouldFindVisitsOfThePatient() throws Exception {
+		this.executeDataSet("pocheuristic/visits-dataset.xml");
+		
+		Patient patient = Context.getPatientService().getPatient(1);
+		PocHeuristicService heuristicService = Context.getService(PocHeuristicService.class);
+		List<Visit> visits = heuristicService.findVisits(patient, null, null, null);
+		Assert.assertEquals(2, visits.size());
+		Assert.assertEquals(Integer.valueOf(3), visits.get(0).getId());
+		Assert.assertEquals(Integer.valueOf(1), visits.get(1).getId());
+	}
+	
+	@Test
+	public void shouldFindTheMostRecentOnly() throws Exception {
+		this.executeDataSet("pocheuristic/visits-dataset.xml");
+		
+		Patient patient = Context.getPatientService().getPatient(1);
+		PocHeuristicService heuristicService = Context.getService(PocHeuristicService.class);
+		List<Visit> visits = heuristicService.findVisits(patient, true, null, null);
+		Assert.assertEquals(1, visits.size());
+		Assert.assertEquals(Integer.valueOf(3), visits.get(0).getId());
+	}
+	
+	@Test
+	public void shouldFindNonVoidedVisits() throws Exception {
+		executeDataSet("pocheuristic/visits-dataset.xml");
+		
+		PocHeuristicService heuristicService = Context.getService(PocHeuristicService.class);
+		List<Visit> visits = heuristicService.findVisits(null, false, null, false);
+		Assert.assertEquals(4, visits.size());
+	}
+	
+	@Test
+	public void shouldFindVisitsFromSpecifiedDayOnly() throws Exception {
+		executeDataSet("pocheuristic/visits-dataset.xml");
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(2018, Calendar.MAY, 9);
+		PocHeuristicService heuristicService = Context.getService(PocHeuristicService.class);
+		List<Visit> visits = heuristicService.findVisits(null, null, calendar.getTime(), null);
+		Assert.assertEquals(1, visits.size());
+		Assert.assertEquals(Integer.valueOf(3), visits.get(0).getId());
+	}
+	
+	@Test
+	public void shouldFindOnlyFromSpecifiedDate() throws Exception {
+		executeDataSet("pocheuristic/visits-dataset.xml");
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(2018, Calendar.MAY, 8);
+		PocHeuristicService heuristicService = Context.getService(PocHeuristicService.class);
+		List<Visit> visits = heuristicService.findVisits(null, null, calendar.getTime(), null);
+		Assert.assertEquals(2, visits.size());
+		Assert.assertEquals(Integer.valueOf(2), visits.get(0).getId());
+		Assert.assertEquals(Integer.valueOf(1), visits.get(1).getId());
+	}
+
 	
 	@Test
 	public void shouldFindObsByOrderAndConceptAndEncounter() throws Exception {

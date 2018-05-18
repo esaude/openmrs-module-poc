@@ -43,8 +43,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<openmrsPlatformVersion>1.11.5</openmrsPlatformVersion>
 		<java.version>1.7</java.version>
-		<openMRSWebServicesVersion>2.16</openMRSWebServicesVersion>
-
+		<openMRSWebServicesVersion>2.20.0</openMRSWebServicesVersion>
 		<MODULE_ID>${project.parent.artifactId}</MODULE_ID>
 		<MODULE_NAME>${project.name}</MODULE_NAME>
 		<MODULE_VERSION>${project.parent.version}</MODULE_VERSION>

@@ -19,6 +19,7 @@ import org.openmrs.Location;
 import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.Patient;
+import org.openmrs.Visit;
 import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.poc.pocheuristic.dao.PocHeuristicCAO;
@@ -37,6 +38,8 @@ public interface PocHeuristicService extends OpenmrsService {
 	List<Encounter> findEncountersWithTestOrdersByPatient(Patient patient, EncounterType encounterType);
 	
 	List<Encounter> findEncountersByPatientAndEncounterType(Patient patient, EncounterType encounterType);
+	
+	List<Visit> findVisits(Patient patient, Boolean mostRecentOnly, Date date, Boolean voided);
 	
 	Obs findObsByOrderAndConceptAndEncounter(Order order, Concept concept, Encounter encounter);
 	

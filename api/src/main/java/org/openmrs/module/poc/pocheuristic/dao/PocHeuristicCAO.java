@@ -20,6 +20,7 @@ import org.openmrs.Location;
 import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.Patient;
+import org.openmrs.Visit;
 
 public interface PocHeuristicCAO {
 	
@@ -33,6 +34,8 @@ public interface PocHeuristicCAO {
 	
 	List<Encounter> findEncountersByPatientAndEncounterTypeAndOrderTypeUuid(final Patient patient,
 	        final EncounterType encounterType, String orderTypeUuid, boolean voided);
+	
+	List<Visit> findVisits(Patient patient, Boolean mostRecentOnly, Date startDate, Date endDate, Boolean voided);
 	
 	Obs findObsByOrderAndConceptAndEncounter(Order order, Concept concept, Encounter encounter, boolean voided);
 	
