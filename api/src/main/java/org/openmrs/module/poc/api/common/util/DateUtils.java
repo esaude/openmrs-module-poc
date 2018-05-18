@@ -44,14 +44,12 @@ public class DateUtils {
 	 * @return {@link Date} que representa o horário maximo para dia informado.
 	 */
 	public static Date highDateTime(final Date date) {
-		
-		final Calendar aux = Calendar.getInstance();
-		aux.setTime(date);
-		aux.set(Calendar.HOUR_OF_DAY, 23);
-		aux.set(Calendar.MINUTE, 59);
-		aux.set(Calendar.SECOND, 59);
-		aux.set(Calendar.MILLISECOND, 999);
-		return aux.getTime();
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar = org.apache.commons.lang3.time.DateUtils.truncate(calendar, Calendar.DAY_OF_MONTH);
+		calendar.add(Calendar.DAY_OF_MONTH, 1);
+		calendar.add(Calendar.SECOND, -1);
+		return calendar.getTime();
 	}
 	
 	/**

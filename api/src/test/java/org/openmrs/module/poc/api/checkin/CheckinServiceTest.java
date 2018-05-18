@@ -9,7 +9,9 @@
  */
 package org.openmrs.module.poc.api.checkin;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -28,31 +30,38 @@ import org.openmrs.module.poc.pocheuristic.service.PocHeuristicService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class CheckinServiceTest extends POCBaseModuleContextSensitiveTest {
-	
+
 	@Autowired
 	private PatientDAO patientDAO;
-	
+
 	@Autowired
 	private LocationDAO locationDAO;
-	
+
 	@Autowired
 	private PocHeuristicService pocHeuristicService;
-	
+
 	@Test
 	public void shouldCheckin() {
 		Patient patient = patientDAO.getPatient(2);
 		Assert.assertTrue(pocHeuristicService.findVisits(patient, null, new Date(), false).isEmpty());
-		
+
 		Checkin checkin = new Checkin();
 		checkin.setPatient(patient);
 		checkin.setLocation(locationDAO.getLocation(1));
 		checkin.setModule(PocModule.PHARMACY);
 		CheckinService checkinService = Context.getService(CheckinService.class);
 		checkinService.checkin(checkin);
-		
-		Assert.assertFalse(pocHeuristicService.findVisits(patient, null, new Date(), false).isEmpty());
+
+		List<Visit> visits = pocHeuristicService.findVisits(patient, null, new Date(), false);
+		Assert.assertFalse(visits.isEmpty());
+		Visit visit = visits.get(0);
+		Assert.assertTrue(new Date().compareTo(visit.getStartDatetime()) > 0);
+		Assert.assertTrue(visit.getStartDatetime().equals(visit.getDateCreated()));
+		Assert.assertTrue(visit.getStopDatetime().compareTo(visit.getStartDatetime()) > 0);
+		String formatedStopTime = new SimpleDateFormat("HH:mm:ss").format(visit.getStopDatetime());
+		Assert.assertEquals("23:59:59", formatedStopTime);
 	}
-	
+
 	@Test
 	public void shouldSelectPharmacyPickUpVisitType() {
 		Patient patient = patientDAO.getPatient(2);
@@ -65,7 +74,7 @@ public class CheckinServiceTest extends POCBaseModuleContextSensitiveTest {
 		Visit visit = pocHeuristicService.findVisits(patient, null, new Date(), false).get(0);
 		Assert.assertEquals(OPENMRSUUIDs.PHARMACY_PICKUP_VISIT_TYPE, visit.getVisitType().getUuid());
 	}
-	
+
 	@Test
 	public void shouldSelectFollowupConsultationVisitType() {
 		Patient patient = patientDAO.getPatient(2);
@@ -78,7 +87,7 @@ public class CheckinServiceTest extends POCBaseModuleContextSensitiveTest {
 		Visit visit = pocHeuristicService.findVisits(patient, null, new Date(), false).get(0);
 		Assert.assertEquals(OPENMRSUUIDs.FOLLOW_UP_CONSULTATION_VISIT_TYPE, visit.getVisitType().getUuid());
 	}
-	
+
 	@Test
 	public void shouldSelectFirstConsultationVisitType() {
 		Patient patient = patientDAO.getPatient(1000);
@@ -91,7 +100,7 @@ public class CheckinServiceTest extends POCBaseModuleContextSensitiveTest {
 		Visit visit = pocHeuristicService.findVisits(patient, null, new Date(), false).get(0);
 		Assert.assertEquals(OPENMRSUUIDs.FIRST_CONSULTATION_VISIT_TYPE, visit.getVisitType().getUuid());
 	}
-	
+
 	@Test(expected = IllegalStateException.class)
 	public void shouldNotCheckinTwiceOnSameDay() {
 		Patient patient = patientDAO.getPatient(1000);
@@ -103,10 +112,10 @@ public class CheckinServiceTest extends POCBaseModuleContextSensitiveTest {
 		checkinService.checkin(checkin);
 		checkinService.checkin(checkin);
 	}
-	
+
 	@Before
 	public void executeTestDataSet() throws Exception {
 		this.executeDataSet("checkinservice/CheckinServiceTest-dataset.xml");
 	}
-	
+
 }
