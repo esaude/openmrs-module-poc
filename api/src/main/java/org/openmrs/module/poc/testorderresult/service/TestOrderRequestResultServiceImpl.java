@@ -16,6 +16,7 @@ import org.openmrs.Encounter;
 import org.openmrs.EncounterRole;
 import org.openmrs.EncounterType;
 import org.openmrs.Form;
+import org.openmrs.Patient;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
@@ -106,8 +107,8 @@ public class TestOrderRequestResultServiceImpl extends BaseOpenmrsService implem
 	}
 	
 	@Override
-	public List<TestOrderRequestResult> findTestRequestResultsByPatientUuid(final String patientUuid) {
+	public List<TestOrderRequestResult> findTestRequestResultsByPatient(final Patient patient) {
 		
-		return this.testOrderRequestResultDAO.findByPatientUuid(patientUuid, false);
+		return this.testOrderRequestResultDAO.findByPatientUuid(patient, false);
 	}
 }

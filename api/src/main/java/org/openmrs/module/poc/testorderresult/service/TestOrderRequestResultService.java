@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.openmrs.Encounter;
+import org.openmrs.Patient;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.poc.testorderresult.dao.TestOrderRequestResultDAO;
@@ -32,5 +33,5 @@ public interface TestOrderRequestResultService extends OpenmrsService {
 	
 	TestOrderRequestResult findTestRequestResultsByRequestEncounter(Encounter request);
 	
-	List<TestOrderRequestResult> findTestRequestResultsByPatientUuid(String patientUuid);
+	List<TestOrderRequestResult> findTestRequestResultsByPatient(Patient patient);
 }
