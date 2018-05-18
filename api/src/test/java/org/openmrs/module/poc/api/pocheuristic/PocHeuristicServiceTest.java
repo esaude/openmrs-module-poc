@@ -19,9 +19,12 @@ import org.hamcrest.Matchers;
 import org.hamcrest.collection.IsCollectionWithSize;
 import org.junit.Assert;
 import org.junit.Test;
+import org.openmrs.Concept;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
 import org.openmrs.Location;
+import org.openmrs.Obs;
+import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
@@ -130,5 +133,41 @@ public class PocHeuristicServiceTest extends POCBaseModuleContextSensitiveTest {
 		
 		MatcherAssert.assertThat(encounters,
 		    CoreMatchers.hasItems(Matchers.<Encounter> hasProperty("orders", IsCollectionWithSize.hasSize(2))));
+	}
+	
+	@Test
+	public void shouldFindObsByOrderAndConceptAndEncounter() throws Exception {
+		this.executeDataSet("pocheuristic/shouldFindObsByOrderAndConceptAndEncounter-dataset.xml");
+		
+		final Obs obs = Context.getService(PocHeuristicService.class)
+		        .findObsByOrderAndConceptAndEncounter(new Order(1000), new Concept(60000), new Encounter(1000));
+		
+		Assert.assertNotNull(obs);
+		Assert.assertEquals(Integer.valueOf(1000), obs.getEncounter().getEncounterId());
+		Assert.assertEquals(Integer.valueOf(1000), obs.getOrder().getOrderId());
+		Assert.assertEquals(Integer.valueOf(60000), obs.getConcept().getConceptId());
+	}
+	
+	@Test
+	public void shouldFindObsByEncounterAndConcept() throws Exception {
+		this.executeDataSet("pocheuristic/shouldFindObsByEncounterAndConcept-dataset.xml");
+		
+		final Obs obs = Context.getService(PocHeuristicService.class).findObsByEncounterAndConcept(new Encounter(1000),
+		    new Concept(60000));
+		
+		Assert.assertNotNull(obs);
+		Assert.assertEquals(Integer.valueOf(1000), obs.getEncounter().getEncounterId());
+		Assert.assertNull(obs.getOrder());
+		Assert.assertEquals(Integer.valueOf(60000), obs.getConcept().getConceptId());
+	}
+	
+	@Test
+	public void shouldFindObsByGroup() throws Exception {
+		this.executeDataSet("pocheuristic/shouldFindObsByGroup-dataset.xml");
+		
+		final List<Obs> observations = Context.getService(PocHeuristicService.class).findObsByGroup(new Obs(1000));
+		
+		Assert.assertNotNull(observations);
+		Assert.assertEquals(3, observations.size());
 	}
 }
