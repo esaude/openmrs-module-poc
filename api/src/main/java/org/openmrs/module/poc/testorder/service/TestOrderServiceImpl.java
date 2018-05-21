@@ -144,6 +144,10 @@ public class TestOrderServiceImpl extends BaseOpenmrsService implements TestOrde
 			// workaround to controll the hibernate sessions commits
 			this.pOCDbSessionManager.setManualFlushMode();
 			
+			if (testOrderPoc.getDateCreation() == null) {
+				testOrderPoc.setDateCreation(new Date());
+			}
+			
 			this.testOrderRequestValidator.validate(testOrderPoc);
 			
 			final Patient patient = this.patientService.getPatientByUuid(testOrderPoc.getPatient().getUuid());
