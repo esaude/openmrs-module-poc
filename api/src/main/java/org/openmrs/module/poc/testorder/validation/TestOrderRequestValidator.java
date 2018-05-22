@@ -43,7 +43,6 @@ public class TestOrderRequestValidator {
 		this.validatePatient(testOrder);
 		this.validateLocation(testOrder);
 		this.validateProvider(testOrder);
-		this.validateCreationDate(testOrder);
 		this.validateTestOrderItems(testOrder);
 		
 		final Patient patient = Context.getPatientService().getPatientByUuid(testOrder.getPatient().getUuid());
