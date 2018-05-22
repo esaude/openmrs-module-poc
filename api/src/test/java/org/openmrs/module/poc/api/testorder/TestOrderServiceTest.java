@@ -27,6 +27,7 @@ import org.openmrs.OrderType;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
 import org.openmrs.TestOrder;
+import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.poc.api.POCBaseModuleContextSensitiveTest;
 import org.openmrs.module.poc.api.common.util.OPENMRSUUIDs;
@@ -57,6 +58,18 @@ public class TestOrderServiceTest extends POCBaseModuleContextSensitiveTest {
 
 		final Encounter encounter = new Encounter();
 		encounter.setUuid("6519d653-find-test-orders-by-encounter");
+		final TestOrderPOC testOrder = Context.getService(TestOrderService.class).findTestOrderByEncounter(encounter);
+
+		MatcherAssert.assertThat(testOrder, CoreMatchers.notNullValue());
+		MatcherAssert.assertThat(testOrder, Matchers.hasProperty("testOrderItems", IsCollectionWithSize.hasSize(2)));
+	}
+
+	@Test(expected = APIException.class)
+	public void shouldNotFindTestOrderByEncounter() throws Exception {
+		this.executeDataSet("testorder/shouldFindTestOrderByEncounter-dataset.xml");
+
+		final Encounter encounter = new Encounter();
+		encounter.setUuid("6519d654-find-test-orders-by-encounter");
 		final TestOrderPOC testOrder = Context.getService(TestOrderService.class).findTestOrderByEncounter(encounter);
 
 		MatcherAssert.assertThat(testOrder, CoreMatchers.notNullValue());
@@ -109,8 +122,8 @@ public class TestOrderServiceTest extends POCBaseModuleContextSensitiveTest {
 		Assert.assertNotNull(createTestOder.getDateCreation());
 	}
 
-	@Test
 	@Ignore
+	@Test
 	public void shouldDeleteTestOrderItem() throws Exception {
 		this.executeDataSet("testorder/shouldDeleteTestOrderItem-dataset.xml");
 
