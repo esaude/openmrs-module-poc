@@ -42,6 +42,8 @@
   	<form_field form_field_id="104" form_id="100" field_id="104" field_number="3" field_part="" required="false" changed_by="1" date_changed="2006-07-18 11:13:59.0" creator="1" date_created="2006-07-18 11:13:57.0" sort_weight="30.0" uuid="92e63d19-9b11-4bbf-8622-85bb191b24x5"/>
 	
  	<encounter encounter_id="1000" encounter_type="3" patient_id="7" location_id="1" form_id="1" encounter_datetime="2018-01-01 00:00:00.0" creator="1" date_created="2018-01-18 14:09:05.0" voided="false" uuid="6519d653-find-test-orders-by-encounter"/>
+ 	<encounter encounter_id="1001" encounter_type="3" patient_id="7" location_id="1" form_id="1" encounter_datetime="2018-01-01 00:00:00.0" creator="1" date_created="2018-01-18 14:09:05.0" voided="false" uuid="6519d654-find-test-orders-by-encounter"/>
+ 	
   	<provider provider_id="1000" person_id="1" identifier="Test" creator="1" date_created="2005-01-01 00:00:00.0" retired="false" uuid="c2299800-cca9-11e0-9572-0800cprovider" />
   	<encounter_provider encounter_provider_id="1000" encounter_id="1000" provider_id="1000" encounter_role_id="1" creator="1" date_created="2006-03-11 15:57:35.0" voided="false" uuid="19e0aae8-20ee-46b7d-9e6enc-provider" />
  	
