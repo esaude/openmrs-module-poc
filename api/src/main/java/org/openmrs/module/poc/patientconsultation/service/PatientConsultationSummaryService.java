@@ -24,6 +24,6 @@ public interface PatientConsultationSummaryService extends OpenmrsService {
 	public void setPatientConsultationSummaryDAO(final PatientConsultationSummaryDAO patientConsultationSummaryDAO);
 	
 	public List<PatientConsultationSummary> findPatientConsultationsByLocationAndDateInterval(Location location,
-	        Date initialDate, Date finalDate);
+	        boolean montly, Date endDate);
 	
 }

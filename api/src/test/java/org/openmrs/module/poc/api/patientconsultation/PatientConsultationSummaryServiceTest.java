@@ -9,14 +9,13 @@
  */
 package org.openmrs.module.poc.api.patientconsultation;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.hamcrest.collection.IsCollectionWithSize;
+import org.junit.Assert;
 import org.junit.Test;
 import org.openmrs.Location;
 import org.openmrs.api.context.Context;
@@ -25,30 +24,103 @@ import org.openmrs.module.poc.patientconsultation.model.PatientConsultationSumma
 import org.openmrs.module.poc.patientconsultation.service.PatientConsultationSummaryService;
 
 public class PatientConsultationSummaryServiceTest extends POCBaseModuleContextSensitiveTest {
-	
-	@SuppressWarnings("unchecked")
+
 	@Test
-	public void shouldFindPatientConsultationsByLocationAndDateInterval() throws Exception {
+	public void shouldFindPatientConsultationsUpToEndDate() throws Exception {
 		this.executeDataSet("patientconsultation/shouldFindPatientConsultationsByLocationAndDateInterval-dataset.xml");
+
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		final Calendar calendar = Calendar.getInstance();
 		calendar.set(Calendar.YEAR, 2017);
-		calendar.set(Calendar.MONTH, 9);
-		calendar.set(Calendar.DAY_OF_MONTH, 20);
-		final Date startDate = calendar.getTime();
-		
-		calendar.set(Calendar.YEAR, 2017);
-		calendar.set(Calendar.MONTH, 10);
+		calendar.set(Calendar.MONTH, Calendar.NOVEMBER);
 		calendar.set(Calendar.DAY_OF_MONTH, 3);
 		final Date endDate = calendar.getTime();
-		
+
 		final List<PatientConsultationSummary> patientSummaries = Context
-		        .getService(PatientConsultationSummaryService.class)
-		        .findPatientConsultationsByLocationAndDateInterval(new Location(2), startDate, endDate);
-		
-		MatcherAssert.assertThat(patientSummaries, CoreMatchers.notNullValue());
-		MatcherAssert.assertThat(patientSummaries, IsCollectionWithSize.hasSize(3));
-		MatcherAssert.assertThat(patientSummaries, CoreMatchers.hasItems(Matchers
-		        .<PatientConsultationSummary> hasProperty("patientConsultations", IsCollectionWithSize.hasSize(1))));
-		
+				.getService(PatientConsultationSummaryService.class)
+				.findPatientConsultationsByLocationAndDateInterval(new Location(2), true, endDate);
+
+		Assert.assertEquals(3, patientSummaries.size());
+		Assert.assertEquals("20/10/2017", dateFormat.format(patientSummaries.get(0).getConsultationDate()));
+		Assert.assertEquals("30/10/2017", dateFormat.format(patientSummaries.get(1).getConsultationDate()));
+		Assert.assertEquals("03/11/2017", dateFormat.format(patientSummaries.get(2).getConsultationDate()));
+	}
+
+	@Test
+	public void shouldFindPatientConsultationsWithinOneMonth() throws Exception {
+		this.executeDataSet("patientconsultation/shouldFindPatientConsultationsByLocationAndDateInterval-dataset.xml");
+
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		final Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.YEAR, 2017);
+		calendar.set(Calendar.MONTH, Calendar.DECEMBER);
+		calendar.set(Calendar.DAY_OF_MONTH, 3);
+		final Date endDate = calendar.getTime();
+
+		final List<PatientConsultationSummary> patientSummaries = Context
+				.getService(PatientConsultationSummaryService.class)
+				.findPatientConsultationsByLocationAndDateInterval(new Location(2), true, endDate);
+
+		Assert.assertEquals(2, patientSummaries.size());
+		Assert.assertEquals("03/11/2017", dateFormat.format(patientSummaries.get(0).getConsultationDate()));
+		Assert.assertEquals("01/12/2017", dateFormat.format(patientSummaries.get(1).getConsultationDate()));
+	}
+
+	@Test
+	public void shouldNotConsiderPatientConsultationsOusideOneMonth() throws Exception {
+		this.executeDataSet("patientconsultation/shouldFindPatientConsultationsByLocationAndDateInterval-dataset.xml");
+
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		final Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.YEAR, 2017);
+		calendar.set(Calendar.MONTH, Calendar.DECEMBER);
+		calendar.set(Calendar.DAY_OF_MONTH, 4);
+		final Date endDate = calendar.getTime();
+
+		final List<PatientConsultationSummary> patientSummaries = Context
+				.getService(PatientConsultationSummaryService.class)
+				.findPatientConsultationsByLocationAndDateInterval(new Location(2), true, endDate);
+
+		Assert.assertEquals(1, patientSummaries.size());
+		Assert.assertEquals("01/12/2017", dateFormat.format(patientSummaries.get(0).getConsultationDate()));
+	}
+
+	@Test
+	public void shouldFindPatientConsultationsWithinOneWeek() throws Exception {
+		this.executeDataSet("patientconsultation/shouldFindPatientConsultationsByLocationAndDateInterval-dataset.xml");
+
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		final Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.YEAR, 2017);
+		calendar.set(Calendar.MONTH, Calendar.NOVEMBER);
+		calendar.set(Calendar.DAY_OF_MONTH, 5);
+		final Date endDate = calendar.getTime();
+
+		final List<PatientConsultationSummary> patientSummaries = Context
+				.getService(PatientConsultationSummaryService.class)
+				.findPatientConsultationsByLocationAndDateInterval(new Location(2), false, endDate);
+
+		Assert.assertEquals(2, patientSummaries.size());
+		Assert.assertEquals("30/10/2017", dateFormat.format(patientSummaries.get(0).getConsultationDate()));
+		Assert.assertEquals("03/11/2017", dateFormat.format(patientSummaries.get(1).getConsultationDate()));
+	}
+
+	@Test
+	public void shouldNotConsiderPatientConsultationsOutsideOneWeek() throws Exception {
+		this.executeDataSet("patientconsultation/shouldFindPatientConsultationsByLocationAndDateInterval-dataset.xml");
+
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		final Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.YEAR, 2017);
+		calendar.set(Calendar.MONTH, Calendar.NOVEMBER);
+		calendar.set(Calendar.DAY_OF_MONTH, 6);
+		final Date endDate = calendar.getTime();
+
+		final List<PatientConsultationSummary> patientSummaries = Context
+				.getService(PatientConsultationSummaryService.class)
+				.findPatientConsultationsByLocationAndDateInterval(new Location(2), false, endDate);
+
+		Assert.assertEquals(1, patientSummaries.size());
+		Assert.assertEquals("03/11/2017", dateFormat.format(patientSummaries.get(0).getConsultationDate()));
 	}
 }
