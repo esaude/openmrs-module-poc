@@ -44,6 +44,8 @@ public class PatientConsultationSummaryResource extends DataDelegatingCrudResour
 			description.addProperty("uuid");
 			description.addProperty("consultationDate");
 			description.addProperty("patientConsultations");
+			description.addProperty("startDate");
+			description.addProperty("endDate");
 			description.addSelfLink();
 			return description;
 		} else if (rep instanceof DefaultRepresentation) {
@@ -51,6 +53,8 @@ public class PatientConsultationSummaryResource extends DataDelegatingCrudResour
 			description.addProperty("uuid");
 			description.addProperty("consultationDate");
 			description.addProperty("patientConsultations");
+			description.addProperty("startDate");
+			description.addProperty("endDate");
 			description.addSelfLink();
 			description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
 			return description;

@@ -62,7 +62,8 @@ public class PatientConsultationSummaryServiceImpl extends BaseOpenmrsService
 		final List<Obs> resultObs = this.patientConsultationSummaryDAO.findObsByLocationAndDateInterval(
 		    Arrays.asList(adultFollowUp, pediatricFollowUp, ccrFollowUp), concept, location, startDate, endDate);
 		
-		return this.summarizeObjectsToPatientConsultation(location, this.groupObsByDateNextVisitDate(resultObs));
+		return this.summarizeObjectsToPatientConsultation(location, this.groupObsByDateNextVisitDate(resultObs),
+		    startDate, endDate);
 	}
 	
 	private Date computeStartDate(boolean montly, Date endDate) {
@@ -90,12 +91,13 @@ public class PatientConsultationSummaryServiceImpl extends BaseOpenmrsService
 	}
 	
 	private List<PatientConsultationSummary> summarizeObjectsToPatientConsultation(final Location location,
-	        final Map<Date, List<Obs>> mapObsByDateNextVisit) {
+	        final Map<Date, List<Obs>> mapObsByDateNextVisit, Date startDate, Date endDate) {
 		final List<PatientConsultationSummary> listSummary = new ArrayList<>();
 		for (final Entry<Date, List<Obs>> entry : mapObsByDateNextVisit.entrySet()) {
 			final Date valueDateTime = entry.getKey();
 			final List<Obs> listObs = entry.getValue();
-			final PatientConsultationSummary patientConsultationSummay = new PatientConsultationSummary(valueDateTime);
+			final PatientConsultationSummary patientConsultationSummay = new PatientConsultationSummary(valueDateTime,
+			        startDate, endDate);
 			for (final Obs obs : listObs) {
 				final boolean ckeckedInInExpectedNextVisitDate = this.patientConsultationSummaryDAO
 				        .hasCheckinInExpectedNextVisitDate(new Patient(obs.getPerson().getId()), location,
@@ -106,7 +108,16 @@ public class PatientConsultationSummaryServiceImpl extends BaseOpenmrsService
 			}
 			listSummary.add(patientConsultationSummay);
 		}
+		if (listSummary.isEmpty()) {
+			listSummary.add(createDefaultSummary(startDate, endDate));
+		}
 		Collections.sort(listSummary);
 		return listSummary;
+	}
+	
+	private PatientConsultationSummary createDefaultSummary(Date startDate, Date endDate) {
+		// so that the front-end as access to the date range even when there are
+		// not consultations to display
+		return new PatientConsultationSummary(null, startDate, endDate);
 	}
 }
