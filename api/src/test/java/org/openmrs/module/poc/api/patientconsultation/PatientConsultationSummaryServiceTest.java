@@ -20,6 +20,7 @@ import org.junit.Test;
 import org.openmrs.Location;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.poc.api.POCBaseModuleContextSensitiveTest;
+import org.openmrs.module.poc.patientconsultation.model.PatientConsultation;
 import org.openmrs.module.poc.patientconsultation.model.PatientConsultationSummary;
 import org.openmrs.module.poc.patientconsultation.service.PatientConsultationSummaryService;
 
@@ -41,9 +42,30 @@ public class PatientConsultationSummaryServiceTest extends POCBaseModuleContextS
 				.findPatientConsultationsByLocationAndDateInterval(new Location(2), true, endDate);
 
 		Assert.assertEquals(3, patientSummaries.size());
-		Assert.assertEquals("20/10/2017", dateFormat.format(patientSummaries.get(0).getConsultationDate()));
-		Assert.assertEquals("30/10/2017", dateFormat.format(patientSummaries.get(1).getConsultationDate()));
-		Assert.assertEquals("03/11/2017", dateFormat.format(patientSummaries.get(2).getConsultationDate()));
+		{
+			PatientConsultationSummary summary = patientSummaries.get(0);
+			Assert.assertEquals("20/10/2017", dateFormat.format(summary.getConsultationDate()));
+			Assert.assertEquals(1, summary.getPatientConsultations().size());
+			PatientConsultation consultation = summary.getPatientConsultations().get(0);
+			Assert.assertEquals(Integer.valueOf(1005), consultation.getEncounter().getId());
+			Assert.assertTrue(consultation.getCheckInOnConsultationDate());
+		}
+		{
+			PatientConsultationSummary summary = patientSummaries.get(1);
+			Assert.assertEquals("30/10/2017", dateFormat.format(summary.getConsultationDate()));
+			Assert.assertEquals(1, summary.getPatientConsultations().size());
+			PatientConsultation consultation = summary.getPatientConsultations().get(0);
+			Assert.assertEquals(Integer.valueOf(1006), consultation.getEncounter().getId());
+			Assert.assertFalse(consultation.getCheckInOnConsultationDate());
+		}
+		{
+			PatientConsultationSummary summary = patientSummaries.get(2);
+			Assert.assertEquals("03/11/2017", dateFormat.format(summary.getConsultationDate()));
+			Assert.assertEquals(1, summary.getPatientConsultations().size());
+			PatientConsultation consultation = summary.getPatientConsultations().get(0);
+			Assert.assertEquals(Integer.valueOf(1007), consultation.getEncounter().getId());
+			Assert.assertTrue(consultation.getCheckInOnConsultationDate());
+		}
 	}
 
 	@Test
@@ -122,5 +144,34 @@ public class PatientConsultationSummaryServiceTest extends POCBaseModuleContextS
 
 		Assert.assertEquals(1, patientSummaries.size());
 		Assert.assertEquals("03/11/2017", dateFormat.format(patientSummaries.get(0).getConsultationDate()));
+	}
+
+	@Test
+	public void shouldGroupConsultationsByDate() throws Exception {
+		this.executeDataSet("patientconsultation/shouldFindPatientConsultationsByLocationAndDateInterval-dataset.xml");
+
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		final Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.YEAR, 2017);
+		calendar.set(Calendar.MONTH, Calendar.DECEMBER);
+		calendar.set(Calendar.DAY_OF_MONTH, 1);
+		final Date endDate = calendar.getTime();
+
+		final List<PatientConsultationSummary> patientSummaries = Context
+				.getService(PatientConsultationSummaryService.class)
+				.findPatientConsultationsByLocationAndDateInterval(new Location(2), true, endDate);
+
+		Assert.assertEquals(2, patientSummaries.size());
+		{
+			PatientConsultationSummary summary = patientSummaries.get(0);
+			Assert.assertEquals("03/11/2017", dateFormat.format(summary.getConsultationDate()));
+			Assert.assertEquals(1, summary.getPatientConsultations().size());
+		}
+		Assert.assertEquals(2, patientSummaries.size());
+		{
+			PatientConsultationSummary summary = patientSummaries.get(1);
+			Assert.assertEquals("01/12/2017", dateFormat.format(summary.getConsultationDate()));
+			Assert.assertEquals(2, summary.getPatientConsultations().size());
+		}
 	}
 }
