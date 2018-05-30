@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.openmrs.Concept;
 import org.openmrs.EncounterType;
 import org.openmrs.Location;
@@ -57,6 +58,7 @@ public class PatientConsultationSummaryServiceImpl extends BaseOpenmrsService
 		final EncounterType ccrFollowUp = Context.getEncounterService()
 		        .getEncounterTypeByUuid(EncounterTyeUUIDConstants.CCR_FOLLOW_UP);
 		
+		endDate = DateUtils.truncate(endDate, Calendar.DAY_OF_MONTH);
 		Date startDate = computeStartDate(montly, endDate);
 		
 		final List<Obs> resultObs = this.patientConsultationSummaryDAO.findObsByLocationAndDateInterval(
