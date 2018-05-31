@@ -11,6 +11,7 @@ package org.openmrs.module.poc.patientconsultation.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.openmrs.Concept;
 import org.openmrs.EncounterType;
 import org.openmrs.Location;
@@ -45,7 +47,7 @@ public class PatientConsultationSummaryServiceImpl extends BaseOpenmrsService
 	
 	@Override
 	public List<PatientConsultationSummary> findPatientConsultationsByLocationAndDateInterval(final Location location,
-	        final Date startDate, final Date endDate) {
+	        boolean montly, Date endDate) {
 		
 		final Concept concept = Context.getConceptService().getConceptByUuid(ConceptUUIDConstants.RETURN_VISIT_DATE);
 		
@@ -56,14 +58,29 @@ public class PatientConsultationSummaryServiceImpl extends BaseOpenmrsService
 		final EncounterType ccrFollowUp = Context.getEncounterService()
 		        .getEncounterTypeByUuid(EncounterTyeUUIDConstants.CCR_FOLLOW_UP);
 		
+		endDate = DateUtils.truncate(endDate, Calendar.DAY_OF_MONTH);
+		Date startDate = computeStartDate(montly, endDate);
+		
 		final List<Obs> resultObs = this.patientConsultationSummaryDAO.findObsByLocationAndDateInterval(
 		    Arrays.asList(adultFollowUp, pediatricFollowUp, ccrFollowUp), concept, location, startDate, endDate);
 		
-		return this.summarizeObjectsToPatientConsultation(location, this.groupObsByDateNextVisitDate(resultObs));
+		return this.summarizeObjectsToPatientConsultation(location, this.groupObsByDateNextVisitDate(resultObs),
+		    startDate, endDate);
+	}
+	
+	private Date computeStartDate(boolean montly, Date endDate) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(endDate);
+		if (montly) {
+			calendar.add(Calendar.MONTH, -1);
+		} else {
+			calendar.add(Calendar.DAY_OF_MONTH, -6);
+		}
+		Date startDate = calendar.getTime();
+		return startDate;
 	}
 	
 	private Map<Date, List<Obs>> groupObsByDateNextVisitDate(final List<Obs> resultObs) {
-		
 		final Map<Date, List<Obs>> mapObsByNextVisitDate = new HashMap<>();
 		for (final Obs obs : resultObs) {
 			List<Obs> list = mapObsByNextVisitDate.get(obs.getValueDatetime());
@@ -72,35 +89,37 @@ public class PatientConsultationSummaryServiceImpl extends BaseOpenmrsService
 			}
 			list.add(obs);
 		}
-		
 		return mapObsByNextVisitDate;
 	}
 	
 	private List<PatientConsultationSummary> summarizeObjectsToPatientConsultation(final Location location,
-	        final Map<Date, List<Obs>> mapObsByDateNextVisit) {
-		
+	        final Map<Date, List<Obs>> mapObsByDateNextVisit, Date startDate, Date endDate) {
 		final List<PatientConsultationSummary> listSummary = new ArrayList<>();
-		
 		for (final Entry<Date, List<Obs>> entry : mapObsByDateNextVisit.entrySet()) {
-			
 			final Date valueDateTime = entry.getKey();
 			final List<Obs> listObs = entry.getValue();
-			
-			final PatientConsultationSummary patientConsultationSummay = new PatientConsultationSummary(valueDateTime);
+			final PatientConsultationSummary patientConsultationSummay = new PatientConsultationSummary(valueDateTime,
+			        startDate, endDate);
 			for (final Obs obs : listObs) {
-				
 				final boolean ckeckedInInExpectedNextVisitDate = this.patientConsultationSummaryDAO
 				        .hasCheckinInExpectedNextVisitDate(new Patient(obs.getPerson().getId()), location,
 				            valueDateTime);
-				
 				final PatientConsultation patientConsultation = new PatientConsultation(obs.getEncounter(),
 				        ckeckedInInExpectedNextVisitDate);
-				
 				patientConsultationSummay.addPatientConsultation(patientConsultation);
 			}
 			listSummary.add(patientConsultationSummay);
 		}
+		if (listSummary.isEmpty()) {
+			listSummary.add(createDefaultSummary(startDate, endDate));
+		}
 		Collections.sort(listSummary);
 		return listSummary;
+	}
+	
+	private PatientConsultationSummary createDefaultSummary(Date startDate, Date endDate) {
+		// so that the front-end as access to the date range even when there are
+		// not consultations to display
+		return new PatientConsultationSummary(null, startDate, endDate);
 	}
 }

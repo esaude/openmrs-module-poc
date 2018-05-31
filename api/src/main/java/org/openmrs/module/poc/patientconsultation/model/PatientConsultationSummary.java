@@ -23,13 +23,19 @@ public class PatientConsultationSummary extends BaseOpenmrsData
 	
 	private final List<PatientConsultation> patientConsultations = new ArrayList<>();
 	
+	private Date startDate;
+	
+	private Date endDate;
+	
 	private Date consultationDate;
 	
 	public PatientConsultationSummary() {
 	}
 	
-	public PatientConsultationSummary(final Date consultationDate) {
+	public PatientConsultationSummary(final Date consultationDate, Date startDate, Date endDate) {
 		this.consultationDate = consultationDate;
+		this.startDate = startDate;
+		this.endDate = endDate;
 	}
 	
 	public List<PatientConsultation> getPatientConsultations() {
@@ -61,5 +67,13 @@ public class PatientConsultationSummary extends BaseOpenmrsData
 	@Override
 	public int compareTo(final PatientConsultationSummary o) {
 		return this.consultationDate.compareTo(o.getConsultationDate());
+	}
+	
+	public Date getStartDate() {
+		return startDate;
+	}
+	
+	public Date getEndDate() {
+		return endDate;
 	}
 }
