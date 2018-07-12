@@ -9,6 +9,10 @@
  */
 package org.openmrs.module.poc.clinicalservice.service;
 
+import java.util.List;
+import java.util.Map;
+
+import org.openmrs.Encounter;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.ObsService;
 import org.openmrs.api.OpenmrsService;
@@ -23,5 +27,7 @@ public interface ClinicalServiceService extends OpenmrsService {
 	void setEncounterService(EncounterService encounterService);
 	
 	void deleteClinicalService(String encounterUuid, String clinicalServiceUuid) throws POCBusinessException;
+	
+	Encounter updateClinicalService(String serviceCode, Encounter encounter, List<Map<String, Object>> obs);
 	
 }

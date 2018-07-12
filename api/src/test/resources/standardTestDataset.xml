@@ -499,7 +499,7 @@
 	<concept concept_id="84" retired="false" datatype_id="4" class_id="2" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="e1db0700-1d5f-11e0-b929-000c29ad1d07"/>
 	<concept_name concept_id="84" name="education-level" locale="en_GB" creator="1" date_created="2015-01-16 13:52:53.0" concept_name_id="3022" concept_name_type="FULLY_SPECIFIED" locale_preferred="0" voided="false" uuid="35d3346a-6769-4d52-823f-b42000000030"/>
 	
-	<concept concept_id="85" retired="false" datatype_id="4" class_id="2" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="e1dd3426-1d5f-11e0-b929-000c29ad1d07"/>
+	<concept concept_id="85" retired="false" datatype_id="1" class_id="2" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="e1dd3426-1d5f-11e0-b929-000c29ad1d07"/>
 	<concept_name concept_id="85" name="number of cohabitantes" locale="en_GB" creator="1" date_created="2015-01-16 13:52:53.0" concept_name_id="3023" concept_name_type="FULLY_SPECIFIED" locale_preferred="0" voided="false" uuid="35d3346a-6769-4d52-823f-b42000000031"/>
 	
 	<concept concept_id="86" retired="false" datatype_id="4" class_id="2" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="e1db0cf0-1d5f-11e0-b929-000c29ad1d07"/>
@@ -571,19 +571,19 @@
 	<concept concept_id="108" retired="false" datatype_id="4" class_id="2" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="7f8f297b-6b71-45c2-8044-c3d89f0f8bf8"/>
 	<concept_name concept_id="108" name="screanning for crypto" locale="en_GB" creator="1" date_created="2015-01-16 13:52:53.0" concept_name_id="3029" concept_name_type="FULLY_SPECIFIED" locale_preferred="0" voided="false" uuid="35d3346a-6769-4d52-823f-b42000000054"/>
 	
-	<concept concept_id="109" retired="false" datatype_id="4" class_id="2" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="4bea5235-1ef3-45a3-a7de-c33850c74422"/>
+	<concept concept_id="109" retired="false" datatype_id="6" class_id="2" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="4bea5235-1ef3-45a3-a7de-c33850c74422"/>
 	<concept_name concept_id="109" name="poc mapping diagnosic date" locale="en_GB" creator="1" date_created="2015-01-16 13:52:53.0" concept_name_id="3029" concept_name_type="FULLY_SPECIFIED" locale_preferred="0" voided="false" uuid="35d3346a-6769-4d52-823f-b42000000055"/>
 
-	<concept concept_id="110" retired="false" datatype_id="4" class_id="2" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="e1d85906-1d5f-11e0-b929-000c29ad1d07"/>
+	<concept concept_id="110" retired="false" datatype_id="6" class_id="2" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="e1d85906-1d5f-11e0-b929-000c29ad1d07"/>
 	<concept_name concept_id="110" name="tb drug start date" locale="en_GB" creator="1" date_created="2015-01-16 13:52:53.0" concept_name_id="3029" concept_name_type="FULLY_SPECIFIED" locale_preferred="0" voided="false" uuid="35d3346a-6769-4d52-823f-b42000000056"/>
 	
-	<concept concept_id="111" retired="false" datatype_id="4" class_id="2" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="0ef94b67-b202-40ad-b542-7b2016524335"/>
+	<concept concept_id="111" retired="false" datatype_id="8" class_id="2" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="0ef94b67-b202-40ad-b542-7b2016524335"/>
 	<concept_name concept_id="111" name="tb drug end date" locale="en_GB" creator="1" date_created="2015-01-16 13:52:53.0" concept_name_id="3029" concept_name_type="FULLY_SPECIFIED" locale_preferred="0" voided="false" uuid="35d3346a-6769-4d52-823f-b42000000057"/>
 	
-	<concept concept_id="112" retired="false" datatype_id="4" class_id="2" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="e1eb7806-1d5f-11e0-b929-000c29ad1d07"/>
+	<concept concept_id="112" retired="false" datatype_id="2" class_id="2" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="e1eb7806-1d5f-11e0-b929-000c29ad1d07"/>
 	<concept_name concept_id="112" name="diagnosis added" locale="en_GB" creator="1" date_created="2015-01-16 13:52:53.0" concept_name_id="3029" concept_name_type="FULLY_SPECIFIED" locale_preferred="0" voided="false" uuid="35d3346a-6769-4d52-823f-b42000000058"/>
 	
-	<concept concept_id="113" retired="false" datatype_id="4" class_id="2" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="e1dd2d50-1d5f-11e0-b929-000c29ad1d07"/>
+	<concept concept_id="113" retired="false" datatype_id="3" class_id="2" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="e1dd2d50-1d5f-11e0-b929-000c29ad1d07"/>
 	<concept_name concept_id="113" name="non coded diagnosis" locale="en_GB" creator="1" date_created="2015-01-16 13:52:53.0" concept_name_id="3029" concept_name_type="FULLY_SPECIFIED" locale_preferred="0" voided="false" uuid="35d3346a-6769-4d52-823f-b42000000059"/>
 	
 	<concept concept_id="114" retired="false" datatype_id="4" class_id="2" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="e1dae630-1d5f-11e0-b929-000c29ad1d07"/>
@@ -616,7 +616,7 @@
 	<concept concept_id="123" retired="false" datatype_id="4" class_id="2" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="e1dc2798-1d5f-11e0-b929-000c29ad1d07"/>
 	<concept_name concept_id="123" name="father age" locale="en_GB" creator="1" date_created="2015-01-16 13:52:53.0" concept_name_id="3038" concept_name_type="FULLY_SPECIFIED" locale_preferred="0" voided="false" uuid="35d3346a-6769-4d52-823f-b42000000070"/>
 		
-	<concept concept_id="124" retired="false" datatype_id="4" class_id="2" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="e1dc2932-1d5f-11e0-b929-000c29ad1d07"/>
+	<concept concept_id="124" retired="false" datatype_id="10" class_id="2" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="e1dc2932-1d5f-11e0-b929-000c29ad1d07"/>
 	<concept_name concept_id="124" name="father is alive" locale="en_GB" creator="1" date_created="2015-01-16 13:52:53.0" concept_name_id="3039" concept_name_type="FULLY_SPECIFIED" locale_preferred="0" voided="false" uuid="35d3346a-6769-4d52-823f-b42000000071"/>
 	
 	<concept concept_id="125" retired="false" datatype_id="4" class_id="2" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="e1dc2ad6-1d5f-11e0-b929-000c29ad1d07"/>

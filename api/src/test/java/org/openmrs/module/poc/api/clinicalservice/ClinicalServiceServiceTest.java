@@ -9,7 +9,10 @@
  */
 package org.openmrs.module.poc.api.clinicalservice;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.hamcrest.CoreMatchers;
@@ -20,6 +23,7 @@ import org.junit.Test;
 import org.openmrs.Concept;
 import org.openmrs.Encounter;
 import org.openmrs.Obs;
+import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.poc.api.POCBaseModuleContextSensitiveTest;
 import org.openmrs.module.poc.api.common.exception.POCBusinessException;
@@ -185,8 +189,7 @@ public class ClinicalServiceServiceTest extends POCBaseModuleContextSensitiveTes
 		
 		// This must be mocked to not lost focus testing one and unique
 		// behaviour
-		final Concept temperature = Context.getConceptService()
-		        .getConceptByUuid(ConceptUUIDConstants.TEMPERATURE);
+		final Concept temperature = Context.getConceptService().getConceptByUuid(ConceptUUIDConstants.TEMPERATURE);
 		Context.getConceptService().retireConcept(temperature, "reason");
 		
 		this.executeDataSet("clinicalservice/shouldDeletePediatricVitalsClinicalServices-dataset.xml");
@@ -406,5 +409,96 @@ public class ClinicalServiceServiceTest extends POCBaseModuleContextSensitiveTes
 		MatcherAssert.assertThat(deletedObs,
 		    CoreMatchers.hasItems(Matchers.<Obs> hasProperty("voided", CoreMatchers.is(true))));
 		MatcherAssert.assertThat(encounuter, Matchers.hasProperty("voided", CoreMatchers.is(true)));
+	}
+	
+	@Test
+	public void shouldUpdateClinicalService() throws Exception {
+		this.executeDataSet("clinicalservice/shouldUpdateClinicalService-dataset.xml");
+		
+		final Encounter encounter = new Encounter();
+		encounter.setUuid("c847-4ss-enc-xpto-pediatric-diagnosis");
+		final String serviceCode = "011";
+		
+		final Map<String, Object> mapTBDrugStart = new HashMap<>();
+		final Map<String, Object> mapDiagnosisAdded = new HashMap<>();
+		final Map<String, Object> mapNonCodedText = new HashMap<>();
+		final Map<String, Object> mapTBEndDate = new HashMap<>();
+		final Map<String, Object> mapNumberOfCohabitants = new HashMap<>();
+		final Map<String, Object> mapFatherIsAlive = new HashMap<>();
+		final List<Map<String, Object>> lstMapNewObs = new ArrayList<>();
+		
+		lstMapNewObs.add(mapTBDrugStart);
+		lstMapNewObs.add(mapDiagnosisAdded);
+		lstMapNewObs.add(mapNonCodedText);
+		lstMapNewObs.add(mapTBEndDate);
+		lstMapNewObs.add(mapNumberOfCohabitants);
+		lstMapNewObs.add(mapFatherIsAlive);
+		
+		mapTBDrugStart.put("concept", "e1d85906-1d5f-11e0-b929-000c29ad1d07");
+		mapTBDrugStart.put("value", "2008-10-20 00:00:00.0");
+		
+		mapDiagnosisAdded.put("concept", "e1eb7806-1d5f-11e0-b929-000c29ad1d07");
+		mapDiagnosisAdded.put("value", "b055abd8-a420-4a11-8b98-02ee170a7b54");
+		
+		mapNonCodedText.put("concept", "e1dd2d50-1d5f-11e0-b929-000c29ad1d07");
+		mapNonCodedText.put("value", "simple test");
+		
+		mapTBEndDate.put("concept", "0ef94b67-b202-40ad-b542-7b2016524335");
+		mapTBEndDate.put("value", "2008-10-20 00:00:00.0");
+		
+		mapNumberOfCohabitants.put("concept", "e1dd3426-1d5f-11e0-b929-000c29ad1d07");
+		mapNumberOfCohabitants.put("value", "4");
+		
+		mapFatherIsAlive.put("concept", "e1dc2932-1d5f-11e0-b929-000c29ad1d07");
+		mapFatherIsAlive.put("value", "true");
+		
+		final Encounter encounterUpdated = Context.getService(ClinicalServiceService.class)
+		        .updateClinicalService(serviceCode, encounter, lstMapNewObs);
+		
+		MatcherAssert.assertThat(encounterUpdated, CoreMatchers.notNullValue());
+	}
+	
+	@Test(expected = APIException.class)
+	public void shouldThrowApiExceptionWhenUpdateClinicalService() throws Exception {
+		
+		final Encounter encounter = new Encounter();
+		final String serviceCode = "unknown";
+		final List<Map<String, Object>> lstMapNewObs = new ArrayList<>();
+		
+		Context.getService(ClinicalServiceService.class).updateClinicalService(serviceCode, encounter, lstMapNewObs);
+	}
+	
+	@Test(expected = RuntimeException.class)
+	public void shouldThrowRuntimeExceptionWhenUpdateClinicalService() throws Exception {
+		this.executeDataSet("clinicalservice/shouldUpdateClinicalService-dataset.xml");
+		
+		final Encounter encounter = new Encounter();
+		encounter.setUuid("c847-4ss-enc-xpto-pediatric-diagnosis");
+		final String serviceCode = "011";
+		final List<Map<String, Object>> lstMapNewObs = new ArrayList<>();
+		final Map<String, Object> mapWithWrongValue = new HashMap<>();
+		lstMapNewObs.add(mapWithWrongValue);
+		
+		mapWithWrongValue.put("concept", "32d3611a-6699-4d52-823f-b4b788bac3e3");
+		mapWithWrongValue.put("value", "wrong");
+		
+		Context.getService(ClinicalServiceService.class).updateClinicalService(serviceCode, encounter, lstMapNewObs);
+	}
+	
+	@Test(expected = APIException.class)
+	public void shouldThrowAPIExceptionWhenUpdateClinicalServiceWithInvalidDate() throws Exception {
+		this.executeDataSet("clinicalservice/shouldUpdateClinicalService-dataset.xml");
+		
+		final Encounter encounter = new Encounter();
+		encounter.setUuid("c847-4ss-enc-xpto-pediatric-diagnosis");
+		final String serviceCode = "011";
+		final List<Map<String, Object>> lstMapNewObs = new ArrayList<>();
+		final Map<String, Object> mapWithWrongValue = new HashMap<>();
+		lstMapNewObs.add(mapWithWrongValue);
+		
+		mapWithWrongValue.put("concept", "0ef94b67-b202-40ad-b542-7b2016524335");
+		mapWithWrongValue.put("value", "123");
+		
+		Context.getService(ClinicalServiceService.class).updateClinicalService(serviceCode, encounter, lstMapNewObs);
 	}
 }
