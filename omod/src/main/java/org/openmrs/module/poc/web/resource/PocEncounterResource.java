@@ -27,27 +27,27 @@ import org.openmrs.module.webservices.rest.web.v1_0.resource.openmrs1_9.Encounte
  * @author edrisse
  */
 @Resource(name = RestConstants.VERSION_1
-        + "/poc-encounter", supportedClass = Encounter.class, supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*",
-        "1.12.*", "2.0.*", "2.1.*" })
+		+ "/poc-encounter", supportedClass = Encounter.class, supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*",
+				"1.12.*", "2.0.*", "2.1.*" })
 public class PocEncounterResource extends EncounterResource1_9 {
-	
+
 	private static final Collection<String> MARKED_ON_UUIDS = new ArrayList<String>() {
-		
+
 		private static final long serialVersionUID = 1620224949111571964L;
 		{
-			add(ConceptUUIDConstants.VITALS_MARKED_ON);
-			add(ConceptUUIDConstants.WHO_MARKED_ON);
-			add(ConceptUUIDConstants.ANAMNESIS_MARKED_ON);
-			add(ConceptUUIDConstants.ANAMNESIS_DIAGNOSIS_ON);
+			add(ConceptUUIDConstants.POC_MAPPING_VITALS_DATE);
+			add(ConceptUUIDConstants.POC_MAPPING_WHO_DATE);
+			add(ConceptUUIDConstants.POC_MAPPING_ANAMNESE_DATE);
+			add(ConceptUUIDConstants.POC_MAPPING_DIAGNOSIS_DATE);
 		}
 	};
-	
+
 	@Override
 	public Encounter save(Encounter delegate) {
 		setCurrentDateOnMarkedOnObs(delegate);
 		return super.save(delegate);
 	}
-	
+
 	private void setCurrentDateOnMarkedOnObs(Encounter delegate) {
 		for (Obs obs : delegate.getObs()) {
 			Concept concept = obs.getConcept();
