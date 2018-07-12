@@ -49,10 +49,10 @@ public class PocEncounterResource extends EncounterResource1_9 {
 	}
 
 	private void setCurrentDateOnMarkedOnObs(Encounter delegate) {
+		Date now = new Date();
 		for (Obs obs : delegate.getObs()) {
 			Concept concept = obs.getConcept();
 			if (MARKED_ON_UUIDS.contains(concept.getUuid())) {
-				Date now = new Date();
 				obs.setValueDatetime(now);
 			}
 		}
