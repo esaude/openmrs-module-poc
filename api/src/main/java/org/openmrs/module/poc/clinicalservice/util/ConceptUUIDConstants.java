@@ -125,4 +125,12 @@ public interface ConceptUUIDConstants {
 	
 	public static final String CURRENT_WHO_HIV_STAGE = "e1e53c02-1d5f-11e0-b929-000c29ad1d07";
 	
+	public static final String VITALS_MARKED_ON = "283e551d-a470-4280-84fd-8f409f3caf7a";
+	
+	public static final String WHO_MARKED_ON = "2afd6fda-3003-4a68-bfa2-9a4e2ab2773d";
+
+	public static final String ANAMNESIS_MARKED_ON = "3ae77ecc-865b-4354-abf9-901f36715c70";
+
+	public static final String ANAMNESIS_DIAGNOSIS_ON = "4bea5235-1ef3-45a3-a7de-c33850c74422";
+	
 }
