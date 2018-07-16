@@ -337,8 +337,10 @@ public class TestOrderServiceImpl extends BaseOpenmrsService implements TestOrde
 		
 		if (needNewSequencial) {
 			
+			final Integer nextSequenceNumber = this.pocSequenceGeneratorService
+			        .getNextSequenceNumber(SequenceNames.TEST_ORDER);
 			final String newSequencialCode = hasSequence ? testOrderPoc.getCodeSequence()
-			        : "ORD-0" + this.pocSequenceGeneratorService.getNextSequenceNumber(SequenceNames.TEST_ORDER);
+			        : "ORD-" + StringUtils.leftPad(String.valueOf(nextSequenceNumber), 6, "0");
 			
 			final Obs obs = new Obs();
 			obs.setConcept(sequencialConcept);
@@ -410,5 +412,10 @@ public class TestOrderServiceImpl extends BaseOpenmrsService implements TestOrde
 		encounter.setEncounterDatetime(encounterDateTime);
 		
 		return encounter;
+	}
+	
+	public static void main(final String[] args) {
+		
+		System.out.println(StringUtils.leftPad(String.valueOf(10948), 6, "0"));
 	}
 }
