@@ -33,6 +33,7 @@ import org.openmrs.module.poc.clinicalservice.util.ClinicalServiceUtil;
 import org.openmrs.module.poc.clinicalservice.util.ConceptUUIDConstants;
 import org.openmrs.module.poc.clinicalservice.util.MappedClinicalServices;
 import org.openmrs.module.poc.clinicalservice.validation.ClinicalServiceValidator;
+import org.openmrs.module.poc.pocheuristic.service.PocHeuristicService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class ClinicalServiceServiceImpl extends BaseOpenmrsService implements ClinicalServiceService {
@@ -136,6 +137,7 @@ public class ClinicalServiceServiceImpl extends BaseOpenmrsService implements Cl
 		final Encounter fetchedEncounter = this.encounterService.getEncounterByUuid(encounter.getUuid());
 		
 		if ((serviceCode != null) && (fetchedEncounter != null)) {
+			
 			this.deleteOldObsOfClinicalService(fetchedEncounter, serviceCode);
 			this.createNewObsForClinicalService(fetchedEncounter, lstMapNewObs);
 			return this.encounterService.saveEncounter(fetchedEncounter);
@@ -152,34 +154,91 @@ public class ClinicalServiceServiceImpl extends BaseOpenmrsService implements Cl
 		        .getClinicalServices(ClinicalServiceKeys.getClinicalServiceByCode(serviceCode));
 		
 		final Set<Obs> allOldObs = fetchedEncounter.getAllObs(false);
-		for (final Obs oldItemObs : allOldObs) {
+		final List<Obs> obsGroups = new ArrayList<>();
+		for (final Obs oldObsItem : allOldObs) {
 			
-			final String conceptUuid = oldItemObs.getConcept().getUuid();
-			if ((oldItemObs.getObsId() != null) && clinicalServices.contains(conceptUuid)
+			final String conceptUuid = oldObsItem.getConcept().getUuid();
+			if ((oldObsItem.getObsId() != null) && clinicalServices.contains(conceptUuid)
 			        && !ClinicalServiceServiceImpl.EXCLUDING_CONCEPTS.contains(conceptUuid)) {
-				this.obsService.voidObs(oldItemObs,
-				    Context.getMessageSourceService().getMessage("poc.global.info.voided.forupdate"));
+				this.voidObs(oldObsItem);
+				
+				if ((oldObsItem.getObsGroup() != null) && !obsGroups.contains(oldObsItem.getObsGroup())) {
+					obsGroups.add(oldObsItem.getObsGroup());
+				}
 			}
+		}
+		
+		// voiding ObsGroups if found
+		for (final Obs obs : obsGroups) {
+			this.voidObs(obs);
 		}
 	}
 	
-	private void createNewObsForClinicalService(final Encounter fetchedEncounter,
+	@SuppressWarnings("unchecked")
+	private void createNewObsForClinicalService(final Encounter encounter,
 	        final List<Map<String, Object>> lstMapNewObs) {
 		
 		try {
 			for (final Map<String, Object> obsMap : lstMapNewObs) {
 				
-				final Concept concept = Context.getConceptService().getConceptByUuid((String) obsMap.get("concept"));
-				final Obs obs = new Obs();
-				obs.setConcept(concept);
-				this.setObsValue(obs, concept, obsMap.get("value"));
-				obs.setPerson(fetchedEncounter.getPatient());
-				fetchedEncounter.addObs(obs);
+				Concept conceptGroup = null;
+				Concept concept = null;
+				Object value = null;
+				
+				final List<Map<String, Object>> groupMembers = (List<Map<String, Object>>) obsMap.get("groupMembers");
+				
+				if (groupMembers != null) {
+					
+					conceptGroup = Context.getConceptService().getConceptByUuid((String) obsMap.get("concept"));
+					
+					for (final Map<String, Object> mapGroupMember : groupMembers) {
+						
+						concept = Context.getConceptService().getConceptByUuid((String) mapGroupMember.get("concept"));
+						value = mapGroupMember.get("value");
+						this.createObsWithGroupObs(encounter, concept, conceptGroup, value);
+					}
+					
+				} else {
+					concept = Context.getConceptService().getConceptByUuid((String) obsMap.get("concept"));
+					value = obsMap.get("value");
+					encounter.addObs(this.createOnlyObs(encounter, concept, value));
+				}
 			}
 		}
 		catch (final ParseException e) {
 			throw new APIException(e);
 		}
+	}
+	
+	private void createObsWithGroupObs(final Encounter encounter, final Concept concept, final Concept conceptGroup,
+	        final Object value) throws ParseException {
+		
+		Obs obsGroup = Context.getService(PocHeuristicService.class).findObsByEncounterAndConcept(encounter,
+		    conceptGroup);
+		if (obsGroup == null) {
+			obsGroup = new Obs();
+			obsGroup.setConcept(conceptGroup);
+			obsGroup.setPerson(encounter.getPatient());
+		}
+		final Obs obsMember = this.createOnlyObs(encounter, concept, value);
+		obsGroup.addGroupMember(obsMember);
+		encounter.addObs(obsGroup);
+		this.encounterService.saveEncounter(encounter);
+	}
+	
+	private Obs createOnlyObs(final Encounter encounter, final Concept concept, final Object value)
+	        throws ParseException {
+		
+		final Obs obs = new Obs();
+		obs.setConcept(concept);
+		obs.setEncounter(encounter);
+		this.setObsValue(obs, concept, value);
+		obs.setPerson(encounter.getPatient());
+		return obs;
+	}
+	
+	private void voidObs(final Obs obs) {
+		this.obsService.voidObs(obs, Context.getMessageSourceService().getMessage("poc.global.info.voided.forupdate"));
 	}
 	
 	private void setObsValue(final Obs obs, final Concept concept, final Object value) throws ParseException {

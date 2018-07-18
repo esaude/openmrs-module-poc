@@ -424,7 +424,7 @@ public class ClinicalServiceServiceTest extends POCBaseModuleContextSensitiveTes
 		final Map<String, Object> mapNonCodedText = new HashMap<>();
 		final Map<String, Object> mapTBEndDate = new HashMap<>();
 		final Map<String, Object> mapNumberOfCohabitants = new HashMap<>();
-		final Map<String, Object> mapFatherIsAlive = new HashMap<>();
+		
 		final List<Map<String, Object>> lstMapNewObs = new ArrayList<>();
 		
 		lstMapNewObs.add(mapTBDrugStart);
@@ -432,7 +432,6 @@ public class ClinicalServiceServiceTest extends POCBaseModuleContextSensitiveTes
 		lstMapNewObs.add(mapNonCodedText);
 		lstMapNewObs.add(mapTBEndDate);
 		lstMapNewObs.add(mapNumberOfCohabitants);
-		lstMapNewObs.add(mapFatherIsAlive);
 		
 		mapTBDrugStart.put("concept", "e1d85906-1d5f-11e0-b929-000c29ad1d07");
 		mapTBDrugStart.put("value", "2008-10-20 00:00:00.0");
@@ -449,8 +448,18 @@ public class ClinicalServiceServiceTest extends POCBaseModuleContextSensitiveTes
 		mapNumberOfCohabitants.put("concept", "e1dd3426-1d5f-11e0-b929-000c29ad1d07");
 		mapNumberOfCohabitants.put("value", "4");
 		
+		final Map<String, Object> conceptToGroupFatherAlive = new HashMap<>();
+		conceptToGroupFatherAlive.put("concept", "e1dd2382-1d5f-11e0-b929-000c29ad1d07");
+		
+		final List<Map<String, Object>> groupMembersFatherAlive = new ArrayList<>();
+		final Map<String, Object> mapFatherIsAlive = new HashMap<>();
 		mapFatherIsAlive.put("concept", "e1dc2932-1d5f-11e0-b929-000c29ad1d07");
 		mapFatherIsAlive.put("value", "true");
+		groupMembersFatherAlive.add(mapFatherIsAlive);
+		
+		conceptToGroupFatherAlive.put("groupMembers", groupMembersFatherAlive);
+		
+		lstMapNewObs.add(conceptToGroupFatherAlive);
 		
 		final Encounter encounterUpdated = Context.getService(ClinicalServiceService.class)
 		        .updateClinicalService(serviceCode, encounter, lstMapNewObs);

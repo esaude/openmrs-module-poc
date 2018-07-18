@@ -15,7 +15,9 @@
 	
 	<!-- Encounter For pediatric Diagnosis -->
   	<encounter encounter_id="1005" encounter_type="2" patient_id="7" location_id="1" form_id="1" encounter_datetime="2008-08-15 00:00:00.0" creator="1" date_created="2008-08-18 14:22:17.0" voided="false" uuid="c847-4ss-enc-xpto-pediatric-diagnosis"/>
-  	<obs obs_id ="150" person_id="7" concept_id="109" encounter_id="1005" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_datetime="2008-08-19 00:00:00.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000500"/>
- 	<obs obs_id ="151" person_id="7" concept_id="110" encounter_id="1005" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_datetime="2008-08-19 00:00:00.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000501"/>
+  
+  	<obs obs_id ="149" person_id="7" concept_id="1002" encounter_id="1005" obs_datetime="2008-08-19 00:00:00.0" location_id="2" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e10000005xx"/>
+  	<obs obs_id ="150" person_id="7" concept_id="109" encounter_id="1005" obs_datetime="2008-08-19 00:00:00.0"  location_id="2" value_datetime="2008-08-19 00:00:00.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000500"/>
+ 	<obs obs_id ="151" person_id="7" concept_id="110" encounter_id="1005" obs_group_id="149" obs_datetime="2008-08-19 00:00:00.0" location_id="2" value_datetime="2008-08-19 00:00:00.0" comments="" creator="1" date_created="2008-08-19 12:35:30.0" voided="false" uuid="2ed1e57d-9f18-41d3-b067-2e1000000501"/>
 	
 </dataset> 
