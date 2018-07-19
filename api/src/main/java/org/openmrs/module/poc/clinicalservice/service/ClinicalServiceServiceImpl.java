@@ -14,6 +14,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -154,7 +155,7 @@ public class ClinicalServiceServiceImpl extends BaseOpenmrsService implements Cl
 		        .getClinicalServices(ClinicalServiceKeys.getClinicalServiceByCode(serviceCode));
 		
 		final Set<Obs> allOldObs = fetchedEncounter.getAllObs(false);
-		final List<Obs> obsGroups = new ArrayList<>();
+		final Set<Obs> obsGroups = new HashSet<>();
 		for (final Obs oldObsItem : allOldObs) {
 			
 			final String conceptUuid = oldObsItem.getConcept().getUuid();
@@ -162,15 +163,17 @@ public class ClinicalServiceServiceImpl extends BaseOpenmrsService implements Cl
 			        && !ClinicalServiceServiceImpl.EXCLUDING_CONCEPTS.contains(conceptUuid)) {
 				this.voidObs(oldObsItem);
 				
-				if ((oldObsItem.getObsGroup() != null) && !obsGroups.contains(oldObsItem.getObsGroup())) {
+				if (oldObsItem.getObsGroup() != null) {
 					obsGroups.add(oldObsItem.getObsGroup());
 				}
 			}
 		}
 		
-		// voiding ObsGroups if found
+		// voiding ObsGroups without active membes
 		for (final Obs obs : obsGroups) {
-			this.voidObs(obs);
+			if (!obs.hasGroupMembers(false)) {
+				this.voidObs(obs);
+			}
 		}
 	}
 	
