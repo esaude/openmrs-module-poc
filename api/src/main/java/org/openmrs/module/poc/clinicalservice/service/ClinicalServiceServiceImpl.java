@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openmrs.Concept;
 import org.openmrs.ConceptDatatype;
 import org.openmrs.Encounter;
@@ -198,13 +199,17 @@ public class ClinicalServiceServiceImpl extends BaseOpenmrsService implements Cl
 						
 						concept = Context.getConceptService().getConceptByUuid((String) mapGroupMember.get("concept"));
 						value = mapGroupMember.get("value");
-						this.createObsWithGroupObs(encounter, concept, conceptGroup, value);
+						if ((value != null) && StringUtils.isNotBlank(value.toString())) {
+							this.createObsWithGroupObs(encounter, concept, conceptGroup, value);
+						}
 					}
 					
 				} else {
 					concept = Context.getConceptService().getConceptByUuid((String) obsMap.get("concept"));
 					value = obsMap.get("value");
-					encounter.addObs(this.createOnlyObs(encounter, concept, value));
+					if ((value != null) && StringUtils.isNotBlank(value.toString())) {
+						encounter.addObs(this.createOnlyObs(encounter, concept, value));
+					}
 				}
 			}
 		}

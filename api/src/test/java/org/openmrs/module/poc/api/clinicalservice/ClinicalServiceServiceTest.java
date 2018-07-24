@@ -20,7 +20,6 @@ import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.hamcrest.collection.IsCollectionWithSize;
 import org.junit.Test;
-import org.openmrs.Concept;
 import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.api.APIException;
@@ -29,7 +28,6 @@ import org.openmrs.module.poc.api.POCBaseModuleContextSensitiveTest;
 import org.openmrs.module.poc.api.common.exception.POCBusinessException;
 import org.openmrs.module.poc.clinicalservice.service.ClinicalServiceService;
 import org.openmrs.module.poc.clinicalservice.util.ClinicalServiceKeys;
-import org.openmrs.module.poc.clinicalservice.util.ConceptUUIDConstants;
 
 public class ClinicalServiceServiceTest extends POCBaseModuleContextSensitiveTest {
 	
@@ -182,23 +180,6 @@ public class ClinicalServiceServiceTest extends POCBaseModuleContextSensitiveTes
 		final String validCode = ClinicalServiceKeys.VITALS_ADULT.getCode();
 		
 		Context.getService(ClinicalServiceService.class).deleteClinicalService(invalidEncounterUuid, validCode);
-	}
-	
-	@Test(expected = POCBusinessException.class)
-	public void shouldNotDeleteClinicalServicesForMissingClinicalServicesConcept() throws Exception {
-		
-		// This must be mocked to not lost focus testing one and unique
-		// behaviour
-		final Concept temperature = Context.getConceptService().getConceptByUuid(ConceptUUIDConstants.TEMPERATURE);
-		Context.getConceptService().retireConcept(temperature, "reason");
-		
-		this.executeDataSet("clinicalservice/shouldDeletePediatricVitalsClinicalServices-dataset.xml");
-		
-		final String encounterUuid = "eec646cb-c847-4ss-enc-vital-child";
-		
-		Context.getService(ClinicalServiceService.class).deleteClinicalService(encounterUuid,
-		    ClinicalServiceKeys.VITALS_PEDIATRICS.getCode());
-		
 	}
 	
 	@SuppressWarnings("unchecked")

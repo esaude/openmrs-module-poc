@@ -99,7 +99,9 @@ public class MappedClinicalServices {
 		        ConceptUUIDConstants.UPPER_AND_LOWER_LIMBS_EXAMS,
 		        ConceptUUIDConstants.SCREENING_FOR_STI,
 		        ConceptUUIDConstants.SCREENING_FOR_TB,
-		        ConceptUUIDConstants.SCREENING_FOR_CRIPTO));
+		        ConceptUUIDConstants.SCREENING_FOR_CRIPTO,
+		        ConceptUUIDConstants.DATE_OF_LAST_MENSTRATION,
+		        ConceptUUIDConstants.PREGNANCY_DUE_DATE));
 		
 		// PEDIATRICS_ANAMNESE_EXAMS
 		MappedClinicalServices.clinicalServices.put(ClinicalServiceKeys.PEDIATRICS_ANAMNESE_EXAMS,
