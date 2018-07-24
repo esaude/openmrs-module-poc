@@ -34,10 +34,6 @@ public class ClinicalServiceUtil {
 			}
 		}
 		
-		if ((result.size() != clinicalServicesUuid.size())) {
-			
-			throw new IllegalArgumentException("poc.error.some.clinical.services.were.not.found.for.given.code");
-		}
 		return result;
 	}
 }
